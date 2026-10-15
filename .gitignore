@@ -1,0 +1,10 @@
+# the brain model's own repo and its 370 MB of connectome data: clone it, see README
+brain/
+.venv-brain/
+brain_out/
+__pycache__/
+*.log
+
+# Vercel link state and the token `vercel link` writes
+site/.vercel/
+.env*

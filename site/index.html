@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One Fly Memory</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta name="description" content="1,000 simulated fruit flies share one memory in Qdrant. A replay of a real run, shown two ways.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root { --bg: #f4f0e6; --paper: #fffdf7; --ink: #1c1b19; --muted: #6d685d; --line: #ddd5c3; --accent: #dc244c; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #14130f; --paper: #1d1c17; --ink: #f1ece0; --muted: #a39d8f; --line: #36332b; --accent: #ff4f72; }
+}
+:root[data-theme="dark"] { --bg: #14130f; --paper: #1d1c17; --ink: #f1ece0; --muted: #a39d8f; --line: #36332b; --accent: #ff4f72; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 Inter, system-ui, sans-serif; }
+.wrap { max-width: 1320px; margin: 0 auto; padding: 40px 16px 56px; }
+h1 { font: 400 clamp(40px, 6vw, 76px)/0.98 "Instrument Serif", Georgia, serif; margin: 0 0 14px; letter-spacing: -0.01em; }
+h1 em { color: var(--accent); }
+.dek { color: var(--muted); margin: 0 0 32px; max-width: 680px; font-size: 17px; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+a.card { display: flex; flex-direction: column; background: var(--paper); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; color: inherit; text-decoration: none; min-width: 0; transition: transform .2s, border-color .2s; }
+a.card:hover { transform: translateY(-2px); border-color: var(--accent); }
+.frame { position: relative; aspect-ratio: 16 / 10; background: #000; overflow: hidden; }
+.frame iframe { position: absolute; left: 0; top: 0; width: 1600px; height: 1000px; border: 0; transform-origin: 0 0; pointer-events: none; }
+.body { padding: 18px 20px 20px; }
+.body h2 { margin: 0 0 6px; font: 400 30px/1.1 "Instrument Serif", Georgia, serif; }
+.body p { margin: 0; color: var(--muted); font-size: 15px; }
+.body .go { display: inline-block; margin-top: 12px; color: var(--accent); font-weight: 600; font-size: 14px; }
+.facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin: 40px 0 0; padding: 0; list-style: none; }
+.facts li { border-top: 2px solid var(--ink); padding-top: 10px; }
+.facts b { display: block; font: 400 40px/1 "Instrument Serif", Georgia, serif; margin-bottom: 6px; }
+.facts span { color: var(--muted); font-size: 14px; }
+.fine { margin-top: 36px; color: var(--muted); font-size: 13.5px; max-width: 860px; }
+@media (max-width: 860px) { .grid { grid-template-columns: 1fr; } .facts { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Can 1,000 flies share <em>one memory?</em></h1>
+  <p class="dek">Every fly lives alone in its own world. When it smells something it doesn't know, it asks a shared memory in Qdrant whether any other fly has met something that smells like it. Here is one real run, shown two ways.</p>
+
+  <div class="grid">
+    <a class="card" href="fly-rig.html">
+      <div class="frame"><iframe src="fly-rig.html" title="Lab tracking replay" scrolling="no" tabindex="-1"></iframe></div>
+      <div class="body">
+        <h2>The lab rig</h2>
+        <p>Tracking footage with the mechanism on screen: each question to Qdrant, its real matches and scores, and every byte sent up.</p>
+        <span class="go">Watch full screen</span>
+      </div>
+    </a>
+    <a class="card" href="fly-plate.html">
+      <div class="frame"><iframe src="fly-plate.html" title="Illustrated replay" scrolling="no" tabindex="-1"></iframe></div>
+      <div class="body">
+        <h2>The field notebook</h2>
+        <p>The same run as an entomology plate come to life, with a notebook writing down what the other flies reported.</p>
+        <span class="go">Watch full screen</span>
+      </div>
+    </a>
+  </div>
+
+  <ul class="facts">
+    <li><b>95%</b><span>right call the first time a fly meets something, with shared memory. Alone: about 50%.</span></li>
+    <li><b>999</b><span>of 1,000 flies alive at the end when sharing. Alone: 82.</span></li>
+    <li><b>1.5 MB</b><span>sent to the cloud in total. Streaming every fly, every step: 106 MB.</span></li>
+    <li><b>97.6%</b><span>of flies were warned off at least one danger by another fly's memory.</span></li>
+  </ul>
+
+  <p class="fine">Replays of a real simulation run (seed 0, 1,000 flies, 400 steps). Fly 813 is shown because it hits every story beat; 238 of 1,000 flies do. The flies are simple programs, not the connectome brain model. Qdrant ran in local mode, so no latency figures are shown.</p>
+</div>
+<script>
+function fitFrames() {
+  document.querySelectorAll('.frame').forEach(f => {
+    f.querySelector('iframe').style.transform = `scale(${f.clientWidth / 1600})`;
+  });
+}
+addEventListener('resize', fitFrames);
+fitFrames();
+</script>
+</body>
+</html>

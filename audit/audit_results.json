@@ -1,0 +1,199 @@
+{
+ "euclid_threshold_returns": [
+  0,
+  1,
+  2,
+  3
+ ],
+ "fresh_seeds_100_104": {
+  "naive": {
+   "first_meeting_right_call": 0.4699497064363693,
+   "food_per_fly": 2.8322,
+   "survival": 0.0814,
+   "stings_per_fly": 2.8848
+  },
+  "private": {
+   "first_meeting_right_call": 0.484016292520627,
+   "food_per_fly": 3.5346,
+   "survival": 0.2798,
+   "stings_per_fly": 2.641
+  },
+  "shared": {
+   "first_meeting_right_call": 0.9481308633307128,
+   "food_per_fly": 4.571199999999999,
+   "survival": 0.999,
+   "stings_per_fly": 0.2912
+  },
+  "shuffled": {
+   "first_meeting_right_call": 0.4875785336828792,
+   "food_per_fly": 1.8170000000000002,
+   "survival": 0.7516,
+   "stings_per_fly": 1.5210000000000001
+  },
+  "location": {
+   "first_meeting_right_call": 0.49035638636317047,
+   "food_per_fly": 0.6896000000000001,
+   "survival": 0.9634,
+   "stings_per_fly": 0.7036
+  }
+ },
+ "traffic": {
+  "uploads_bytes": 143248.0,
+  "query_bytes": 1377228.8,
+  "total_upstream_bytes": 1520476.8,
+  "every_sniff_to_cloud_bytes": 2852659.2,
+  "firehose_bytes": 105600000.0,
+  "sniffs": 11143.2,
+  "fleet_queries": 5379.8,
+  "writes": 511.6
+ },
+ "novel_bins": [
+  {
+   "steps": "0-5",
+   "n": 327,
+   "avoided": 0.17737003058103976
+  },
+  {
+   "steps": "5-10",
+   "n": 70,
+   "avoided": 1.0
+  },
+  {
+   "steps": "10-20",
+   "n": 143,
+   "avoided": 1.0
+  },
+  {
+   "steps": "20-50",
+   "n": 328,
+   "avoided": 1.0
+  },
+  {
+   "steps": "50-200",
+   "n": 1117,
+   "avoided": 1.0
+  }
+ ],
+ "robustness": [
+  {
+   "instance_noise": 0.5,
+   "threshold": 0.5,
+   "private": 0.48526503853407804,
+   "private_food": 3.5126666666666666,
+   "shared": 0.943715645822091,
+   "shared_food": 4.57,
+   "shuffled": 0.48411502514999033,
+   "shuffled_food": 1.8066666666666666
+  },
+  {
+   "instance_noise": 0.5,
+   "threshold": 0.6,
+   "private": 0.4859295516530615,
+   "private_food": 3.515333333333334,
+   "shared": 0.9498508103195212,
+   "shared_food": 4.501333333333333,
+   "shuffled": 0.47688489634125125,
+   "shuffled_food": 1.8216666666666665
+  },
+  {
+   "instance_noise": 0.5,
+   "threshold": 0.7,
+   "private": 0.48702028398340386,
+   "private_food": 3.4923333333333333,
+   "shared": 0.9502014450366781,
+   "shared_food": 4.530666666666666,
+   "shuffled": 0.47402961361367746,
+   "shuffled_food": 1.7176666666666665
+  },
+  {
+   "instance_noise": 0.8,
+   "threshold": 0.5,
+   "private": 0.48826050727671394,
+   "private_food": 3.52,
+   "shared": 0.9490511788237956,
+   "shared_food": 4.519333333333333,
+   "shuffled": 0.5605773551157536,
+   "shuffled_food": 2.211
+  },
+  {
+   "instance_noise": 0.8,
+   "threshold": 0.6,
+   "private": 0.47792688959832735,
+   "private_food": 3.144666666666667,
+   "shared": 0.9500143431277056,
+   "shared_food": 4.488333333333333,
+   "shuffled": 0.5326906553812725,
+   "shuffled_food": 2.0386666666666664
+  },
+  {
+   "instance_noise": 0.8,
+   "threshold": 0.7,
+   "private": 0.4743174396581746,
+   "private_food": 2.9116666666666666,
+   "shared": 0.871494334244006,
+   "shared_food": 4.6033333333333335,
+   "shuffled": 0.5469825858971554,
+   "shuffled_food": 2.3123333333333336
+  },
+  {
+   "instance_noise": 1.0,
+   "threshold": 0.5,
+   "private": 0.47705012972294586,
+   "private_food": 3.138666666666667,
+   "shared": 0.9493083803821721,
+   "shared_food": 4.486999999999999,
+   "shuffled": 0.5126198351114973,
+   "shuffled_food": 1.8826666666666665
+  },
+  {
+   "instance_noise": 1.0,
+   "threshold": 0.6,
+   "private": 0.4736353019425787,
+   "private_food": 2.885666666666667,
+   "shared": 0.9025759133556632,
+   "shared_food": 4.551333333333333,
+   "shuffled": 0.5308941250456773,
+   "shuffled_food": 2.0683333333333334
+  },
+  {
+   "instance_noise": 1.0,
+   "threshold": 0.7,
+   "private": 0.4749949336488904,
+   "private_food": 2.9203333333333332,
+   "shared": 0.6086354988734274,
+   "shared_food": 3.448333333333333,
+   "shuffled": 0.5012179981935193,
+   "shuffled_food": 2.716333333333333
+  },
+  {
+   "instance_noise": 1.3,
+   "threshold": 0.5,
+   "private": 0.471599990062358,
+   "private_food": 2.877333333333333,
+   "shared": 0.9062012188648897,
+   "shared_food": 4.572333333333334,
+   "shuffled": 0.5400049497389466,
+   "shuffled_food": 2.0526666666666666
+  },
+  {
+   "instance_noise": 1.3,
+   "threshold": 0.6,
+   "private": 0.47393609236250933,
+   "private_food": 2.8970000000000002,
+   "shared": 0.6787215869844969,
+   "shared_food": 3.814666666666666,
+   "shuffled": 0.5062245239726441,
+   "shuffled_food": 2.5933333333333333
+  },
+  {
+   "instance_noise": 1.3,
+   "threshold": 0.7,
+   "private": 0.4763517054643766,
+   "private_food": 2.9333333333333336,
+   "shared": 0.4776187076342351,
+   "shared_food": 2.906,
+   "shuffled": 0.46964506107014214,
+   "shuffled_food": 2.8383333333333334
+  }
+ ]
+}

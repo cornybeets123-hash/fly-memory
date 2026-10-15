@@ -1,0 +1,90 @@
+{
+  "trials_per_case": 10,
+  "sugar_hz": 150.0,
+  "bitter_hz": 150.0,
+  "eat_threshold_hz": 10.0,
+  "neurons": 127400,
+  "connections": 14687178,
+  "total_wall_s": 748.7885105609894,
+  "simulated_s": 35.0,
+  "wall_s_per_simulated_s": 21.274190160206388,
+  "cases": [
+    {
+      "case": 1,
+      "fly": 0,
+      "object": "baited trap, empty memory",
+      "best_fleet_score": null,
+      "recalled_danger": false,
+      "sugar_hz": 150.0,
+      "bitter_hz": 0.0,
+      "mn9_left_hz": 83.3,
+      "mn9_left_ci95": 2.818434869056071,
+      "mn9_right_hz": 59.7,
+      "trials": 10,
+      "reused_trials_of_identical_input": false,
+      "eats": true,
+      "stung": true,
+      "escalated": true,
+      "cos_to_trap_type": 0.869838462586793,
+      "cos_to_food_type": 0.35061632825326156
+    },
+    {
+      "case": 2,
+      "fly": 1,
+      "object": "another trap, same type",
+      "best_fleet_score": 0.8167699344183937,
+      "recalled_danger": true,
+      "sugar_hz": 150.0,
+      "bitter_hz": 150.0,
+      "mn9_left_hz": 7.3,
+      "mn9_left_ci95": 1.7049371444914523,
+      "mn9_right_hz": 12.7,
+      "trials": 10,
+      "reused_trials_of_identical_input": false,
+      "eats": false,
+      "stung": false,
+      "escalated": false,
+      "cos_to_trap_type": 0.8948138344456291,
+      "cos_to_food_type": 0.3104710826393125
+    },
+    {
+      "case": 3,
+      "fly": 1,
+      "object": "real food (trap is built from it)",
+      "best_fleet_score": null,
+      "recalled_danger": false,
+      "sugar_hz": 150.0,
+      "bitter_hz": 0.0,
+      "mn9_left_hz": 83.3,
+      "mn9_left_ci95": 2.818434869056071,
+      "mn9_right_hz": 59.7,
+      "trials": 10,
+      "reused_trials_of_identical_input": true,
+      "eats": true,
+      "stung": false,
+      "escalated": false,
+      "cos_to_trap_type": 0.3846518390483045,
+      "cos_to_food_type": 0.8682393457119042
+    }
+  ],
+  "bitter_dose_response": [
+    {
+      "bitter_hz": 50.0,
+      "mn9_left_hz": 70.4,
+      "mn9_left_ci95": 1.9203999583420115,
+      "trials": 5
+    },
+    {
+      "bitter_hz": 100.0,
+      "mn9_left_hz": 33.2,
+      "mn9_left_ci95": 3.1237259802998083,
+      "trials": 5
+    },
+    {
+      "bitter_hz": 200.0,
+      "mn9_left_hz": 1.0,
+      "mn9_left_ci95": 0.8765386471799175,
+      "trials": 5
+    }
+  ]
+}
