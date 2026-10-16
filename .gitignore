@@ -8,3 +8,11 @@ __pycache__/
 # Vercel link state and the token `vercel link` writes
 site/.vercel/
 .env*
+.venv/
+.DS_Store
+.firecrawl/
+.pytest_cache/
+.ruff_cache/
+workshop-results.json
+artifacts/
+state/

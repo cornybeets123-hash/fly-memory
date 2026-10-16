@@ -1,0 +1,81 @@
+{
+  "seed": 3000,
+  "fly": 2,
+  "encounter": 22,
+  "policies": {
+    "balanced": {
+      "recall": {
+        "hits": [
+          {
+            "id": 3,
+            "score": 0.7803131341934204,
+            "outcome": 1,
+            "tick": 2
+          }
+        ],
+        "evidence": -1.0,
+        "confidence": 0.0,
+        "bitter_hz": 0
+      },
+      "neural": {
+        "trial_id": "p9-sugar-bitter-0-seed-106",
+        "source": "recorded",
+        "seed": 106,
+        "bitter_hz": 0,
+        "sugar_hz": 150,
+        "feeding": true,
+        "readouts_hz": {
+          "MN9": [
+            81.0,
+            57.0
+          ],
+          "P9-oDN1": [
+            3.0,
+            2.0
+          ],
+          "FG": [
+            30.0,
+            54.0
+          ]
+        }
+      }
+    },
+    "harm": {
+      "recall": {
+        "hits": [
+          {
+            "id": 5,
+            "score": 0.7756054997444153,
+            "outcome": -1,
+            "tick": 4
+          }
+        ],
+        "evidence": 1.0,
+        "confidence": 0.7756054997444153,
+        "bitter_hz": 200
+      },
+      "neural": {
+        "trial_id": "p9-sugar-bitter-200-seed-106",
+        "source": "recorded",
+        "seed": 106,
+        "bitter_hz": 200,
+        "sugar_hz": 150,
+        "feeding": false,
+        "readouts_hz": {
+          "MN9": [
+            0.0,
+            4.0
+          ],
+          "P9-oDN1": [
+            13.0,
+            11.0
+          ],
+          "FG": [
+            5.0,
+            22.0
+          ]
+        }
+      }
+    }
+  }
+}

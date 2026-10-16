@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#101224" />
+    <title>Fly Memory · Qdrant</title>
+    <link rel="icon" href="/static/qdrant-mark.svg" />
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <header>
+        <a
+          class="brand"
+          href="https://qdrant.tech/documentation/edge/"
+          target="_blank"
+          rel="noreferrer"
+          ><img src="/static/qdrant.svg" alt="Qdrant"
+        /></a>
+        <div class="title">
+          <b>Fly memory</b><span>Same brain. New experiences.</span>
+        </div>
+        <span class="engine" id="engine"><i></i>Qdrant Edge</span>
+        <button id="run" class="primary">Run experiment <span>↗</span></button>
+      </header>
+      <main>
+        <div class="experiment-bar">
+          <div class="tabs" role="group" aria-label="Memory policy">
+            <button data-mode="none" aria-pressed="false">No memory</button>
+            <button data-mode="harm" aria-pressed="false">Bad memories</button>
+            <button data-mode="balanced" class="active" aria-pressed="true">
+              All experiences
+            </button>
+          </div>
+          <div class="experiment-title">
+            <i id="status-dot"></i
+            ><span id="experiment-state" aria-live="polite"
+              >Preparing experiment</span
+            >
+          </div>
+          <button class="text-button" id="benchmark">Compare policies ↗</button>
+        </div>
+        <div class="panels">
+          <section class="panel habitat-panel" aria-labelledby="habitat-title">
+            <div class="panel-heading">
+              <h2 id="habitat-title">01 / The encounter</h2>
+              <span id="subject">FLY 07</span>
+            </div>
+            <div class="habitat-wrap">
+              <canvas
+                id="habitat"
+                role="img"
+                aria-label="An anatomical fly approaches fruit in a specimen dish. Feeding and refusal follow recorded neural outputs."
+              ></canvas>
+              <span class="dish-tag" id="encounter-label">A new encounter</span>
+              <div class="dish-score">
+                <span id="decision" aria-live="polite">Exploring</span
+                ><small id="contact-label">Contact 01 / 40</small>
+              </div>
+            </div>
+            <div class="subject-stats">
+              <div>
+                <small>HEALTH</small>
+                <div class="health-track"><i id="health-bar"></i></div>
+              </div>
+              <div>
+                <strong id="safe-meals">0</strong><small>SAFE MEALS</small>
+              </div>
+              <div>
+                <strong id="harmful-meals">0</strong
+                ><small>HARMFUL MEALS</small>
+              </div>
+            </div>
+            <div
+              class="roster"
+              id="roster"
+              role="group"
+              aria-label="Select one of sixteen independent flies"
+            ></div>
+            <div class="panel-caption">
+              16 independent lives. Each memory starts empty.
+            </div>
+          </section>
+          <section class="panel brain-panel" aria-labelledby="brain-title">
+            <div class="panel-heading">
+              <h2 id="brain-title">02 / The brain</h2>
+              <span class="source-tag" id="neural-source">RECORDED TRIAL</span>
+            </div>
+            <div class="brain-count">
+              <strong>127,400</strong
+              ><span>neurons · 14.7M synaptic connections</span>
+            </div>
+            <canvas
+              id="brain"
+              role="img"
+              aria-label="Fly brain activity schematic. Colored populations follow recorded sugar, bitter, halting, and feeding spikes."
+            ></canvas>
+            <div class="stimuli">
+              <span><i class="sugar-dot"></i>Sugar <b>150 Hz</b></span
+              ><span
+                ><i class="bitter-dot"></i>Recalled bitter
+                <b id="bitter-rate">0 Hz</b></span
+              >
+            </div>
+            <canvas
+              id="spikes"
+              role="img"
+              aria-label="Recorded spike counts in 25 millisecond bins for sugar, bitter, and the feeding motor neuron."
+            ></canvas>
+            <div class="motor-readout">
+              <div>
+                <small>MN9 LEFT</small><strong id="motor-rate">— Hz</strong>
+              </div>
+              <span id="motor-action">Feeding motor output</span>
+            </div>
+            <div class="brain-footer">
+              <span id="trial-seed">SEED 100 · 1 SIMULATED SECOND</span
+              ><button id="verify" class="text-button">Verify live ↗</button>
+            </div>
+            <div class="panel-caption">
+              Activity schematic · fixed model · real spike recordings
+            </div>
+          </section>
+          <section class="panel memory-panel" aria-labelledby="memory-title">
+            <div class="panel-heading">
+              <h2 id="memory-title">03 / The memory</h2>
+              <img src="/static/qdrant-mark.svg" alt="Qdrant Edge" />
+            </div>
+            <div class="map-title">
+              <strong id="memory-count">0</strong
+              ><span>personal experiences</span
+              ><span class="local-tag">ON DEVICE</span>
+            </div>
+            <div class="map-wrap">
+              <canvas
+                id="memory-map"
+                role="img"
+                aria-label="Growing two-dimensional projection of personal odor memories. Nourishing memories are mint; harmful memories are pink. White marks the current query."
+              ></canvas>
+              <div id="map-tooltip" hidden></div>
+              <div class="map-legend">
+                <span><i class="safe-dot"></i>Nourishing</span
+                ><span><i class="bitter-dot"></i>Harmful</span
+                ><span>+ Query</span>
+              </div>
+            </div>
+            <div class="query-heading">
+              <span id="query-caption">COSINE · TOP 1 · ≥ 0.60</span
+              ><span id="match-count">0 MATCHES</span>
+            </div>
+            <div
+              id="matches"
+              class="matches"
+              aria-label="Actual retrieved memories"
+            >
+              <p>No earlier experience.</p>
+            </div>
+            <div class="memory-actions">
+              <button id="surgery" class="secondary">Delete a memory ↗</button
+              ><span id="write-state">Waiting for an observation</span>
+            </div>
+            <div class="panel-caption">
+              24 receptor responses · fixed 2D projection for display
+            </div>
+          </section>
+        </div>
+        <div class="loop" aria-label="Experience and retrieval loop">
+          <span data-phase="0">Sense</span><i>→</i
+          ><span data-phase="1"
+            ><img src="/static/qdrant-mark.svg" alt="" />Recall</span
+          ><i>→</i><span data-phase="2">Stimulate brain</span><i>→</i
+          ><span data-phase="3">Observe + remember</span>
+          <div id="loop-detail">A new smell enters the loop.</div>
+        </div>
+        <div class="playback">
+          <button id="play" aria-label="Pause replay">Ⅱ</button
+          ><button id="previous" aria-label="Previous encounter">‹</button
+          ><input
+            id="scrub"
+            type="range"
+            min="0"
+            max="39"
+            value="0"
+            aria-label="Encounter position"
+          /><button id="next" aria-label="Next encounter">›</button
+          ><select id="speed" aria-label="Replay speed">
+            <option value="0.5">0.5×</option>
+            <option value="1" selected>1×</option>
+            <option value="2">2×</option>
+            <option value="4">4×</option></select
+          ><span id="replay-position">01 / 40</span>
+        </div>
+        <section class="progress-panel" aria-labelledby="progress-title">
+          <div class="progress-intro">
+            <h2 id="progress-title">Does experience help?</h2>
+            <div class="chart-legend">
+              <span><i class="safe-dot"></i>This policy</span
+              ><span><i class="control-dot"></i>No memory</span>
+            </div>
+            <p id="progress-result">Same encounters. Same neural seeds.</p>
+          </div>
+          <div class="chart-wrap">
+            <canvas
+              id="progress-chart"
+              role="img"
+              aria-label="Matched comparison of lives remaining over encounters, with and without memory."
+            ></canvas>
+          </div>
+          <div class="cohort-score">
+            <strong id="alive-count">16<span>/16</span></strong
+            ><small id="cohort-metric">ALIVE</small
+            ><span id="thriving-count">Goal: survive + 12 safe meals</span>
+          </div>
+        </section>
+        <div class="bottom-bar">
+          <details id="settings">
+            <summary>Retrieval lab <span>⌄</span></summary>
+            <div class="settings-grid">
+              <label
+                >Seed<input
+                  id="seed"
+                  type="number"
+                  value="2000"
+                  min="0"
+                  max="1000000"
+              /></label>
+              <label
+                >Similarity threshold <output id="threshold-label">0.60</output
+                ><input
+                  id="threshold"
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.01"
+                  value="0.6"
+              /></label>
+              <label
+                >Neighbors<select id="top-k">
+                  <option selected>1</option>
+                  <option>3</option>
+                  <option>5</option>
+                  <option>10</option>
+                </select></label
+              >
+              <label
+                >Representation<select id="representation">
+                  <option value="centered">Centered receptor responses</option>
+                  <option value="raw">Raw receptor responses</option>
+                </select></label
+              >
+              <label
+                >Control<select id="control">
+                  <option value="normal">Selected policy</option>
+                  <option value="exact">Exact match (no repeats)</option>
+                  <option value="shuffled">Random outcomes</option>
+                </select></label
+              >
+              <label
+                >Sensor noise <output id="noise-label">0.015</output
+                ><input
+                  id="noise"
+                  type="range"
+                  min="0"
+                  max="0.1"
+                  step="0.005"
+                  value="0.015"
+              /></label>
+              <label
+                >Distinguishing cue <output id="marker-label">30%</output
+                ><input
+                  id="marker"
+                  type="range"
+                  min="0"
+                  max="0.5"
+                  step="0.05"
+                  value="0.3"
+              /></label>
+              <label
+                >Evidence margin <output id="margin-label">0.00</output
+                ><input
+                  id="margin"
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.05"
+                  value="0"
+              /></label>
+            </div>
+            <p class="settings-note">
+              Changing a setting requires a new experiment. Seeds 2000 and 3000
+              form separate evaluation cohorts.
+            </p>
+          </details>
+          <details class="about">
+            <summary>What runs here?</summary>
+            <p>
+              Qdrant Edge performs every memory write, search, deletion, and
+              restoration locally. The Shiu et al. whole-brain model supplies
+              recorded feeding and halting responses. Verify live reruns one
+              second through all 127,400 neurons.
+            </p>
+            <p>
+              Recall drives bitter taste input through an engineered interface.
+              The brain's weights stay fixed. Odor mixtures, sickness, energy
+              requirements, movement, and the 10 Hz feeding gate are designed.
+              Odor vectors use measured DoOR single-odorant responses; the 30%
+              distinguishing cue is designed.
+            </p>
+            <p>
+              The brain view is a population activity schematic. The memory view
+              is a fixed projection; Qdrant searches all 24 dimensions. No
+              hazard label or position enters a query.
+            </p>
+            <a href="/api/docs">API</a> ·
+            <a
+              href="https://www.nature.com/articles/s41586-024-07763-9"
+              target="_blank"
+              rel="noreferrer"
+              >Brain model</a
+            >
+            ·
+            <a
+              href="https://qdrant.tech/documentation/edge/"
+              target="_blank"
+              rel="noreferrer"
+              >Qdrant Edge</a
+            >
+          </details>
+        </div>
+        <div id="error" role="alert" hidden></div>
+      </main>
+      <footer>
+        <span>SIMULATED FLY BRAIN, PERSISTENT TRAUMA</span
+        ><span>Shiu et al. · FlyWire v630 · DoOR · Qdrant Edge</span>
+      </footer>
+    </div>
+    <dialog id="intervention-dialog">
+      <button class="close" aria-label="Close memory experiment">×</button>
+      <div class="eyebrow">QDRANT EDGE / MEMORY INTERVENTION</div>
+      <h2>What if this memory disappeared?</h2>
+      <p id="intervention-context"></p>
+      <div id="intervention-results"></div>
+      <p id="intervention-verdict" role="status"></p>
+      <button id="live-surgery" class="primary">
+        Verify all three live (~30 s) ↗
+      </button>
+      <p class="dialog-note">
+        The exact pre-contact memory is reconstructed. The selected point is
+        deleted and restored through Qdrant. Connectivity, synaptic weights, and
+        neural seed stay fixed.
+      </p>
+    </dialog>
+    <dialog id="benchmark-dialog">
+      <button class="close" aria-label="Close comparison">×</button>
+      <div class="eyebrow">MATCHED COHORTS / REAL QDRANT QUERIES</div>
+      <h2>Memory has to earn its place.</h2>
+      <div id="benchmark-results"></div>
+      <p class="dialog-note">
+        Each policy starts empty. Every fly owns its history. All conditions use
+        the same potential encounters and recorded neural seeds. A life succeeds
+        only with survival and enough safe meals.
+      </p>
+    </dialog>
+    <script src="/static/fly.js"></script>
+    <script src="/static/app.js"></script>
+  </body>
+</html>

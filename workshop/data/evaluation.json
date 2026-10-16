@@ -1,0 +1,706 @@
+{
+  "neural_source": "recorded",
+  "engine": "Qdrant Edge 0.8.0",
+  "results": [
+    {
+      "config": {
+        "seed": 2000,
+        "mode": "none",
+        "flies": 16,
+        "encounters": 40,
+        "threshold": 0.6,
+        "top_k": 1,
+        "representation": "centered",
+        "noise": 0.015,
+        "marker": 0.3,
+        "margin": 0.0
+      },
+      "summary": {
+        "stimulus_counts": {
+          "0": 130,
+          "50": 0,
+          "100": 0,
+          "150": 0,
+          "200": 0
+        },
+        "recalled_but_fed": 0,
+        "total": 16,
+        "alive": 0,
+        "thriving": 0,
+        "minimum_safe_meals": 12,
+        "safe_meals": 82,
+        "poison_meals": 48,
+        "safe_refusals": 0,
+        "memories": 0,
+        "early_poison_meals": 48,
+        "late_poison_meals": 0
+      },
+      "wall_seconds": 1.947
+    },
+    {
+      "config": {
+        "seed": 2000,
+        "mode": "exact",
+        "flies": 16,
+        "encounters": 40,
+        "threshold": 0.6,
+        "top_k": 1,
+        "representation": "centered",
+        "noise": 0.015,
+        "marker": 0.3,
+        "margin": 0.0
+      },
+      "summary": {
+        "stimulus_counts": {
+          "0": 130,
+          "50": 0,
+          "100": 0,
+          "150": 0,
+          "200": 0
+        },
+        "recalled_but_fed": 0,
+        "total": 16,
+        "alive": 0,
+        "thriving": 0,
+        "minimum_safe_meals": 12,
+        "safe_meals": 82,
+        "poison_meals": 48,
+        "safe_refusals": 0,
+        "memories": 130,
+        "early_poison_meals": 48,
+        "late_poison_meals": 0
+      },
+      "wall_seconds": 1.665
+    },
+    {
+      "config": {
+        "seed": 2000,
+        "mode": "harm",
+        "flies": 16,
+        "encounters": 40,
+        "threshold": 0.6,
+        "top_k": 1,
+        "representation": "centered",
+        "noise": 0.015,
+        "marker": 0.3,
+        "margin": 0.0
+      },
+      "summary": {
+        "stimulus_counts": {
+          "0": 389,
+          "50": 0,
+          "100": 0,
+          "150": 56,
+          "200": 166
+        },
+        "recalled_but_fed": 3,
+        "total": 16,
+        "alive": 15,
+        "thriving": 15,
+        "minimum_safe_meals": 12,
+        "safe_meals": 359,
+        "poison_meals": 33,
+        "safe_refusals": 29,
+        "memories": 33,
+        "early_poison_meals": 31,
+        "late_poison_meals": 2
+      },
+      "wall_seconds": 1.722
+    },
+    {
+      "config": {
+        "seed": 2000,
+        "mode": "balanced",
+        "flies": 16,
+        "encounters": 40,
+        "threshold": 0.6,
+        "top_k": 1,
+        "representation": "centered",
+        "noise": 0.015,
+        "marker": 0.3,
+        "margin": 0.0
+      },
+      "summary": {
+        "stimulus_counts": {
+          "0": 414,
+          "50": 0,
+          "100": 0,
+          "150": 32,
+          "200": 165
+        },
+        "recalled_but_fed": 1,
+        "total": 16,
+        "alive": 15,
+        "thriving": 15,
+        "minimum_safe_meals": 12,
+        "safe_meals": 382,
+        "poison_meals": 33,
+        "safe_refusals": 6,
+        "memories": 415,
+        "early_poison_meals": 31,
+        "late_poison_meals": 2
+      },
+      "wall_seconds": 1.694
+    },
+    {
+      "config": {
+        "seed": 2000,
+        "mode": "shuffled",
+        "flies": 16,
+        "encounters": 40,
+        "threshold": 0.6,
+        "top_k": 1,
+        "representation": "centered",
+        "noise": 0.015,
+        "marker": 0.3,
+        "margin": 0.0
+      },
+      "summary": {
+        "stimulus_counts": {
+          "0": 109,
+          "50": 0,
+          "100": 0,
+          "150": 10,
+          "200": 58
+        },
+        "recalled_but_fed": 2,
+        "total": 16,
+        "alive": 0,
+        "thriving": 0,
+        "minimum_safe_meals": 12,
+        "safe_meals": 63,
+        "poison_meals": 48,
+        "safe_refusals": 50,
+        "memories": 111,
+        "early_poison_meals": 46,
+        "late_poison_meals": 2
+      },
+      "wall_seconds": 1.673
+    },
+    {
+      "config": {
+        "seed": 3000,
+        "mode": "none",
+        "flies": 16,
+        "encounters": 40,
+        "threshold": 0.6,
+        "top_k": 1,
+        "representation": "centered",
+        "noise": 0.015,
+        "marker": 0.3,
+        "margin": 0.0
+      },
+      "summary": {
+        "stimulus_counts": {
+          "0": 125,
+          "50": 0,
+          "100": 0,
+          "150": 0,
+          "200": 0
+        },
+        "recalled_but_fed": 0,
+        "total": 16,
+        "alive": 0,
+        "thriving": 0,
+        "minimum_safe_meals": 12,
+        "safe_meals": 77,
+        "poison_meals": 48,
+        "safe_refusals": 0,
+        "memories": 0,
+        "early_poison_meals": 48,
+        "late_poison_meals": 0
+      },
+      "wall_seconds": 1.288
+    },
+    {
+      "config": {
+        "seed": 3000,
+        "mode": "exact",
+        "flies": 16,
+        "encounters": 40,
+        "threshold": 0.6,
+        "top_k": 1,
+        "representation": "centered",
+        "noise": 0.015,
+        "marker": 0.3,
+        "margin": 0.0
+      },
+      "summary": {
+        "stimulus_counts": {
+          "0": 125,
+          "50": 0,
+          "100": 0,
+          "150": 0,
+          "200": 0
+        },
+        "recalled_but_fed": 0,
+        "total": 16,
+        "alive": 0,
+        "thriving": 0,
+        "minimum_safe_meals": 12,
+        "safe_meals": 77,
+        "poison_meals": 48,
+        "safe_refusals": 0,
+        "memories": 125,
+        "early_poison_meals": 48,
+        "late_poison_meals": 0
+      },
+      "wall_seconds": 1.603
+    },
+    {
+      "config": {
+        "seed": 3000,
+        "mode": "harm",
+        "flies": 16,
+        "encounters": 40,
+        "threshold": 0.6,
+        "top_k": 1,
+        "representation": "centered",
+        "noise": 0.015,
+        "marker": 0.3,
+        "margin": 0.0
+      },
+      "summary": {
+        "stimulus_counts": {
+          "0": 385,
+          "50": 0,
+          "100": 0,
+          "150": 38,
+          "200": 168
+        },
+        "recalled_but_fed": 5,
+        "total": 16,
+        "alive": 13,
+        "thriving": 13,
+        "minimum_safe_meals": 12,
+        "safe_meals": 355,
+        "poison_meals": 35,
+        "safe_refusals": 19,
+        "memories": 35,
+        "early_poison_meals": 32,
+        "late_poison_meals": 3
+      },
+      "wall_seconds": 1.644
+    },
+    {
+      "config": {
+        "seed": 3000,
+        "mode": "balanced",
+        "flies": 16,
+        "encounters": 40,
+        "threshold": 0.6,
+        "top_k": 1,
+        "representation": "centered",
+        "noise": 0.015,
+        "marker": 0.3,
+        "margin": 0.0
+      },
+      "summary": {
+        "stimulus_counts": {
+          "0": 356,
+          "50": 0,
+          "100": 0,
+          "150": 14,
+          "200": 134
+        },
+        "recalled_but_fed": 3,
+        "total": 16,
+        "alive": 7,
+        "thriving": 7,
+        "minimum_safe_meals": 12,
+        "safe_meals": 318,
+        "poison_meals": 41,
+        "safe_refusals": 3,
+        "memories": 359,
+        "early_poison_meals": 34,
+        "late_poison_meals": 7
+      },
+      "wall_seconds": 1.682
+    },
+    {
+      "config": {
+        "seed": 3000,
+        "mode": "shuffled",
+        "flies": 16,
+        "encounters": 40,
+        "threshold": 0.6,
+        "top_k": 1,
+        "representation": "centered",
+        "noise": 0.015,
+        "marker": 0.3,
+        "margin": 0.0
+      },
+      "summary": {
+        "stimulus_counts": {
+          "0": 150,
+          "50": 0,
+          "100": 0,
+          "150": 17,
+          "200": 177
+        },
+        "recalled_but_fed": 3,
+        "total": 16,
+        "alive": 4,
+        "thriving": 3,
+        "minimum_safe_meals": 12,
+        "safe_meals": 109,
+        "poison_meals": 44,
+        "safe_refusals": 103,
+        "memories": 153,
+        "early_poison_meals": 39,
+        "late_poison_meals": 5
+      },
+      "wall_seconds": 1.695
+    },
+    {
+      "config": {
+        "seed": 4000,
+        "mode": "none",
+        "flies": 16,
+        "encounters": 40,
+        "threshold": 0.6,
+        "top_k": 1,
+        "representation": "centered",
+        "noise": 0.015,
+        "marker": 0.3,
+        "margin": 0.0
+      },
+      "summary": {
+        "stimulus_counts": {
+          "0": 143,
+          "50": 0,
+          "100": 0,
+          "150": 0,
+          "200": 0
+        },
+        "recalled_but_fed": 0,
+        "total": 16,
+        "alive": 0,
+        "thriving": 0,
+        "minimum_safe_meals": 12,
+        "safe_meals": 95,
+        "poison_meals": 48,
+        "safe_refusals": 0,
+        "memories": 0,
+        "early_poison_meals": 48,
+        "late_poison_meals": 0
+      },
+      "wall_seconds": 1.289
+    },
+    {
+      "config": {
+        "seed": 4000,
+        "mode": "exact",
+        "flies": 16,
+        "encounters": 40,
+        "threshold": 0.6,
+        "top_k": 1,
+        "representation": "centered",
+        "noise": 0.015,
+        "marker": 0.3,
+        "margin": 0.0
+      },
+      "summary": {
+        "stimulus_counts": {
+          "0": 143,
+          "50": 0,
+          "100": 0,
+          "150": 0,
+          "200": 0
+        },
+        "recalled_but_fed": 0,
+        "total": 16,
+        "alive": 0,
+        "thriving": 0,
+        "minimum_safe_meals": 12,
+        "safe_meals": 95,
+        "poison_meals": 48,
+        "safe_refusals": 0,
+        "memories": 143,
+        "early_poison_meals": 48,
+        "late_poison_meals": 0
+      },
+      "wall_seconds": 1.62
+    },
+    {
+      "config": {
+        "seed": 4000,
+        "mode": "harm",
+        "flies": 16,
+        "encounters": 40,
+        "threshold": 0.6,
+        "top_k": 1,
+        "representation": "centered",
+        "noise": 0.015,
+        "marker": 0.3,
+        "margin": 0.0
+      },
+      "summary": {
+        "stimulus_counts": {
+          "0": 414,
+          "50": 0,
+          "100": 0,
+          "150": 51,
+          "200": 152
+        },
+        "recalled_but_fed": 5,
+        "total": 16,
+        "alive": 14,
+        "thriving": 14,
+        "minimum_safe_meals": 12,
+        "safe_meals": 385,
+        "poison_meals": 34,
+        "safe_refusals": 27,
+        "memories": 34,
+        "early_poison_meals": 31,
+        "late_poison_meals": 3
+      },
+      "wall_seconds": 1.621
+    },
+    {
+      "config": {
+        "seed": 4000,
+        "mode": "balanced",
+        "flies": 16,
+        "encounters": 40,
+        "threshold": 0.6,
+        "top_k": 1,
+        "representation": "centered",
+        "noise": 0.015,
+        "marker": 0.3,
+        "margin": 0.0
+      },
+      "summary": {
+        "stimulus_counts": {
+          "0": 430,
+          "50": 0,
+          "100": 0,
+          "150": 19,
+          "200": 144
+        },
+        "recalled_but_fed": 1,
+        "total": 16,
+        "alive": 13,
+        "thriving": 13,
+        "minimum_safe_meals": 12,
+        "safe_meals": 396,
+        "poison_meals": 35,
+        "safe_refusals": 3,
+        "memories": 431,
+        "early_poison_meals": 32,
+        "late_poison_meals": 3
+      },
+      "wall_seconds": 1.776
+    },
+    {
+      "config": {
+        "seed": 4000,
+        "mode": "shuffled",
+        "flies": 16,
+        "encounters": 40,
+        "threshold": 0.6,
+        "top_k": 1,
+        "representation": "centered",
+        "noise": 0.015,
+        "marker": 0.3,
+        "margin": 0.0
+      },
+      "summary": {
+        "stimulus_counts": {
+          "0": 164,
+          "50": 0,
+          "100": 0,
+          "150": 36,
+          "200": 205
+        },
+        "recalled_but_fed": 3,
+        "total": 16,
+        "alive": 8,
+        "thriving": 5,
+        "minimum_safe_meals": 12,
+        "safe_meals": 127,
+        "poison_meals": 40,
+        "safe_refusals": 145,
+        "memories": 167,
+        "early_poison_meals": 38,
+        "late_poison_meals": 2
+      },
+      "wall_seconds": 1.747
+    },
+    {
+      "config": {
+        "seed": 5000,
+        "mode": "none",
+        "flies": 16,
+        "encounters": 40,
+        "threshold": 0.6,
+        "top_k": 1,
+        "representation": "centered",
+        "noise": 0.015,
+        "marker": 0.3,
+        "margin": 0.0
+      },
+      "summary": {
+        "stimulus_counts": {
+          "0": 154,
+          "50": 0,
+          "100": 0,
+          "150": 0,
+          "200": 0
+        },
+        "recalled_but_fed": 0,
+        "total": 16,
+        "alive": 0,
+        "thriving": 0,
+        "minimum_safe_meals": 12,
+        "safe_meals": 106,
+        "poison_meals": 48,
+        "safe_refusals": 0,
+        "memories": 0,
+        "early_poison_meals": 46,
+        "late_poison_meals": 2
+      },
+      "wall_seconds": 1.421
+    },
+    {
+      "config": {
+        "seed": 5000,
+        "mode": "exact",
+        "flies": 16,
+        "encounters": 40,
+        "threshold": 0.6,
+        "top_k": 1,
+        "representation": "centered",
+        "noise": 0.015,
+        "marker": 0.3,
+        "margin": 0.0
+      },
+      "summary": {
+        "stimulus_counts": {
+          "0": 154,
+          "50": 0,
+          "100": 0,
+          "150": 0,
+          "200": 0
+        },
+        "recalled_but_fed": 0,
+        "total": 16,
+        "alive": 0,
+        "thriving": 0,
+        "minimum_safe_meals": 12,
+        "safe_meals": 106,
+        "poison_meals": 48,
+        "safe_refusals": 0,
+        "memories": 154,
+        "early_poison_meals": 46,
+        "late_poison_meals": 2
+      },
+      "wall_seconds": 1.603
+    },
+    {
+      "config": {
+        "seed": 5000,
+        "mode": "harm",
+        "flies": 16,
+        "encounters": 40,
+        "threshold": 0.6,
+        "top_k": 1,
+        "representation": "centered",
+        "noise": 0.015,
+        "marker": 0.3,
+        "margin": 0.0
+      },
+      "summary": {
+        "stimulus_counts": {
+          "0": 380,
+          "50": 0,
+          "100": 0,
+          "150": 72,
+          "200": 160
+        },
+        "recalled_but_fed": 6,
+        "total": 16,
+        "alive": 14,
+        "thriving": 14,
+        "minimum_safe_meals": 12,
+        "safe_meals": 352,
+        "poison_meals": 34,
+        "safe_refusals": 56,
+        "memories": 34,
+        "early_poison_meals": 28,
+        "late_poison_meals": 6
+      },
+      "wall_seconds": 1.624
+    },
+    {
+      "config": {
+        "seed": 5000,
+        "mode": "balanced",
+        "flies": 16,
+        "encounters": 40,
+        "threshold": 0.6,
+        "top_k": 1,
+        "representation": "centered",
+        "noise": 0.015,
+        "marker": 0.3,
+        "margin": 0.0
+      },
+      "summary": {
+        "stimulus_counts": {
+          "0": 431,
+          "50": 0,
+          "100": 0,
+          "150": 25,
+          "200": 156
+        },
+        "recalled_but_fed": 1,
+        "total": 16,
+        "alive": 14,
+        "thriving": 14,
+        "minimum_safe_meals": 12,
+        "safe_meals": 398,
+        "poison_meals": 34,
+        "safe_refusals": 10,
+        "memories": 432,
+        "early_poison_meals": 28,
+        "late_poison_meals": 6
+      },
+      "wall_seconds": 1.829
+    },
+    {
+      "config": {
+        "seed": 5000,
+        "mode": "shuffled",
+        "flies": 16,
+        "encounters": 40,
+        "threshold": 0.6,
+        "top_k": 1,
+        "representation": "centered",
+        "noise": 0.015,
+        "marker": 0.3,
+        "margin": 0.0
+      },
+      "summary": {
+        "stimulus_counts": {
+          "0": 144,
+          "50": 0,
+          "100": 0,
+          "150": 22,
+          "200": 163
+        },
+        "recalled_but_fed": 2,
+        "total": 16,
+        "alive": 4,
+        "thriving": 1,
+        "minimum_safe_meals": 12,
+        "safe_meals": 102,
+        "poison_meals": 44,
+        "safe_refusals": 117,
+        "memories": 146,
+        "early_poison_meals": 40,
+        "late_poison_meals": 4
+      },
+      "wall_seconds": 1.669
+    }
+  ]
+}

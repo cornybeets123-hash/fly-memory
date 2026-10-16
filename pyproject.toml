@@ -1,0 +1,32 @@
+[project]
+name = "fly-memory-workshop"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "fastapi>=0.143.2",
+    "numpy>=2.4.6",
+    "qdrant-edge-py==0.8.0",
+    "uvicorn[standard]>=0.54.0",
+]
+
+[project.optional-dependencies]
+legacy = ["qdrant-client==1.19.1", "matplotlib"]
+brain = [
+    "brian2==2.10.1",
+    "joblib>=1.6.0",
+    "pandas>=3.0.6",
+    "pyarrow>=26.0.0",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+
+[tool.ruff]
+target-version = "py312"
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "pytest>=9.1.1",
+    "ruff>=0.17.1",
+]
