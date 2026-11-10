@@ -1,6 +1,6 @@
 # Present the workshop
 
-[Google Slides](https://docs.google.com/presentation/d/1aj-Nia6P6c8aZw6a_gu1u8tqcZn0tQ2mNLOttiZOWCI/edit) · [PDF](slides.pdf) · [Download](https://drive.google.com/file/d/1OQzqriEYKj4KyG4AuuVJOAPegMhSYkqY/view)
+[Google Slides](https://docs.google.com/presentation/d/1aj-Nia6P6c8aZw6a_gu1u8tqcZn0tQ2mNLOttiZOWCI/edit) · [PDF](slides.pdf) · [Repository](https://github.com/Dylancouzon/fly-memory) · [ZIP fallback](https://drive.google.com/file/d/1OQzqriEYKj4KyG4AuuVJOAPegMhSYkqY/view)
 
 **45 minutes. 16 slides. Two presenter-led builds.** Attendees can watch or use the same files.
 
@@ -9,6 +9,8 @@
 Use Python 3.12, Node.js 22.18 or later, and uv.
 
 ```sh
+git clone --depth 1 https://github.com/Dylancouzon/fly-memory.git
+cd fly-memory
 uv sync --locked
 uv run run.py
 ```
@@ -16,6 +18,8 @@ uv run run.py
 Open http://127.0.0.1:8766. Confirm **Your code**. Open `memory.py`, `pipeline.py`, and `fly_brain.py` in the editor.
 
 Rehearse with `uv run run.py --solution`. Stop that server before the coding session. Keep `slides.pdf` and `fly-memory-offline.html` ready.
+
+Show the opening QR before the session. It opens the repository and setup instructions. Attendees can watch or clone the files. Complete installation before the first build. Keep the ZIP as a fallback.
 
 ## Run of show
 
@@ -53,6 +57,8 @@ The opening No memory demo supplies no records to Personal memory. **Run again r
 
 ## Build one
 
+Ask: "Which record can we store, and when does it become eligible?"
+
 Replace `remember` and `recall` in `memory.py`. Keep the supplied consumer.
 
 ```python
@@ -75,9 +81,11 @@ def recall(shard, vector, scope):
 uv run run.py --check personal
 ```
 
-Save. Select **Personal memory**. Select **A6**. Click **Replay memory** after its first match. Point to **A6 observed it. A6 uses it.** The neural choice input changes from **30/30 Hz** to **0/30 Hz**.
+Save. Select **Personal memory**. Select **A6**. Click **Replay memory** after its first match. Point to the matching views and the **A6** memory source. Inspect evidence contains the observed outcome. The crossed-out left input changes from **30 Hz** to **0 Hz**. The right input stays at **30 Hz**. The green arrow shows the actual neural choice.
 
 ## Build two
+
+Ask: "Whose observations can B6 retrieve, and why can it use no new B observations?"
 
 Replace `scope` in `pipeline.py`.
 
@@ -98,7 +106,7 @@ def scope(world, protocol, fly, shared=False):
 uv run run.py --check shared
 ```
 
-Save. Select **Shared memory**. Click **Replay memory**. Select **B6**. Point to the A source and B consumer. The new group uses completed A observations before entering those routes.
+Save. Select **Shared memory**. Click **Replay memory**. Select **B6**. Point to the A source beneath the memory view and the B owner beside the brain. The new group uses completed A observations before entering those routes.
 
 ## Controls and recovery
 
@@ -108,7 +116,11 @@ The opening group uses eight declared seeds, **300–307**. A6/B6 is selected fi
 
 Select a numbered fly to inspect its brain and retrieval. The large counter shows the group’s exits. A green line under a fly means it exited. Pink means its time expired.
 
-Show the query view, returned observation, source, **Returned**, **Cosine**, and **Search · ms**. Cosine measures visual similarity. It is not a success probability. Search time measures the local Qdrant call. It excludes encoding and neural computation. **Inspect evidence** shows ranked records and raw data.
+Every marker is a fly. The larger fly with a halo is selected. Thumbnails align with the maze. The outlined area marks the query capture. Query and stored views keep their distinct captured positions.
+
+Show the query view, returned observation, source, **Matches**, **Cosine**, and **Search · ms**. The card keeps the last applied match visible under **Last memory use**. **Brain input then** and **Choice then** belong to that time. Before a match, it shows the latest junction. The brain canvas and lower turn arrow show the current frame under **Now**. The connector appears only when both displays refer to the same frame.
+
+Cosine measures visual similarity. It is not a success probability. Search time measures the local Qdrant call. It excludes encoding and neural computation. **Inspect evidence** shows ranked records and raw data.
 
 Press **R** to run the selected mode. Press **Space** to pause. Use **1**, **2**, and **3** to select stages in order. The speed button cycles through 2×, 1×, and 4× display speed. The display continues through memory events. Pause manually or select Replay memory to explain a match.
 
@@ -116,7 +128,7 @@ Each click streams all eight independent brains and actual Qdrant queries on one
 
 If a build fails, read the displayed error and run its `--check` command. Use the completed functions here for recovery. Restart with `--solution` when you need to skip coding.
 
-Optional: select **Disconnect steering**. Input and spikes still compute. Physical yaw and branch readout become zero. The attempt ends when the brain cannot select an option. Restore the connection before continuing.
+Optional in the live demo: open **Inspect evidence**, then select **Disconnect steering**. This control stays hidden in the recorded fallback. The dialog closes and the main display states **Steering disconnected**. Input and spikes still compute. Physical yaw and branch readout become zero. The attempt ends when the brain cannot select an option. Restore the connection before continuing.
 
 ## Explain the boundary
 

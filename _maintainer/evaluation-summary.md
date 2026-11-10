@@ -16,7 +16,7 @@ The opening development group uses seeds 300–307. It produced four exits witho
 
 The UI reports each local Qdrant call in milliseconds. This includes request and filter handling. It excludes image encoding and neural computation. These tiny local searches do not measure production-scale latency. Cosine measures descriptor similarity, not outcome probability.
 
-The brain can turn left or right with equal sensory input. Its learned wiring and noise create a left bias. Retrieval changes the sensory input to fixed neural wiring. The application supplies perception, the option mapping, and forward motion.
+The brain can turn left or right with equal sensory input. Its fixed wiring and noise create a left bias. Retrieval changes the sensory input to fixed neural wiring. The application supplies perception, the option mapping, and forward motion.
 
 The independent dense neural checks passed four cases, including persistent state. The earlier controller ablations and paired single-fly audit remain in `_internal/archive/three-fork-single-evaluation/`. They use a different shared-pool protocol.
 

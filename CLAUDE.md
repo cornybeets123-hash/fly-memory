@@ -6,7 +6,7 @@ Read `~/.claude/CLAUDE.md` and [AGENTS.md](AGENTS.md). They own the shared guida
 
 This is a 45-minute conference workshop for AI builders, including retrieval beginners. Teach retrieval through a fun worked example. Prioritize intuitive visuals, visible evidence, and transfer to other workloads. Keep Qdrant branding accurate and avoid sales language.
 
-The flow is: context, no-memory demo, retrieval lesson, personal-memory build, personal demo, shared-memory lesson, shared-memory build, shared demo, and conclusion. The presenter codes; attendees can download the same files. The 16 Google Slides use minimal text, diagrams, and detailed notes. Use the same fly views throughout the concepts. Keep the visuals simple while teaching the technical mechanisms. The demos teach behavior; the slides teach how retrieval works and which design choices matter. Use short formulas, signatures, field names, and predicates when they explain the mechanism. Keep full executable functions in speaker notes and the editor. Repeat a visual when it explains a new step or a useful comparison. The conclusion maps the design choices to other systems.
+The flow is: context, no-memory demo, retrieval lesson, personal-memory build, personal demo, shared-memory lesson, shared-memory build, shared demo, and conclusion. The presenter codes; attendees clone the same repository before the session. The ZIP remains a fallback. The 16 Google Slides use minimal text, diagrams, and detailed notes. Use the same fly views throughout the concepts. Keep the visuals simple while teaching the technical mechanisms. The demos teach behavior; the slides teach how retrieval works and which design choices matter. Use short formulas, signatures, field names, and predicates when they explain the mechanism. Keep full executable functions in speaker notes and the editor. Repeat a visual when it explains a new step or a useful comparison. The conclusion maps the design choices to other systems.
 
 ## Edit surfaces
 
@@ -34,7 +34,7 @@ Show actual returns, cosine scores, local query-call times, and spikes. Cosine m
 
 The opening group uses seeds 300–307 and focuses A6/B6. It produced four, six, and eight exits across the stages. **New group** samples fresh seeds. The held-out evaluation uses 50000–50015: 5/16, 9/16, and 16/16 exits within 65 seconds. See [evaluation details](_maintainer/evaluation-summary.md) for full measures and limitations.
 
-The last release passed 14 Python tests, three JavaScript checks, four dense neural checks, and the ownership audit. Astra found no route fallback or blocker. Work inline. Dylan rejected repeated or parallel reviews. Preserve the current design during manual finishing.
+The current checks cover 22 Python tests, 23 JavaScript checks, four dense neural checks, and the ownership audit. Astra found no route fallback or blocker. Work inline. Dylan rejected repeated or parallel reviews. Preserve the current design during manual finishing.
 
 Start with [the presenter guide](_maintainer/presenter.md) for timing, exact builds, controls, and recovery. [Slide notes](_maintainer/slides.json) contain the lesson details.
 
@@ -54,7 +54,7 @@ uv run run.py --export                # Recompute offline playback and build the
 Keep the native deck, notes, PDF, offline HTML, and ZIP synchronized. Export writes `_internal/artifacts/fly-memory-workshop.zip`.
 
 - [Google Slides](https://docs.google.com/presentation/d/1aj-Nia6P6c8aZw6a_gu1u8tqcZn0tQ2mNLOttiZOWCI/edit)
-- [Existing public ZIP](https://drive.google.com/file/d/1OQzqriEYKj4KyG4AuuVJOAPegMhSYkqY/view). Replace its bytes to preserve the slide QR link.
+- [Existing public ZIP](https://drive.google.com/file/d/1OQzqriEYKj4KyG4AuuVJOAPegMhSYkqY/view). Keep its fallback URL stable. The opening and closing QR codes point to the repository.
 
 The live display streams all eight flies without automatic event holds. The ten-seed gate and opening-group frames match the previous release. Live stream, ownership, and cancellation checks passed.
 

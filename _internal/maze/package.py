@@ -2,6 +2,7 @@
 
 import base64
 import json
+import re
 from pathlib import Path
 from zipfile import ZIP_DEFLATED, ZipFile
 
@@ -46,7 +47,7 @@ def backup():
     ).decode()
     css = css.replace("/assets/fonts/mona.woff2", f"data:font/woff2;base64,{font}")
     html = html.replace(
-        '<link rel="stylesheet" href="/static/style.css?v=10">', f"<style>{css}</style>"
+        '<link rel="stylesheet" href="/static/style.css?v=13">', f"<style>{css}</style>"
     )
     for name in ("qdrant-mark.svg",):
         encoded = base64.b64encode(
@@ -59,11 +60,19 @@ def backup():
     )
     data = json.dumps(dataset, separators=(",", ":")).replace("</", "<\\/")
     html = html.replace(
-        '<script src="/static/app.js?v=10"></script>',
+        '<script src="/static/app.js?v=13"></script>',
         f"<script>window.WORKSHOP_DATA={data};</script><script>"
         + (server.STATIC / "app.js").read_text()
         + "</script>",
     )
+    if (
+        "/static/" in html
+        or "window.WORKSHOP_DATA=" not in html
+        or re.search(r"\b(?:src|href)\s*=\s*[\"']/assets/", html)
+    ):
+        raise ValueError(
+            "The offline export still depends on live assets or lacks recorded data."
+        )
     output = MAINTAINER / "fly-memory-offline.html"
     output.write_text(html)
     evidence = ROOT / "_internal/artifacts/maze-slides/demo.json"

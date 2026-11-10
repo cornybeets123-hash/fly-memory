@@ -12,3 +12,6 @@ The project gallery shows related fly-connectome projects. They use different da
 | `lesson-first.png`, `lesson-query.png`, `lesson-stored.png` | This workshop, A6, personal-memory stage, seed 305. | Retain the unmodified first-visit, query, and stored capture pixels. The stored view led back across START. |
 
 Sources were inspected on November 9, 2026. The screenshots illustrate the projects; they do not establish biological fidelity or reproduce their experiments. Project names and images retain their creators' rights. NeuroCraft Fly software uses MIT; Minecraft assets retain their separate terms. See each linked project for its notices.
+
+
+`repository-qr.png` encodes https://github.com/Dylancouzon/fly-memory . Generated locally with the qrcode package. The opening and closing slides use the same repository destination.

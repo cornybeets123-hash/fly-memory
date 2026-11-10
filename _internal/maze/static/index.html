@@ -1,13 +1,13 @@
 <!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Find the exit · Fly memory</title><link rel="icon" href="/assets/qdrant-mark.svg"><link rel="stylesheet" href="/static/style.css?v=10"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Find the exit · Fly memory</title><link rel="icon" href="/assets/qdrant-mark.svg"><link rel="stylesheet" href="/static/style.css?v=13"></head>
 <body>
 <header>
   <div class="brand"><img src="/assets/qdrant-mark.svg" alt="Qdrant"><h1>Find the exit.</h1></div>
   <nav aria-label="Workshop stages">
-    <button class="stage selected" data-mode="none" aria-pressed="true"><span>01</span> No memory</button>
-    <button class="stage" data-mode="personal" aria-pressed="false"><span>02</span> Personal memory</button>
-    <button class="stage" data-mode="shared" aria-pressed="false"><span>03</span> Shared memory</button>
+    <button class="stage selected" data-mode="none" aria-pressed="true">No memory</button>
+    <button class="stage" data-mode="personal" aria-pressed="false">Personal memory</button>
+    <button class="stage" data-mode="shared" aria-pressed="false">Shared memory</button>
   </nav>
   <button id="fullscreen" class="icon" aria-label="Full screen" title="Full screen">⛶</button>
 </header>
@@ -16,36 +16,37 @@
     <div class="arena-heading"><div><p class="eyebrow" id="chapter">MEMORY IS OFF</p><h2 id="headline">Can it find the exit?</h2></div><div class="group-score"><strong id="group-result">0/8</strong><span>reached exit</span></div><div id="timer">0.0<span>s</span></div></div>
     <div id="fly-selector" role="group" aria-label="Select a fly to inspect"></div>
     <canvas id="world" role="img" aria-label="The fly explores a maze toward its exit."></canvas>
-    <div id="scene-caption" aria-live="polite">Find the exit. The fly sees only nearby openings.</div>
     <div class="arena-footer"><span class="legend"><i class="hero-dot"></i><b id="hero-name">Fly A</b><span id="playback-source"></span><span id="ghost-key" hidden><i class="ghost-dot"></i> No-memory ghost</span></span><span class="result" id="result"></span></div>
     <div class="computing" id="computing" hidden><span class="spinner"></span><p id="computing-label">Computing neural activity…</p></div>
   </section>
-  <aside>
-    <section class="memory-panel" aria-label="Retrieval evidence">
-      <div class="panel-heading"><span class="eyebrow">QDRANT EDGE</span><span id="memory-count">Memory off</span></div>
-      <h3 id="memory-title">Every visit is a fresh choice.</h3>
+  <aside id="retrieval-flow" aria-label="Retrieval and neural response">
+    <section class="memory-panel" aria-label="Retained junction evidence">
+      <div class="panel-heading"><h3><img src="/assets/qdrant-mark.svg" alt="">Qdrant Edge</h3><span id="memory-count">Memory off</span></div>
+      <div class="junction-heading"><span id="junction-time">Last junction · —</span></div>
       <div class="evidence" id="evidence">
-        <figure><div class="view" id="current-view"><span>?</span></div><figcaption id="current-caption">Current view</figcaption></figure>
-        <div class="comparison" aria-hidden="true"><img src="/assets/qdrant-mark.svg" alt=""></div>
-        <figure><div class="view" id="stored-view"><span>?</span></div><figcaption id="stored-caption">From memory</figcaption></figure>
+        <figure><div class="view" id="current-view"><span>—</span></div><figcaption id="current-caption">View</figcaption></figure>
+        <div class="comparison" aria-hidden="true">→</div>
+        <figure><div class="view" id="stored-view"><span>—</span></div><figcaption id="stored-caption">Memory</figcaption></figure>
       </div>
-      <div class="search-metrics"><div><strong id="returned-count">—</strong><span>Returned</span></div><div><strong id="cosine-score">—</strong><span>Cosine</span></div><div><strong id="search-time">—</strong><span>Search · ms</span></div></div>
-      <div class="evidence-result" id="evidence-result">No stored experience yet.</div>
-      <div class="provenance" id="provenance"></div><button id="replay-memory" hidden>Replay memory</button>
+      <div class="search-metrics"><div><strong id="returned-count">—</strong><span>Matches</span></div><div><strong id="cosine-score">—</strong><span>Cosine</span></div><div><strong id="search-time">—</strong><span>Search · ms</span></div></div>
     </section>
-    <section class="brain-panel" aria-label="Actual neural activity">
-      <div class="panel-heading"><span class="eyebrow">THE FLY BRAIN MODEL</span><span>138,639 neurons</span></div>
-      <canvas id="brain" role="img" aria-label="Computed spikes at actual FlyWire neuron positions."></canvas>
-      <div class="steering"><div><span>Left</span><div class="bar"><i id="left-bar"></i></div></div><strong id="turn">Straight</strong><div><span>Right</span><div class="bar"><i id="right-bar"></i></div></div></div>
-      <div class="brain-note"><span id="input">Steering input: 0 / 0 Hz</span><button id="disconnect" aria-pressed="false">Disconnect steering</button></div>
+    <section class="input-panel" id="input-panel" aria-label="Sensory input at the shown junction">
+      <span class="flow-arrow" aria-hidden="true">↓</span>
+      <div class="input-heading"><span>Brain input then</span><div class="choice-heading"><span>Choice then</span><strong id="decision-choice" role="img" aria-label="Waiting for a neural decision.">—</strong></div></div>
+      <div class="input-options"><div id="left-option"><span>Left</span><strong id="left-input">—</strong><span>Hz</span><i></i></div><div id="right-option"><span>Right</span><strong id="right-input">—</strong><span>Hz</span><i></i></div></div>
+    </section>
+    <section class="brain-panel" aria-label="Current neural activity">
+      <div class="panel-heading"><h3>Fly brain <span id="brain-owner"></span></h3><span id="brain-time">Now · 0.0 s</span></div>
+      <span id="spike-source" class="spike-caption">Computed spikes</span><canvas id="brain" role="img" aria-label="Computed spikes at actual FlyWire neuron positions."></canvas>
+      <div class="steering"><div><span>Left readout</span><div class="bar"><i id="left-bar"></i></div></div><strong id="turn" role="img" aria-label="Current turn">↑</strong><div><span>Right readout</span><div class="bar"><i id="right-bar"></i></div></div></div>
     </section>
   </aside>
 </main>
 <footer>
   <div class="controls"><button id="run" class="primary">Run the demo <span>↵</span></button><button id="pause" disabled>Pause</button><button id="speed" aria-label="Simulation display speed 2 times. Change speed.">2× speed</button></div>
   <p id="message" role="status" aria-live="polite">Start with the first attempt.</p>
-  <button id="inspect">Inspect evidence</button>
+  <div class="evidence-controls"><button id="replay-memory" hidden>Replay memory</button><button id="inspect">Inspect evidence</button></div>
 </footer>
-<dialog id="inspector"><button id="close-inspector" class="close" aria-label="Close evidence">×</button><h2>The computation behind this run</h2><p>Computed neural spikes and actual Qdrant results drive this display.</p><div id="retrieval-table"></div><p>Cosine measures view similarity. Search time includes the local Qdrant call. It excludes image encoding and brain computation.</p><details><summary>Raw evidence</summary><pre id="details"></pre></details></dialog>
-<script src="/assets/fly.js"></script><script src="/static/app.js?v=10"></script>
+<dialog id="inspector"><button id="close-inspector" class="close" aria-label="Close evidence">×</button><h2>The computation behind this run</h2><p>The fixed model integrates 138,639 neurons. Actual Qdrant results change its sensory input. The evidence below belongs to the displayed junction. Thumbnails use the maze orientation. The outlined area marks the query capture. Original captures and hashes remain unchanged.</p><p id="memory-title">Run the demo to inspect a junction.</p><p id="policy"></p><p id="provenance"></p><div id="retrieval-table"></div><p>Cosine measures view similarity. Search time includes the local Qdrant call. It excludes image encoding and brain computation.</p><div class="brain-note"><span id="input">Steering input: 0 / 0 Hz</span><button id="disconnect" aria-pressed="false">Disconnect steering</button></div><details><summary>Raw evidence</summary><pre id="details"></pre></details></dialog>
+<script src="/assets/fly.js"></script><script src="/static/app.js?v=13"></script>
 </body></html>
