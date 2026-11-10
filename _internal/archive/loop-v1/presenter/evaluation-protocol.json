@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "declared_before_evaluation": true,
+  "scope": "Engineered partial-visibility refuge task, not biological survival validation.",
+  "seeds": [10000,10001,10002,10003,10004,10005,10006,10007,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10019],
+  "control_seeds": [10000,10001,10002,10003,10004],
+  "modes": ["none","personal","shared"],
+  "controls": ["no_replay","no_motor","disconnect","irrelevant_replay","remove_safe","remove_donor","always_escape"],
+  "clearance_sensitivity_ms": [20,45,90],
+  "gates": {
+    "shared_harm_below_personal_below_none": true,
+    "safe_feeding_retained_pct_min": 95,
+    "shared_false_jump_rate_max": 0.05,
+    "natural_input_hashes_match": true,
+    "baseline_clear_view_escapes": true,
+    "removing_safe_evidence_causes_false_escapes": true,
+    "always_escape_loses_safe_feeding": true,
+    "muted_replay_removes_early_action": true,
+    "muted_motor_prevents_all_escape": true
+  }
+}

@@ -1,0 +1,1100 @@
+{
+  "computation_hash": "d2848943e90c18c33752f3d86aef7c3405c973842952874cf71f3e6f1ec56b2a",
+  "protocol": {
+    "version": 1,
+    "declared_before_evaluation": true,
+    "scope": "Engineered partial-visibility refuge task, not biological survival validation.",
+    "seeds": [
+      10000,
+      10001,
+      10002,
+      10003,
+      10004,
+      10005,
+      10006,
+      10007,
+      10008,
+      10009,
+      10010,
+      10011,
+      10012,
+      10013,
+      10014,
+      10015,
+      10016,
+      10017,
+      10018,
+      10019
+    ],
+    "control_seeds": [
+      10000,
+      10001,
+      10002,
+      10003,
+      10004
+    ],
+    "modes": [
+      "none",
+      "personal",
+      "shared"
+    ],
+    "controls": [
+      "no_replay",
+      "no_motor",
+      "disconnect",
+      "irrelevant_replay",
+      "remove_safe",
+      "remove_donor",
+      "always_escape"
+    ],
+    "clearance_sensitivity_ms": [
+      20,
+      45,
+      90
+    ],
+    "gates": {
+      "shared_harm_below_personal_below_none": true,
+      "safe_feeding_retained_pct_min": 95,
+      "shared_false_jump_rate_max": 0.05,
+      "natural_input_hashes_match": true,
+      "baseline_clear_view_escapes": true,
+      "removing_safe_evidence_causes_false_escapes": true,
+      "always_escape_loses_safe_feeding": true,
+      "muted_replay_removes_early_action": true,
+      "muted_motor_prevents_all_escape": true
+    }
+  },
+  "means": {
+    "none": {
+      "survivors": 0,
+      "hits": 12,
+      "false_jumps": 0,
+      "safe_feeding_ms": 5400,
+      "safe_feeding_available_ms": 5400,
+      "safe_feeding_retained_pct": 100.0
+    },
+    "personal": {
+      "survivors": 6,
+      "hits": 6,
+      "false_jumps": 0,
+      "safe_feeding_ms": 5400,
+      "safe_feeding_available_ms": 5400,
+      "safe_feeding_retained_pct": 100.0
+    },
+    "shared": {
+      "survivors": 6,
+      "hits": 0,
+      "false_jumps": 0,
+      "safe_feeding_ms": 5400,
+      "safe_feeding_available_ms": 5400,
+      "safe_feeding_retained_pct": 100.0
+    }
+  },
+  "controls": {
+    "no_replay": {
+      "survivors": 0,
+      "hits": 12,
+      "false_jumps": 0,
+      "safe_feeding_ms": 5400,
+      "safe_feeding_available_ms": 5400,
+      "safe_feeding_retained_pct": 100.0
+    },
+    "no_motor": {
+      "survivors": 0,
+      "hits": 12,
+      "false_jumps": 0,
+      "safe_feeding_ms": 3600,
+      "safe_feeding_available_ms": 5400,
+      "safe_feeding_retained_pct": 66.7
+    },
+    "disconnect": {
+      "survivors": 0,
+      "hits": 12,
+      "false_jumps": 0,
+      "safe_feeding_ms": 3600,
+      "safe_feeding_available_ms": 5400,
+      "safe_feeding_retained_pct": 66.7
+    },
+    "irrelevant_replay": {
+      "survivors": 0,
+      "hits": 12,
+      "false_jumps": 0,
+      "safe_feeding_ms": 5400,
+      "safe_feeding_available_ms": 5400,
+      "safe_feeding_retained_pct": 100.0
+    },
+    "remove_safe": {
+      "survivors": 6,
+      "hits": 0,
+      "false_jumps": 18,
+      "safe_feeding_ms": 81.0,
+      "safe_feeding_available_ms": 5400,
+      "safe_feeding_retained_pct": 1.5
+    },
+    "remove_donor": {
+      "survivors": 6,
+      "hits": 6,
+      "false_jumps": 0,
+      "safe_feeding_ms": 5400,
+      "safe_feeding_available_ms": 5400,
+      "safe_feeding_retained_pct": 100.0
+    },
+    "always_escape": {
+      "survivors": 6,
+      "hits": 0,
+      "false_jumps": 18,
+      "safe_feeding_ms": 81.0,
+      "safe_feeding_available_ms": 5400,
+      "safe_feeding_retained_pct": 1.5
+    }
+  },
+  "checks": {
+    "shared_harm_below_personal_below_none": true,
+    "safe_feeding_retained_pct_min": true,
+    "shared_false_jump_rate_max": true,
+    "natural_input_hashes_match": true,
+    "baseline_clear_view_escapes": true,
+    "removing_safe_evidence_causes_false_escapes": true,
+    "always_escape_loses_safe_feeding": true,
+    "muted_replay_removes_early_action": true,
+    "muted_motor_prevents_all_escape": true
+  },
+  "rows": [
+    {
+      "seed": 10000,
+      "mode": "none",
+      "world_hash": "c197c3998f098902a8ebb324040fd0a0a7ffe93d0f11776018f7246f4ff71f8f",
+      "summary": {
+        "survivors": 0,
+        "hits": 12,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10000,
+      "mode": "personal",
+      "world_hash": "c197c3998f098902a8ebb324040fd0a0a7ffe93d0f11776018f7246f4ff71f8f",
+      "summary": {
+        "survivors": 6,
+        "hits": 6,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10000,
+      "mode": "shared",
+      "world_hash": "c197c3998f098902a8ebb324040fd0a0a7ffe93d0f11776018f7246f4ff71f8f",
+      "summary": {
+        "survivors": 6,
+        "hits": 0,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10001,
+      "mode": "none",
+      "world_hash": "b68dbca02341f8c2ff8d9a73d8bdd1fb67b3d4c91de2b1615b344e899e0e6f1b",
+      "summary": {
+        "survivors": 0,
+        "hits": 12,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10001,
+      "mode": "personal",
+      "world_hash": "b68dbca02341f8c2ff8d9a73d8bdd1fb67b3d4c91de2b1615b344e899e0e6f1b",
+      "summary": {
+        "survivors": 6,
+        "hits": 6,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10001,
+      "mode": "shared",
+      "world_hash": "b68dbca02341f8c2ff8d9a73d8bdd1fb67b3d4c91de2b1615b344e899e0e6f1b",
+      "summary": {
+        "survivors": 6,
+        "hits": 0,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10002,
+      "mode": "none",
+      "world_hash": "2acb16ff8af103292636e1208d5d5625dd4bbd404143265ed0e3a7850dc311a1",
+      "summary": {
+        "survivors": 0,
+        "hits": 12,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10002,
+      "mode": "personal",
+      "world_hash": "2acb16ff8af103292636e1208d5d5625dd4bbd404143265ed0e3a7850dc311a1",
+      "summary": {
+        "survivors": 6,
+        "hits": 6,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10002,
+      "mode": "shared",
+      "world_hash": "2acb16ff8af103292636e1208d5d5625dd4bbd404143265ed0e3a7850dc311a1",
+      "summary": {
+        "survivors": 6,
+        "hits": 0,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10003,
+      "mode": "none",
+      "world_hash": "a5a1d3dd4b3934ee277dd31428f192b4f7e154ead30f4c4fade6256718036509",
+      "summary": {
+        "survivors": 0,
+        "hits": 12,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10003,
+      "mode": "personal",
+      "world_hash": "a5a1d3dd4b3934ee277dd31428f192b4f7e154ead30f4c4fade6256718036509",
+      "summary": {
+        "survivors": 6,
+        "hits": 6,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10003,
+      "mode": "shared",
+      "world_hash": "a5a1d3dd4b3934ee277dd31428f192b4f7e154ead30f4c4fade6256718036509",
+      "summary": {
+        "survivors": 6,
+        "hits": 0,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10004,
+      "mode": "none",
+      "world_hash": "14d35e7c3ccb02c30ec4cc4339b646ba7242f22a0432025a2d00dbf02e667eba",
+      "summary": {
+        "survivors": 0,
+        "hits": 12,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10004,
+      "mode": "personal",
+      "world_hash": "14d35e7c3ccb02c30ec4cc4339b646ba7242f22a0432025a2d00dbf02e667eba",
+      "summary": {
+        "survivors": 6,
+        "hits": 6,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10004,
+      "mode": "shared",
+      "world_hash": "14d35e7c3ccb02c30ec4cc4339b646ba7242f22a0432025a2d00dbf02e667eba",
+      "summary": {
+        "survivors": 6,
+        "hits": 0,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10005,
+      "mode": "none",
+      "world_hash": "ba6522751aed613fbf8d3f04eb9e2aa7a92c884c96def208758674fda65ebea6",
+      "summary": {
+        "survivors": 0,
+        "hits": 12,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10005,
+      "mode": "personal",
+      "world_hash": "ba6522751aed613fbf8d3f04eb9e2aa7a92c884c96def208758674fda65ebea6",
+      "summary": {
+        "survivors": 6,
+        "hits": 6,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10005,
+      "mode": "shared",
+      "world_hash": "ba6522751aed613fbf8d3f04eb9e2aa7a92c884c96def208758674fda65ebea6",
+      "summary": {
+        "survivors": 6,
+        "hits": 0,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10006,
+      "mode": "none",
+      "world_hash": "8471894601291a02523bc47716327586fc87db1999f386d8df35150621ea76a4",
+      "summary": {
+        "survivors": 0,
+        "hits": 12,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10006,
+      "mode": "personal",
+      "world_hash": "8471894601291a02523bc47716327586fc87db1999f386d8df35150621ea76a4",
+      "summary": {
+        "survivors": 6,
+        "hits": 6,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10006,
+      "mode": "shared",
+      "world_hash": "8471894601291a02523bc47716327586fc87db1999f386d8df35150621ea76a4",
+      "summary": {
+        "survivors": 6,
+        "hits": 0,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10007,
+      "mode": "none",
+      "world_hash": "d2461c6ede7d10aecdb155140a9e66fdab094d299475d49e6e3cd369ed0931d8",
+      "summary": {
+        "survivors": 0,
+        "hits": 12,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10007,
+      "mode": "personal",
+      "world_hash": "d2461c6ede7d10aecdb155140a9e66fdab094d299475d49e6e3cd369ed0931d8",
+      "summary": {
+        "survivors": 6,
+        "hits": 6,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10007,
+      "mode": "shared",
+      "world_hash": "d2461c6ede7d10aecdb155140a9e66fdab094d299475d49e6e3cd369ed0931d8",
+      "summary": {
+        "survivors": 6,
+        "hits": 0,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10008,
+      "mode": "none",
+      "world_hash": "404c170b69d78d58f359a962bb351bc3599dd4562f0fdd53e49206e03c7837a1",
+      "summary": {
+        "survivors": 0,
+        "hits": 12,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10008,
+      "mode": "personal",
+      "world_hash": "404c170b69d78d58f359a962bb351bc3599dd4562f0fdd53e49206e03c7837a1",
+      "summary": {
+        "survivors": 6,
+        "hits": 6,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10008,
+      "mode": "shared",
+      "world_hash": "404c170b69d78d58f359a962bb351bc3599dd4562f0fdd53e49206e03c7837a1",
+      "summary": {
+        "survivors": 6,
+        "hits": 0,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10009,
+      "mode": "none",
+      "world_hash": "5e9112d8c0a607f1107538500f9d17507fa83775dd399ec43ad5e6acff0ea384",
+      "summary": {
+        "survivors": 0,
+        "hits": 12,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10009,
+      "mode": "personal",
+      "world_hash": "5e9112d8c0a607f1107538500f9d17507fa83775dd399ec43ad5e6acff0ea384",
+      "summary": {
+        "survivors": 6,
+        "hits": 6,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10009,
+      "mode": "shared",
+      "world_hash": "5e9112d8c0a607f1107538500f9d17507fa83775dd399ec43ad5e6acff0ea384",
+      "summary": {
+        "survivors": 6,
+        "hits": 0,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10010,
+      "mode": "none",
+      "world_hash": "e4b42e612958a64c860a0c55234da0baa7171cfa0477671f068c786671afc792",
+      "summary": {
+        "survivors": 0,
+        "hits": 12,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10010,
+      "mode": "personal",
+      "world_hash": "e4b42e612958a64c860a0c55234da0baa7171cfa0477671f068c786671afc792",
+      "summary": {
+        "survivors": 6,
+        "hits": 6,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10010,
+      "mode": "shared",
+      "world_hash": "e4b42e612958a64c860a0c55234da0baa7171cfa0477671f068c786671afc792",
+      "summary": {
+        "survivors": 6,
+        "hits": 0,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10011,
+      "mode": "none",
+      "world_hash": "3018de8902fcdc454ee45379eb86f68a5ac66a5dccdca12bc9661dc35b2fc5af",
+      "summary": {
+        "survivors": 0,
+        "hits": 12,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10011,
+      "mode": "personal",
+      "world_hash": "3018de8902fcdc454ee45379eb86f68a5ac66a5dccdca12bc9661dc35b2fc5af",
+      "summary": {
+        "survivors": 6,
+        "hits": 6,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10011,
+      "mode": "shared",
+      "world_hash": "3018de8902fcdc454ee45379eb86f68a5ac66a5dccdca12bc9661dc35b2fc5af",
+      "summary": {
+        "survivors": 6,
+        "hits": 0,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10012,
+      "mode": "none",
+      "world_hash": "05da7ce88f38824647a97ffce4645b751baebb49c04c5d7d9355d085bfdc14e8",
+      "summary": {
+        "survivors": 0,
+        "hits": 12,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10012,
+      "mode": "personal",
+      "world_hash": "05da7ce88f38824647a97ffce4645b751baebb49c04c5d7d9355d085bfdc14e8",
+      "summary": {
+        "survivors": 6,
+        "hits": 6,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10012,
+      "mode": "shared",
+      "world_hash": "05da7ce88f38824647a97ffce4645b751baebb49c04c5d7d9355d085bfdc14e8",
+      "summary": {
+        "survivors": 6,
+        "hits": 0,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10013,
+      "mode": "none",
+      "world_hash": "dca924c5b3412674abf0e8f67fb9b87144e029f70c2bd4256efc5e204bf1f3f0",
+      "summary": {
+        "survivors": 0,
+        "hits": 12,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10013,
+      "mode": "personal",
+      "world_hash": "dca924c5b3412674abf0e8f67fb9b87144e029f70c2bd4256efc5e204bf1f3f0",
+      "summary": {
+        "survivors": 6,
+        "hits": 6,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10013,
+      "mode": "shared",
+      "world_hash": "dca924c5b3412674abf0e8f67fb9b87144e029f70c2bd4256efc5e204bf1f3f0",
+      "summary": {
+        "survivors": 6,
+        "hits": 0,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10014,
+      "mode": "none",
+      "world_hash": "8ca457b1dc14ae6e48641c4324ee0779d707d21053bca467fbb7ce614826ab1d",
+      "summary": {
+        "survivors": 0,
+        "hits": 12,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10014,
+      "mode": "personal",
+      "world_hash": "8ca457b1dc14ae6e48641c4324ee0779d707d21053bca467fbb7ce614826ab1d",
+      "summary": {
+        "survivors": 6,
+        "hits": 6,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10014,
+      "mode": "shared",
+      "world_hash": "8ca457b1dc14ae6e48641c4324ee0779d707d21053bca467fbb7ce614826ab1d",
+      "summary": {
+        "survivors": 6,
+        "hits": 0,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10015,
+      "mode": "none",
+      "world_hash": "ecfa93b1591e01f016a660b861cd6b7da91242c44441124b74df893ff96a0508",
+      "summary": {
+        "survivors": 0,
+        "hits": 12,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10015,
+      "mode": "personal",
+      "world_hash": "ecfa93b1591e01f016a660b861cd6b7da91242c44441124b74df893ff96a0508",
+      "summary": {
+        "survivors": 6,
+        "hits": 6,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10015,
+      "mode": "shared",
+      "world_hash": "ecfa93b1591e01f016a660b861cd6b7da91242c44441124b74df893ff96a0508",
+      "summary": {
+        "survivors": 6,
+        "hits": 0,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10016,
+      "mode": "none",
+      "world_hash": "a0924ae225bbe1ae27d948a1e2d32f2d59b7753641911dd0b15957032b6ebfa2",
+      "summary": {
+        "survivors": 0,
+        "hits": 12,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10016,
+      "mode": "personal",
+      "world_hash": "a0924ae225bbe1ae27d948a1e2d32f2d59b7753641911dd0b15957032b6ebfa2",
+      "summary": {
+        "survivors": 6,
+        "hits": 6,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10016,
+      "mode": "shared",
+      "world_hash": "a0924ae225bbe1ae27d948a1e2d32f2d59b7753641911dd0b15957032b6ebfa2",
+      "summary": {
+        "survivors": 6,
+        "hits": 0,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10017,
+      "mode": "none",
+      "world_hash": "59bff5dd9de5ba4575146db56c9976ab7f51c3f38b5ea7e875dbf3d0f5d0f4ab",
+      "summary": {
+        "survivors": 0,
+        "hits": 12,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10017,
+      "mode": "personal",
+      "world_hash": "59bff5dd9de5ba4575146db56c9976ab7f51c3f38b5ea7e875dbf3d0f5d0f4ab",
+      "summary": {
+        "survivors": 6,
+        "hits": 6,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10017,
+      "mode": "shared",
+      "world_hash": "59bff5dd9de5ba4575146db56c9976ab7f51c3f38b5ea7e875dbf3d0f5d0f4ab",
+      "summary": {
+        "survivors": 6,
+        "hits": 0,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10018,
+      "mode": "none",
+      "world_hash": "11b9e80a3b4c047404afe5ed7068707153b772613965fd76baa3189177a43cdd",
+      "summary": {
+        "survivors": 0,
+        "hits": 12,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10018,
+      "mode": "personal",
+      "world_hash": "11b9e80a3b4c047404afe5ed7068707153b772613965fd76baa3189177a43cdd",
+      "summary": {
+        "survivors": 6,
+        "hits": 6,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10018,
+      "mode": "shared",
+      "world_hash": "11b9e80a3b4c047404afe5ed7068707153b772613965fd76baa3189177a43cdd",
+      "summary": {
+        "survivors": 6,
+        "hits": 0,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10019,
+      "mode": "none",
+      "world_hash": "6eba3223f20957186f13e75ec9db10963288af266df8a40ad97834a07032cc01",
+      "summary": {
+        "survivors": 0,
+        "hits": 12,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10019,
+      "mode": "personal",
+      "world_hash": "6eba3223f20957186f13e75ec9db10963288af266df8a40ad97834a07032cc01",
+      "summary": {
+        "survivors": 6,
+        "hits": 6,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "seed": 10019,
+      "mode": "shared",
+      "world_hash": "6eba3223f20957186f13e75ec9db10963288af266df8a40ad97834a07032cc01",
+      "summary": {
+        "survivors": 6,
+        "hits": 0,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    }
+  ],
+  "sensitivity": [
+    {
+      "config": {
+        "seed": 10000,
+        "clearance_ms": 20,
+        "strike_ms": 200,
+        "injuries_to_die": 2
+      },
+      "mode": "none",
+      "summary": {
+        "survivors": 6,
+        "hits": 0,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "config": {
+        "seed": 10000,
+        "clearance_ms": 20,
+        "strike_ms": 200,
+        "injuries_to_die": 2
+      },
+      "mode": "personal",
+      "summary": {
+        "survivors": 6,
+        "hits": 0,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "config": {
+        "seed": 10000,
+        "clearance_ms": 20,
+        "strike_ms": 200,
+        "injuries_to_die": 2
+      },
+      "mode": "shared",
+      "summary": {
+        "survivors": 6,
+        "hits": 0,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "config": {
+        "seed": 10000,
+        "clearance_ms": 45,
+        "strike_ms": 200,
+        "injuries_to_die": 2
+      },
+      "mode": "none",
+      "summary": {
+        "survivors": 0,
+        "hits": 12,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "config": {
+        "seed": 10000,
+        "clearance_ms": 45,
+        "strike_ms": 200,
+        "injuries_to_die": 2
+      },
+      "mode": "personal",
+      "summary": {
+        "survivors": 6,
+        "hits": 6,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "config": {
+        "seed": 10000,
+        "clearance_ms": 45,
+        "strike_ms": 200,
+        "injuries_to_die": 2
+      },
+      "mode": "shared",
+      "summary": {
+        "survivors": 6,
+        "hits": 0,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "config": {
+        "seed": 10000,
+        "clearance_ms": 90,
+        "strike_ms": 200,
+        "injuries_to_die": 2
+      },
+      "mode": "none",
+      "summary": {
+        "survivors": 0,
+        "hits": 12,
+        "false_jumps": 0,
+        "safe_feeding_ms": 3600,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 66.7
+      }
+    },
+    {
+      "config": {
+        "seed": 10000,
+        "clearance_ms": 90,
+        "strike_ms": 200,
+        "injuries_to_die": 2
+      },
+      "mode": "personal",
+      "summary": {
+        "survivors": 6,
+        "hits": 6,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    },
+    {
+      "config": {
+        "seed": 10000,
+        "clearance_ms": 90,
+        "strike_ms": 200,
+        "injuries_to_die": 2
+      },
+      "mode": "shared",
+      "summary": {
+        "survivors": 6,
+        "hits": 0,
+        "false_jumps": 0,
+        "safe_feeding_ms": 5400,
+        "safe_feeding_available_ms": 5400,
+        "safe_feeding_retained_pct": 100.0
+      }
+    }
+  ],
+  "scope": "Measured model/task results. The cue encoder, visibility, and refuge movement are engineered. The v783 Float32 runtime has not been established as Brian2-identical."
+}

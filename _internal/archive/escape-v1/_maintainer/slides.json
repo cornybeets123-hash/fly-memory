@@ -1,0 +1,346 @@
+[
+  {
+    "kind": "cover",
+    "title": "Give a fly\na memory",
+    "timing": "0:00\u20133:00",
+    "notes": "Start with the failure. Open the local demo in No memory mode and run it. The screen hides the approach. The neural reflex fires after looming becomes visible, but the engineered actor reaches refuge too late. Continue to the repeat ambush. Two hits end a run. The clear-view cycle also shows that the normal reflex can work.\n\nThis is a retrieval lesson for AI builders. The audience can watch the presenter code. People who want to follow use the same files. Return to the gallery after the failure. Do not explain the full architecture before the audience sees the problem.",
+    "id": "flydeck_01",
+    "number": 1,
+    "source_slide_id": "flydeck_01",
+    "construction": "Edit inspected native Qdrant Dark v1.1 slide",
+    "media_mapping": {
+      "Official logo and gradient": "keep",
+      "Old content": "replace",
+      "Project gallery": "keep only on slide two",
+      "Existing download QR": "keep only on closing"
+    },
+    "visual_sources": [
+      "assets/escape-brain.png"
+    ]
+  },
+  {
+    "kind": "gallery",
+    "title": "People connect fly brains to games and bodies.",
+    "timing": "3:00\u20134:00",
+    "notes": "These related projects use different datasets, models, and input adapters. Eon connects a whole-brain model to an embodied fly simulation. NeuroCraft Fly uses a MaleCNS leaky-rate model and scripted Minecraft body programs. DOOMFLY maps visual inputs and neural readouts to a Doom controller. Its baseline uses 3,335 R1\u2013R6 brightness inputs. Later variants add other channels. Those projects do not validate this workshop's escape behavior.\n\nOur workshop uses the pinned Doodle Fly v783 LIF runtime. Its 138,639-neuron network offers many possible input populations. We select a small escape pathway so the retrieval mechanism stays legible.\n\nSources: https://eon.systems/updates/embodied-brain-emulation ; https://github.com/evnsnclr/neurocraft-fly-public ; https://github.com/nftechie/doomfly/tree/71ecf53d78eaffaf1a57ed7b0ccf5d458abc9f33 ; https://github.com/dtecx/doodle-fly/tree/2a8a0311e4e488e9bf9a7f8e79e42ffb8bcaadf5 . Screenshot credits are in _maintainer/assets/NOTICE.md.",
+    "id": "flydeck_02",
+    "number": 2,
+    "source_slide_id": "flydeck_02",
+    "construction": "Edit inspected native Qdrant Dark v1.1 slide",
+    "media_mapping": {
+      "Official logo and gradient": "keep",
+      "Old content": "replace",
+      "Project gallery": "keep only on slide two",
+      "Existing download QR": "keep only on closing"
+    },
+    "visual_sources": [
+      "assets/eon-embodied.jpg",
+      "assets/neurocraft.jpg",
+      "assets/doomfly.jpg"
+    ]
+  },
+  {
+    "kind": "retrieval",
+    "title": "Retrieval supplies stored evidence for the current task.",
+    "timing": "4:00\u20136:00",
+    "notes": "Retrieval selects stored information relevant to the current task. The application gives a query to the search engine. The engine returns records. The application uses their content in its next decision.\n\nUse the documentation example. A question says undo a deployment. A useful guide says restore the previous version. Matching meaning can help when wording differs. An assistant can put the returned guide into its context before composing an answer. Search, selection, and the consumer remain separate parts.\n\nThe fly follows the same contract. Its current cue is the query. Past sensory episodes are records. The neural model consumes the selected input recording. Retrieval is also useful for document search, recommendations, and finding past tool observations. These examples are illustrative.\n\nSource: https://qdrant.tech/documentation/overview/vector-search/",
+    "id": "flydeck_03",
+    "number": 3,
+    "source_slide_id": "flydeck_03",
+    "construction": "Edit inspected native Qdrant Dark v1.1 slide",
+    "media_mapping": {
+      "Official logo and gradient": "keep",
+      "Old content": "replace",
+      "Project gallery": "keep only on slide two",
+      "Existing download QR": "keep only on closing"
+    },
+    "visual_sources": [
+      "Editable native diagram or code"
+    ]
+  },
+  {
+    "kind": "encoder",
+    "title": "The encoder defines what similarity can mean.",
+    "timing": "6:00\u20137:30",
+    "notes": "An encoder maps an input into numerical coordinates. A text embedding model can place related meanings near each other. Other encoders represent images, audio, or sensor features. Both stored inputs and new queries must use compatible encoders and vector dimensions. A search engine compares vectors supplied to it.\n\nThe fly uses an eight-dimensional engineered cue representation. Its first two values encode a simulated pulse-pattern phase. Small simulated sensor noise makes later queries differ from stored vectors. The vector uses the current visible cue. It does not contain the future sweep label or the identity of the correct episode. The cue design is a teaching device. It does not establish quality for a text embedding model.\n\nAsk which distinctions the representation must preserve in the audience's applications. Source: _internal/escape/scene.py encode(); https://qdrant.tech/documentation/concepts/vectors/",
+    "id": "flydeck_05",
+    "number": 4,
+    "source_slide_id": "flydeck_05",
+    "construction": "Edit inspected native Qdrant Dark v1.1 slide",
+    "media_mapping": {
+      "Official logo and gradient": "keep",
+      "Old content": "replace",
+      "Project gallery": "keep only on slide two",
+      "Existing download QR": "keep only on closing"
+    },
+    "visual_sources": [
+      "Editable native diagram or code"
+    ]
+  },
+  {
+    "kind": "search",
+    "title": "Vector search ranks similar representations.",
+    "timing": "7:30\u20139:00",
+    "notes": "Cosine similarity compares vector direction. A score describes similarity under the chosen representation. It is not the probability that a stored claim is true. A threshold rejects sufficiently different representations. A limit sets the maximum number of results.\n\nHNSW organizes vectors in a layered graph for approximate nearest-neighbor search. Coarse links help reach a useful area, then denser links refine the search. This diagram is schematic. It is not a trace of Qdrant visiting nodes. The workshop collection is small, and the index is forced for demonstration. Do not make performance or scale claims from this task.\n\nQdrant Edge uses a named cue vector with cosine distance. The live query returns actual point IDs, scores, and payloads. Source: _internal/escape/scene.py shard(); https://qdrant.tech/documentation/concepts/indexing/ ; https://qdrant.tech/documentation/edge/edge-api/reading-data/",
+    "id": "flydeck_04",
+    "number": 5,
+    "source_slide_id": "flydeck_04",
+    "construction": "Edit inspected native Qdrant Dark v1.1 slide",
+    "media_mapping": {
+      "Official logo and gradient": "keep",
+      "Old content": "replace",
+      "Project gallery": "keep only on slide two",
+      "Existing download QR": "keep only on closing"
+    },
+    "visual_sources": [
+      "Editable native diagram or code"
+    ]
+  },
+  {
+    "kind": "eligibility",
+    "title": "A close match must also belong to the right context.",
+    "timing": "9:00\u201310:00",
+    "notes": "Show the actual candidates from the first shared threat query for Fly A. Kitchen Scout observed a quiet cycle in another arena. Its similar vector does not make it eligible for the orchard. Scout observed the orchard threat and uses the same model protocol. The quiet orchard episode remains eligible too.\n\nEach query filters arena and protocol. The shared query also excludes the querying fly's own published copies. The personal query can still return its own evidence. Similarity ranks eligible records. These controls can map to service, tenant, model version, or permissions in an AI application.\n\nThe candidates come from actual unfiltered diagnostic queries across the two shards. They do not show a native HNSW traversal. Source: artifacts/escape-runs.json shared cycle one, Fly A candidates; memory.py; https://qdrant.tech/documentation/concepts/filtering/",
+    "id": "flydeck_09",
+    "number": 6,
+    "source_slide_id": "flydeck_09",
+    "construction": "Edit inspected native Qdrant Dark v1.1 slide",
+    "media_mapping": {
+      "Official logo and gradient": "keep",
+      "Old content": "replace",
+      "Project gallery": "keep only on slide two",
+      "Existing download QR": "keep only on closing"
+    },
+    "visual_sources": [
+      "Editable native diagram or code"
+    ]
+  },
+  {
+    "kind": "brain",
+    "title": "Fixed neural wiring turns input into spikes.",
+    "timing": "10:00\u201311:30",
+    "notes": "The network contains 138,639 neurons and 15,091,983 directed connections from FlyWire v783. The anatomical image uses actual neuron anchor positions. Bright points are neurons active in the computed scene. The voltage sketch is schematic.\n\nA leaky integrate-and-fire neuron integrates incoming current, leaks toward rest, and emits a spike after crossing a threshold. Rest and reset are -52 mV. The threshold is -45 mV. LPLC2 and LC4 populations feed the giant-fiber escape pathway. We read the two DNp01 neurons.\n\nThis is Doodle Fly's Float32 runtime with Shiu-style parameters. Independent dense integration checks total spike counts and DNp01 times, including a continuous-state replay fixture. Brian2 scheduling equivalence and biological escape timing remain unestablished. The world and body use declared engineering rules.\n\nSources: https://www.nature.com/articles/s41586-024-07763-9 ; https://github.com/dtecx/doodle-fly/tree/2a8a0311e4e488e9bf9a7f8e79e42ffb8bcaadf5 ; https://www.sciencedirect.com/science/article/pii/S0960982219301381 ; artifacts/plans/evidence/dense-runtime-validation.json.",
+    "id": "flydeck_10",
+    "number": 7,
+    "source_slide_id": "flydeck_10",
+    "construction": "Edit inspected native Qdrant Dark v1.1 slide",
+    "media_mapping": {
+      "Official logo and gradient": "keep",
+      "Old content": "replace",
+      "Project gallery": "keep only on slide two",
+      "Existing download QR": "keep only on closing"
+    },
+    "visual_sources": [
+      "assets/escape-brain.png"
+    ]
+  },
+  {
+    "kind": "adapter",
+    "title": "A recalled episode adds earlier sensory input.",
+    "timing": "11:30\u201312:30",
+    "notes": "The current cue becomes a vector query. Qdrant returns the winning episode with a reference to immutable sensory input events. The adapter replays those events from cue recognition, preserving relative timing, targets, amplitude, and duration. It keeps the natural sensory stream active. The model's wiring stays fixed.\n\nThe natural looming input arrives when the fixed world makes the swatter visible. LPLC2 and LC4 inputs can then activate DNp01. The body starts an engineered escape only after the neural readout fires. A score or a stored sweep label never calls movement. A quiet episode replays quiet sensory content and produces no escape response in this task.\n\nThis is external episodic memory connected through a designed sensory adapter. The scene uses 45 ms for refuge clearance and a strike at 200 ms. Those values describe the game. Source: fly_brain.py; _internal/escape/neural/runtime.ts; _internal/escape/scene.py.",
+    "id": "flydeck_08",
+    "number": 8,
+    "source_slide_id": "flydeck_08",
+    "construction": "Edit inspected native Qdrant Dark v1.1 slide",
+    "media_mapping": {
+      "Official logo and gradient": "keep",
+      "Old content": "replace",
+      "Project gallery": "keep only on slide two",
+      "Existing download QR": "keep only on closing"
+    },
+    "visual_sources": [
+      "Editable native diagram or code"
+    ]
+  },
+  {
+    "kind": "point",
+    "title": "Store a cue vector with a usable episode.",
+    "timing": "12:30\u201313:15",
+    "notes": "This is actual personal point 106. Fly A observed the sweep in cycle 1, which is scene two in the display. The vector represents that earlier cue. The payload retains the source, arena, model protocol, observation cycle, observed event, and recording reference.\n\nThe input recording contains an 80 ms window of directly observed external sensory events. Its content hash identifies events, target populations, duration, and protocol. The reference is 736f49e7d40bc176a984f504bfc25b3e78b75363cdebbdaff1b2f1b4c3ce1bff. Qdrant stores the compact reference rather than duplicating thousands of event pairs in every payload. The local neural worker owns immutable recordings for this run.\n\nThe later query differs from the stored cue and retrieves this point at cosine 0.999984. Observed event metadata supports provenance and conflict checks. The selected recording's content determines the neural input. Source: artifacts/escape-runs.json personal Fly A cycle five; _internal/escape/neural/runtime.ts.",
+    "id": "flydeck_11",
+    "number": 9,
+    "source_slide_id": "flydeck_11",
+    "construction": "Edit inspected native Qdrant Dark v1.1 slide",
+    "media_mapping": {
+      "Official logo and gradient": "keep",
+      "Old content": "replace",
+      "Project gallery": "keep only on slide two",
+      "Existing download QR": "keep only on closing"
+    },
+    "visual_sources": [
+      "Editable native diagram or code"
+    ]
+  },
+  {
+    "kind": "write",
+    "title": "Write verified experience after the observation ends.",
+    "timing": "13:15\u201314:00",
+    "notes": "A query can use only earlier completed observations. The scene collects decisions for every fly, runs the neural and engineered world outcome, then publishes the observed episodes after the cycle. No fly can read another fly's same-cycle future.\n\nA sweep remains a threat observation when the fly dodges it. Injury and the environmental event are separate fields. Calling a dodged sweep safe would corrupt the next decision. A quiet record becomes valid after the warning-only observation window ends. Recalled guesses never become new direct observations.\n\nThe world advances each neural session continuously for 600 ms per encounter. The stored sensory window lasts 80 ms. The display slows and shows the first 350 ms for explanation. The publication boundary follows the full observation. Source: _internal/escape/scene.py buffered writes; _internal/escape/neural/runtime.ts.",
+    "id": "flydeck_12",
+    "number": 10,
+    "source_slide_id": "flydeck_12",
+    "construction": "Edit inspected native Qdrant Dark v1.1 slide",
+    "media_mapping": {
+      "Official logo and gradient": "keep",
+      "Old content": "replace",
+      "Project gallery": "keep only on slide two",
+      "Existing download QR": "keep only on closing"
+    },
+    "visual_sources": [
+      "Editable native diagram or code"
+    ]
+  },
+  {
+    "kind": "personal",
+    "title": "Two operations create personal memory.",
+    "timing": "14:00\u201323:00",
+    "notes": "Open memory.py. Implement remember with UpdateOperation.upsert_points. Implement recall with QueryRequest and Query.Nearest using the cue vector. Construct the eligibility filter with arena orchard and the supplied PROTOCOL. Add optional source exclusion for the next build. Set limit three, threshold 0.98, and with_payload=True.\n\nThe slide names the filter eligible for readability. The implementation can construct it inline. Keep quiet observations eligible. Complete decide by returning best.payload[\"recording\"]. The supplied policy sorts combined results and abstains on effectively tied conflicting observations. Similarity is not confidence.\n\nRun uv run run.py --check personal. Show fly_brain.py so the audience sees where the recording goes. Save the files before rerunning Personal. The completed functions are in _internal/escape/answers.py for recovery. This code uses the actual Edge API. Source: https://qdrant.tech/documentation/edge/edge-api/reading-data/ ; https://qdrant.tech/documentation/edge/edge-api/updating-data/",
+    "id": "flydeck_13",
+    "number": 11,
+    "source_slide_id": "flydeck_13",
+    "construction": "Edit inspected native Qdrant Dark v1.1 slide",
+    "media_mapping": {
+      "Official logo and gradient": "keep",
+      "Old content": "replace",
+      "Project gallery": "keep only on slide two",
+      "Existing download QR": "keep only on closing"
+    },
+    "visual_sources": [
+      "Editable native diagram or code"
+    ]
+  },
+  {
+    "kind": "timing",
+    "title": "The same cue can produce an earlier escape.",
+    "timing": "23:00\u201327:00",
+    "notes": "Run Personal. Playback opens at the matched repeat ambush, scene six. Earlier computed scenes include the fly's first observed injury. Point 106 now supplies its own recorded sensory input. The ghost shows the same scene without retrieval.\n\nFor Fly A, the no-memory DNp01 onset is 179.6 ms. With the retrieved episode it is 4.5 ms. The fixed clearance rule adds 45 ms. The strike stays at 200 ms. No-memory clearance is 224.6 ms. Memory clearance is 49.5 ms. The difference comes from earlier input, with fixed wiring and natural sensory schedule.\n\nPause and scrub to compare the input raster, escape activity, and movement. Open Inspect query. Mute recall, then restore the full path. Retrieval still runs while the muted channel prevents replay from entering the model. The ordinary reflex remains available. Source: artifacts/escape-runs.json matched Fly A cycle five; fly_brain.py.",
+    "id": "flydeck_15",
+    "number": 12,
+    "source_slide_id": "flydeck_15",
+    "construction": "Edit inspected native Qdrant Dark v1.1 slide",
+    "media_mapping": {
+      "Official logo and gradient": "keep",
+      "Old content": "replace",
+      "Project gallery": "keep only on slide two",
+      "Existing download QR": "keep only on closing"
+    },
+    "visual_sources": [
+      "Editable native diagram or code"
+    ]
+  },
+  {
+    "kind": "sharing",
+    "title": "Shared evidence helps before a first encounter.",
+    "timing": "27:00\u201331:00",
+    "notes": "A recipient can have no personal experience of this threat and still retrieve Scout's observed episode. Scout has directly observed one orchard sweep and one quiet orchard cycle. Kitchen Scout also observed a quiet cycle, with a different cue association in a different arena. All conditions compute these source observations. Only shared memory allows the recipient to query them.\n\nThe shared shard runs inside the Python application through Qdrant Edge. It supplies another access scope. This workshop models access to other agents' evidence within one process. Network synchronization is outside the lesson. All flies use the same model protocol, so this is provenance-controlled reuse rather than a claim about transfer between different brains.\n\nFor builders, local agent memory can stay on a device, while an explicit shared source supplies team observations. Choose access rules before ranking. Sources: pipeline.py; https://qdrant.tech/documentation/edge/",
+    "id": "flydeck_16",
+    "number": 13,
+    "source_slide_id": "flydeck_16",
+    "construction": "Edit inspected native Qdrant Dark v1.1 slide",
+    "media_mapping": {
+      "Official logo and gradient": "keep",
+      "Old content": "replace",
+      "Project gallery": "keep only on slide two",
+      "Existing download QR": "keep only on closing"
+    },
+    "visual_sources": [
+      "Editable native diagram or code"
+    ]
+  },
+  {
+    "kind": "sharedbuild",
+    "title": "Shared memory adds one read and one write.",
+    "timing": "31:00\u201335:00",
+    "notes": "Open pipeline.py. Keep the personal read. Add memory.recall(shared, vector, exclude_fly=fly) to hits inside the shared branch. Keep the personal write. Add memory.remember(shared, point) inside the shared branch.\n\nRun uv run run.py --check shared. Save the file and select Shared in the demo. The recipient starts the run with empty personal memory. The first quiet cycle can create its own quiet observation. Scout's episode supplies the first threat experience. Source exclusion applies to shared copies. It does not prevent the recipient from reading its own personal shard.\n\nThe application combines candidates, chooses the closest eligible episode, and replays its sensory content. The observation boundary still applies. Source: pipeline.py; _internal/escape/answers.py.",
+    "id": "flydeck_17",
+    "number": 14,
+    "source_slide_id": "flydeck_17",
+    "construction": "Edit inspected native Qdrant Dark v1.1 slide",
+    "media_mapping": {
+      "Official logo and gradient": "keep",
+      "Old content": "replace",
+      "Project gallery": "keep only on slide two",
+      "Existing download QR": "keep only on closing"
+    },
+    "visual_sources": [
+      "Editable native diagram or code"
+    ]
+  },
+  {
+    "kind": "safe",
+    "title": "Safe evidence keeps the fly feeding.",
+    "timing": "35:00\u201339:00",
+    "notes": "Run Shared. On the first threat, Fly A retrieves Scout's episode and fires DNp01 at 4.5 ms. It clears refuge at 49.5 ms before the fixed 200 ms strike. The recipient has not experienced this threat itself. Continue to a similar quiet cue.\n\nThe safe and threat cue prototypes have cosine similarity about 0.995. Both pass the 0.98 threshold. A closer quiet episode can rank first. Its replay produces neural input without DNp01 escape activity. Thresholding alone does not explain the safe behavior.\n\nThe safe-episode-removal control still survives, but produces 18 false escapes per six-fly run and keeps only 1.5% of safe feeding. The complete shared path produces zero false escapes and retains 100%. Those controls use five held-out seeds. The same waste occurs when always replaying the threat episode on every cue. Source: _internal/escape/data/evaluation.json. These values describe the engineered task.",
+    "id": "flydeck_19",
+    "number": 15,
+    "source_slide_id": "flydeck_19",
+    "construction": "Edit inspected native Qdrant Dark v1.1 slide",
+    "media_mapping": {
+      "Official logo and gradient": "keep",
+      "Old content": "replace",
+      "Project gallery": "keep only on slide two",
+      "Existing download QR": "keep only on closing"
+    },
+    "visual_sources": [
+      "Editable native diagram or code"
+    ]
+  },
+  {
+    "kind": "evaluation",
+    "title": "Measure the decision, including its cost.",
+    "timing": "39:00\u201340:30",
+    "notes": "The table uses 20 declared held-out world seeds, 10000 through 10019, with six flies per run. Means: no memory has zero survivors, 12 hits, and 100% safe feeding retained. Personal memory has six survivors, six hits, and 100% safe feeding. Shared memory has six survivors, zero hits, and 100% safe feeding. Each mode sees the same scheduled world and natural input events.\n\nThe causal controls matter. Muting replay restores 12 hits. Disconnecting sensory outputs prevents DNp01 escape. Disabling the escape readout preserves spikes and prevents movement. Removing donor evidence restores the personal-memory harm level. The always-escape control survives but wastes 98.5% of safe feeding.\n\nThe representation and world are engineered. The normal reflex succeeds in clear-view trials. Sensitivity includes 20, 45, and 90 ms clearance times. At 20 ms the reflex can already avoid the task's threats, so memory has less outcome value. Similarity cannot recover an unrepresented distinction. Source: _maintainer/evaluation-protocol.json; _internal/escape/data/evaluation.json.",
+    "id": "flydeck_23",
+    "number": 16,
+    "source_slide_id": "flydeck_23",
+    "construction": "Edit inspected native Qdrant Dark v1.1 slide",
+    "media_mapping": {
+      "Official logo and gradient": "keep",
+      "Old content": "replace",
+      "Project gallery": "keep only on slide two",
+      "Existing download QR": "keep only on closing"
+    },
+    "visual_sources": [
+      "Editable native diagram or code"
+    ]
+  },
+  {
+    "kind": "transfer",
+    "title": "Use the same contract in an AI agent.",
+    "timing": "40:30\u201342:00",
+    "notes": "Map this worked example to a deployment assistant. The current tool observation replaces the fly cue. A compatible text encoder produces the query vector. Search returns a verified past incident or runbook with service, source, version, and time metadata. The agent uses that content when proposing its next action. Store the new outcome only after observing it.\n\nThe fly consumes recorded sensory events. A language model can consume retrieved text in its context. Retrieval keeps relevant external information available without changing the consumer's weights. The application still validates evidence and controls actions.\n\nFor a real workload, choose the encoder, metadata access rules, freshness policy, and downstream evaluation. Measure whether the returned evidence changes the right decision and what a false match costs. The deployment incident on this slide is illustrative, not a second implemented demo.",
+    "id": "flydeck_24",
+    "number": 17,
+    "source_slide_id": "flydeck_24",
+    "construction": "Edit inspected native Qdrant Dark v1.1 slide",
+    "media_mapping": {
+      "Official logo and gradient": "keep",
+      "Old content": "replace",
+      "Project gallery": "keep only on slide two",
+      "Existing download QR": "keep only on closing"
+    },
+    "visual_sources": [
+      "Editable native diagram or code"
+    ]
+  },
+  {
+    "kind": "closing",
+    "title": "What should your next agent remember?",
+    "timing": "42:00\u201345:00",
+    "notes": "Take questions. The QR opens the existing attendee download. It contains the same memory.py and pipeline.py used on stage, the brain adapter, locked environment, PDF, presenter guide, and standalone recorded backup.\n\nPeople need no prerequisites to watch. Optional local coding requires uv and Node.js 22.18 or later. The README provides two startup commands. The offline replay requires only a browser and clearly labels recorded computation.\n\nAsk the audience for one useful stored observation, its eligibility rules, and the decision it should change. Source and dataset notices remain in the download.",
+    "id": "flylesson_27",
+    "number": 18,
+    "source_slide_id": "flylesson_27",
+    "construction": "Edit inspected native Qdrant Dark v1.1 slide",
+    "media_mapping": {
+      "Official logo and gradient": "keep",
+      "Old content": "replace",
+      "Project gallery": "keep only on slide two",
+      "Existing download QR": "keep only on closing"
+    },
+    "visual_sources": [
+      "Existing workshop download QR"
+    ]
+  }
+]

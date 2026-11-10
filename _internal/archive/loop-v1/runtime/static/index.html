@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Find the exit · Fly memory</title><link rel="icon" href="/assets/qdrant-mark.svg"><link rel="stylesheet" href="/static/style.css"></head>
+<body>
+<header>
+  <div class="brand"><img src="/assets/qdrant-mark.svg" alt="Qdrant"><h1>Find the exit.</h1></div>
+  <nav aria-label="Workshop stages">
+    <button class="stage selected" data-mode="none" aria-pressed="true"><span>01</span> No memory</button>
+    <button class="stage" data-mode="personal" aria-pressed="false"><span>02</span> Personal memory</button>
+    <button class="stage" data-mode="shared" aria-pressed="false"><span>03</span> Shared memory</button>
+  </nav>
+  <button id="fullscreen" class="icon" aria-label="Full screen" title="Full screen">⛶</button>
+</header>
+<main>
+  <section class="arena" aria-label="Fly navigation simulation">
+    <div class="arena-heading"><div><p class="eyebrow" id="chapter">MEMORY IS OFF</p><h2 id="headline">It keeps taking the loop.</h2></div><div id="timer">0.0<span>s</span></div></div>
+    <canvas id="world" role="img" aria-label="The fly explores a maze toward its exit."></canvas>
+    <div id="scene-caption" aria-live="polite">Find the exit. The fly sees only nearby openings.</div>
+    <div class="arena-footer"><span class="legend"><i class="hero-dot"></i><b id="hero-name">Fly A</b><span id="ghost-key" hidden><i class="ghost-dot"></i> No-memory ghost</span></span><span class="result" id="result"></span></div>
+    <div class="computing" id="computing" hidden><span class="spinner"></span><p>Computing neural activity…</p></div>
+  </section>
+  <aside>
+    <section class="memory-panel" aria-label="Retrieval evidence">
+      <div class="panel-heading"><span class="eyebrow">QDRANT EDGE</span><span id="memory-count">Memory off</span></div>
+      <h3 id="memory-title">Every visit is a fresh choice.</h3>
+      <div class="evidence" id="evidence">
+        <figure><div class="view" id="current-view"><span>?</span></div><figcaption id="current-caption">Current view</figcaption></figure>
+        <div class="comparison" aria-hidden="true">↔</div>
+        <figure><div class="view" id="stored-view"><span>?</span></div><figcaption id="stored-caption">From memory</figcaption></figure>
+      </div>
+      <div class="evidence-result" id="evidence-result">No stored experience yet.</div>
+      <div class="provenance" id="provenance"></div>
+    </section>
+    <section class="brain-panel" aria-label="Actual neural activity">
+      <div class="panel-heading"><span class="eyebrow">THE FIXED FLY BRAIN</span><span>138,639 neurons</span></div>
+      <canvas id="brain" role="img" aria-label="Computed spikes at actual FlyWire neuron positions."></canvas>
+      <div class="steering"><div><span>Left</span><div class="bar"><i id="left-bar"></i></div></div><strong id="turn">Straight</strong><div><span>Right</span><div class="bar"><i id="right-bar"></i></div></div></div>
+      <div class="brain-note"><span id="input">LC10a input: 0 / 0 Hz</span><button id="disconnect" aria-pressed="false">Disconnect steering</button></div>
+    </section>
+  </aside>
+</main>
+<footer>
+  <div class="controls"><button id="run" class="primary">Run the demo <span>↵</span></button><button id="pause" disabled>Pause</button><button id="speed" aria-label="Change playback speed">2× playback</button></div>
+  <p id="message" role="status" aria-live="polite">Start with the first attempt.</p>
+  <button id="inspect">Inspect evidence</button>
+</footer>
+<dialog id="inspector"><button id="close-inspector" class="close" aria-label="Close evidence">×</button><h2>The computation behind this run</h2><p>Computed neural spikes and actual Qdrant results drive this playback.</p><pre id="details"></pre></dialog>
+<script src="/assets/fly.js"></script><script src="/static/app.js"></script>
+</body></html>

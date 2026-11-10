@@ -1,0 +1,79 @@
+{
+  "world": "workshop-maze-v3",
+  "protocol": "maze-texture192-neural-choice-v1",
+  "development_seeds": [
+    300,
+    301,
+    302,
+    303,
+    304,
+    305,
+    306,
+    307
+  ],
+  "held_out_seeds": [
+    50000,
+    50001,
+    50002,
+    50003,
+    50004,
+    50005,
+    50006,
+    50007,
+    50008,
+    50009,
+    50010,
+    50011,
+    50012,
+    50013,
+    50014,
+    50015
+  ],
+  "deadline_seconds": 65,
+  "decision_window_ms": 200,
+  "balanced_input_hz": [
+    30,
+    30
+  ],
+  "maximum_zero_readout_windows": 5,
+  "threshold": 0.9,
+  "conflict_margin": 0.02,
+  "scenery_seed": 2026,
+  "source": {
+    "_internal/maze/checks.py": "367c8771e4fb577ea7e864bd43bc1cb23d9d9194205c919381a9cae5bcf91c7e",
+    "_internal/maze/cohort.py": "197db99aafc1d1216a3e9cf37bdbdd20b1d1c983b2c08db3fcea6b612ad10deb",
+    "_internal/maze/cohort_evaluate.py": "4eb460137572b2533089a319f111e8c6a8bb3eb4362f1debde5f36951537a880",
+    "_internal/maze/kernel.py": "ae5fc28ad54621ffeeb477c6ddd36d4815ffef7e5c93b5d58a52b700c6517763",
+    "_internal/maze/learner.py": "3bb23f5b60a01ca13f7fba57cebe47bf482da32ab930ffea96a9fa18f9656e20",
+    "_internal/maze/memory.py": "13b019176d8d18791934f41fb6c517f3cef10dcc735f004e49eef4e2ca9c9496",
+    "_internal/maze/observer.py": "9716fa61eeb5dee5cfbf9537c2b4320ad208a74db6e8e20288a19f7cb60d813d",
+    "_internal/maze/package.py": "c3545930b9ead0777d9a7e57527c345227d952668e9afa387b44e0b97d8fca67",
+    "_internal/maze/presentation.py": "8708aa2563507600d823ad37793cf68637aecbf8489db2a16cac3317866291db",
+    "_internal/maze/server.py": "3a29ba8df132c95e21637b4a9e418993ada56672eba93cb72967fd68397faafb",
+    "_internal/maze/simulation.py": "c43e4c530b31c3cadea78f85b6915fa8340d0bc035621d9ad65adab8357c17f0",
+    "_internal/maze/vision.py": "7e38202b090750a16d21b1d3e70e5f809d4f7ea1c24ff16e28edadb2fb60e5be",
+    "_internal/maze/workshop_evaluate.py": "01b1aeb1c4ef38935dc1cb627408adbddbc0484bb500c0e8c55eb2568e90d16e",
+    "_internal/maze/workshop_world.py": "d17c2b3790fc873a4d1531e94aa16e4fccbf42a76f40d10f69b88207d49303b7",
+    "_internal/maze/world.py": "ede569c0926f5dbae948f4277115eb1efe0e06882bc2e1653cdbdb2006365a9f",
+    "_internal/maze/neural.ts": "28ff39191d723e2eeda5140474a1dba14075ec1ef4a06e11ff0da4ead46335cc",
+    "fly_brain.py": "5b39d0b591565061c8fcf74daf2118f4d0f0af9f7a8af831efb75e6673f14353",
+    "memory.py": "57e0526bb27b6e307e8a6d1fcbcd5a3ad6f622600bbe06eaf84540eb2005a109",
+    "pipeline.py": "bd05c999590e6abe8b0b31c055081168f413dbf0ba684f5daaf31b479c0ea770",
+    "uv.lock": "8215d8a8c5bf006941e3f49a8b8065ef4b3f8ecabae8745faaa8723446d01e02",
+    "_internal/brain/data.ts": "88a3b20d52e9a793182e66343171d9ca9c5c5f25ea66df08cc7dfa23c24b39c7",
+    "_internal/brain/engine.ts": "11c291c6fcd67ffa2a982d8bf98b5396588bd76248409a3ad68578bfaadce588",
+    "_internal/brain/validate.ts": "61a9a848dd279f5d23d43ae2dbc8202fa22931324eace9a37e7c59fe33a7438a",
+    "_internal/brain/data/graph.bin.gz": "9dcf99cef2a0712cc988e1dbb84d3b5c5780d8db2162069da993aafa7ac09e61",
+    "_internal/brain/data/neurons.bin.gz": "6fe2c543c7037839f5babfe3ac851dc3c01594c2e01027e3ce26dc5b5c7021f5"
+  },
+  "scope": "One fixed engineered maze with matched neural seeds. No biological planning or search-scale claim.",
+  "group_size": 8,
+  "shared_pool": "All completed A-group observations; no B-group writes during the comparison",
+  "post_evaluation_changes": {
+    "files": [
+      "_internal/maze/package.py",
+      "_internal/maze/server.py"
+    ],
+    "note": "Release changes add a disconnected-control reset fix, CLI routing, presentation updates, and packaging. Normal-mode movement, neural computation, encoding, and retrieval policy are unchanged."
+  }
+}

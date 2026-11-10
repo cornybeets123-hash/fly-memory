@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Fly Memory · Qdrant</title>
+    <link rel="icon" href="/static/qdrant-mark.svg" />
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="https://qdrant.tech" aria-label="Qdrant"
+        ><img src="/static/qdrant.svg" alt="Qdrant"
+      /></a>
+      <nav aria-label="Workshop stage">
+        <button data-stage="none" class="active" aria-pressed="true">
+          <span>01</span>No memory</button
+        ><button data-stage="personal" aria-pressed="false">
+          <span>02</span>Personal</button
+        ><button data-stage="shared" aria-pressed="false">
+          <span>03</span>Shared
+        </button>
+      </nav>
+      <button id="help" class="quiet">Build memory</button
+      ><button id="fullscreen" class="quiet" aria-label="Enter full screen">
+        ⛶
+      </button>
+    </header>
+    <main>
+      <div class="intro">
+        <div>
+          <p id="chapter" class="eyebrow">THE FIRST ENCOUNTER</p>
+          <h1 id="title">Can they survive?</h1>
+        </div>
+        <button id="run" class="primary">Run experiment ↗</button>
+      </div>
+      <p id="error" class="error" role="alert" hidden></p>
+      <div class="view-bar">
+        <div class="legend">
+          <span class="food-key">● Food</span
+          ><span class="hazard-key">▲ Poisoned food</span
+          ><span class="observer">Audience view: hazards revealed</span>
+        </div>
+        <button id="view" class="quiet">Show colony ↗</button>
+      </div>
+      <section id="encounter" class="encounter" aria-label="Focused encounter">
+        <div class="scene">
+          <canvas
+            id="encounter-canvas"
+            role="img"
+            aria-label="Selected fly encounters food. Hazard markings are visible only to the audience."
+          ></canvas>
+          <div class="scene-caption">
+            <span id="scene-position">ONE FLY. ONE DECISION.</span>
+            <h2 id="scene-title">A sweet scent can hide danger.</h2>
+          </div>
+        </div>
+        <div class="evidence">
+          <div class="observation">
+            <p class="eyebrow">01 · SENSE</p>
+            <h3 id="sense-title">The fly senses an odor.</h3>
+            <canvas
+              id="odor-canvas"
+              role="img"
+              aria-label="Actual 24-dimensional receptor-response vector"
+            ></canvas
+            ><small>24 receptor-response dimensions. Outcome unknown.</small>
+          </div>
+          <div class="recollection">
+            <p class="eyebrow">02 · RETRIEVE</p>
+            <h3 id="memory-title">No stored experience</h3>
+            <p id="memory-detail">The next meal will reveal its outcome.</p>
+            <div id="memory-match" class="memory-match" hidden>
+              <span id="memory-source"></span
+              ><strong id="memory-score"></strong>
+            </div>
+            <button id="ablate" class="quiet" hidden>
+              Remove this memory and requery ↗
+            </button>
+          </div>
+          <div class="response">
+            <p class="eyebrow">03 · BRAIN RESPONSE</p>
+            <div class="decision">
+              <strong id="decision">?</strong
+              ><span id="motor-rate">The decision is pending.</span>
+            </div>
+            <canvas
+              id="neural-canvas"
+              role="img"
+              aria-label="Recorded sugar, bitter, and feeding motor spike counts"
+            ></canvas
+            ><small id="neural-label"
+              >Computed neural spikes · one-second trial · slowed replay</small
+            >
+          </div>
+        </div>
+      </section>
+      <section id="colony" hidden>
+        <div id="habitats" class="habitats"></div>
+        <div class="transport">
+          <button id="play" class="play" aria-label="Play experiment">▶</button
+          ><input
+            id="timeline"
+            type="range"
+            min="0"
+            max="599"
+            value="0"
+            aria-label="Experiment time"
+          /><span id="time">0%</span
+          ><select id="speed" aria-label="Playback speed">
+            <option value="10">1×</option>
+            <option value="20" selected>2×</option>
+            <option value="40">4×</option></select
+          ><button id="inspect" class="quiet">Follow a fly ↗</button>
+        </div>
+      </section>
+      <div class="story-bar">
+        <span id="story-count">Start the experiment.</span>
+        <p id="story-text">
+          Twelve flies must eat. Three harmful meals kill a fly.
+        </p>
+        <button id="next" class="primary" disabled>Reveal decision ↗</button>
+      </div>
+      <div id="wave" class="wave" hidden>A new poison appears.</div>
+      <footer>
+        <span id="code-label">Your code</span><span>Qdrant Edge</span
+        ><span>Recorded neural trials</span
+        ><button id="about" class="quiet">How it works</button
+        ><button id="verify" class="quiet" disabled>Verify live</button
+        ><button id="download-frame" class="quiet">Save frame</button
+        ><label class="seed"
+          >Seed
+          <input
+            id="seed"
+            value="2000"
+            type="number"
+            min="0"
+            max="1000000"
+            aria-label="World seed"
+        /></label>
+      </footer>
+      <p id="verification" aria-live="polite"></p>
+    </main>
+    <dialog id="lesson-dialog">
+      <button class="close quiet" aria-label="Close instructions">×</button>
+      <p class="eyebrow">EDIT ONE FILE</p>
+      <h2 id="lesson-file">memory.py</h2>
+      <p id="lesson-instruction"></p>
+      <code id="lesson-check"></code>
+      <details>
+        <summary>Show completed code</summary>
+        <pre id="lesson-code"></pre>
+      </details>
+    </dialog>
+    <dialog id="about-dialog">
+      <button class="close quiet" aria-label="Close explanation">×</button>
+      <h2>Same brain. Different experience.</h2>
+      <p>
+        Qdrant Edge retrieves observed meals. A warning changes bitter input to
+        the fixed brain model. Its feeding motor response determines whether the
+        fly eats. Sugar and P9 stimulation stay at 150 Hz each.
+      </p>
+      <p>
+        The body uses an engineered movement controller. Refusal makes it turn
+        away. Energy, poisoned food, injuries, and death belong to the designed
+        world.
+      </p>
+      <p>
+        The visible activity replays computed one-second neural trials. Verify
+        live reruns the original model. Odor vectors come from measured receptor
+        responses; their link to bitter input is engineered.
+      </p>
+      <p>
+        Audience hazard labels never enter the fly's decision. Shared memory
+        contains observations from earlier steps.
+      </p>
+      <p class="shortcuts">
+        Space: reveal or play · 1 / 2 / 3: stage · F: full screen · V: view
+      </p>
+    </dialog>
+    <script src="/static/fly.js"></script>
+    <script src="/static/app.js"></script>
+  </body>
+</html>

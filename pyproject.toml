@@ -9,20 +9,13 @@ dependencies = [
     "uvicorn[standard]>=0.54.0",
 ]
 
-[project.optional-dependencies]
-legacy = ["qdrant-client==1.19.1", "matplotlib"]
-brain = [
-    "brian2==2.10.1",
-    "joblib>=1.6.0",
-    "pandas>=3.0.6",
-    "pyarrow>=26.0.0",
-]
-
 [tool.pytest.ini_options]
 pythonpath = ["."]
+testpaths = ["_internal/tests"]
 
 [tool.ruff]
 target-version = "py312"
+extend-exclude = ["_internal/archive"]
 
 [dependency-groups]
 dev = [

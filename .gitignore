@@ -1,12 +1,10 @@
-# the brain model's own repo and its 370 MB of connectome data: clone it, see README
-brain/
-.venv-brain/
-brain_out/
+# Archived source checkout and generated maintainer artifacts
+_internal/archive/source-brain/
+_internal/artifacts/
 __pycache__/
 *.log
 
-# Vercel link state and the token `vercel link` writes
-site/.vercel/
+# Local credentials and generated workshop files
 .env*
 .venv/
 .DS_Store
@@ -14,5 +12,4 @@ site/.vercel/
 .pytest_cache/
 .ruff_cache/
 workshop-results.json
-artifacts/
 state/

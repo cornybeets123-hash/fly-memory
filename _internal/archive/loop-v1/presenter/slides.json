@@ -1,0 +1,130 @@
+[
+  {
+    "id": "flydeck_01",
+    "kind": "cover",
+    "title": "Give a fly\na memory",
+    "timing": "0:00\u20133:00",
+    "notes": "Open the demo and run No memory first. Ask the room whether the fly will choose differently on its next visit. It takes the returning circuit again. The task ends at a declared 45-second simulated deadline. No experience enters searchable memory in this mode. The audit log still retains observations for inspection. The fly keeps moving until that deadline. The 2\u00d7 display is playback of computation performed when Run is clicked. It shows actual spikes and query results.\n\nThis workshop teaches retrieval through a small worked example. Attendees can watch or edit the same files. We will build personal memory, then change who can retrieve the experience.",
+    "number": 1
+  },
+  {
+    "id": "flydeck_02",
+    "kind": "gallery",
+    "title": "Fly brains. Many interfaces.",
+    "timing": "3:00\u20134:00",
+    "notes": "These projects connect fly-brain models to different bodies and input adapters. Eon demonstrates an embodied fly simulation. NeuroCraft Fly connects a MaleCNS leaky-rate model to scripted Minecraft body programs. DOOMFLY maps visual inputs and neural readouts to a Doom controller. Its pinned baseline supplies 3,335 R1\u2013R6 brightness inputs. Later variants add channels. Those adapters provide more stimuli than this workshop. Their results do not establish our navigation behavior.\n\nOur bounded interface makes the retrieval effect easy to inspect. The network does every physical turn. The application supplies local perception, an opening policy, and forward movement. Sources: https://eon.systems/updates/embodied-brain-emulation ; https://github.com/evnsnclr/neurocraft-fly-public ; https://github.com/nftechie/doomfly/tree/71ecf53d78eaffaf1a57ed7b0ccf5d458abc9f33 ; https://github.com/dtecx/doodle-fly/tree/2a8a0311e4e488e9bf9a7f8e79e42ffb8bcaadf5 . Screenshot credits: _maintainer/assets/NOTICE.md.",
+    "number": 2
+  },
+  {
+    "id": "flydeck_10",
+    "kind": "brain",
+    "title": "Input becomes movement.",
+    "timing": "4:00\u20136:00",
+    "notes": "The pinned Doodle Fly runtime uses FlyWire v783: 138,639 neurons and 15,091,983 directed connections. Leaky integrate-and-fire neurons integrate current, leak toward rest, and emit spikes at a threshold. The diagram simplifies this process. The displayed anatomical positions and highlighted spike IDs come from the actual data and computation.\n\nOpen fly_brain.py briefly. The adapter turns the selected local bearing into left or right LC10a stimulation. The network propagates activity. We read six descending cells per side across DNa02, DNa01, DNae002, DNg111, DNb01, and DNge043. Their calibrated rate difference controls yaw. The body moves forward through an engineered rule.\n\nRetrieval changes which visible opening the local policy chooses. That changes the sensory input, neural activity, and movement. Wiring remains fixed. Memories live in Qdrant Edge. This is a designed controller around a connectome model. Dense integration checks passed, including persistent state. Brian2 scheduling equivalence and biological maze intelligence remain unestablished. Sources: _internal/brain/data/NOTICE.md ; https://github.com/dtecx/doodle-fly/tree/2a8a0311e4e488e9bf9a7f8e79e42ffb8bcaadf5 ; https://www.nature.com/articles/s41586-024-07763-9 .",
+    "number": 3
+  },
+  {
+    "id": "flydeck_03",
+    "kind": "retrieval",
+    "title": "Retrieval brings evidence into a decision.",
+    "timing": "6:00\u20138:00",
+    "notes": "Retrieval selects stored information relevant to a current task. An encoder represents the query. A search engine returns relevant records. The application uses their content in its next decision.\n\nAsk the room for a use case. Use the incident-assistant example: the user says undo a deployment, while the guide says restore the previous version. A suitable text embedding model can connect related meaning despite different wording. The assistant receives the guide as context before answering. Retrieval can also supply previous tool outcomes or related images.\n\nThe fly uses a visible entrance as its query. Its stored record contains an observed traversal outcome. Its consumer avoids repeating a completed circuit. We use Qdrant Edge, a vector search engine that runs inside this Python application. This is a concrete local-agent memory use case. Sources: https://qdrant.tech/documentation/overview/vector-search/ ; https://qdrant.tech/documentation/edge/ .",
+    "number": 4
+  },
+  {
+    "id": "flydeck_05",
+    "kind": "encoder",
+    "title": "Similarity starts with the encoder.",
+    "timing": "8:00\u20139:30",
+    "notes": "An encoder maps input into a vector. Compatible encoders and dimensions must represent stored records and queries. A text model can represent semantic meaning. An image model can represent visual features. The search engine compares the vectors supplied by the application.\n\nThis workshop uses a transparent toy image descriptor. Each view has 64 by 64 RGB pixels. We average each image column over depth, center each color channel, and normalize the resulting 192 values. Depth pooling tolerates movement along the viewed corridor. Local clear compass rays set camera orientation. The image origin stays at the real fly position.\n\nOnly captured pixels enter the vector. The encoder receives no global coordinates, route IDs, or outcomes. Scenery uses one declared random seed across all floor area. This small handcrafted descriptor supports this bounded scene. It does not establish quality for natural images. A production application selects an embedding model for its data and measures retrieval quality. Source: _internal/maze/vision.py ; https://qdrant.tech/documentation/concepts/vectors/ . The text-vector bars are schematic.",
+    "number": 5
+  },
+  {
+    "id": "flydeck_04",
+    "kind": "search",
+    "title": "Nearby vectors become candidates.",
+    "timing": "9:30\u201311:00",
+    "notes": "Cosine compares vector direction. A higher score means greater similarity under this representation. A threshold rejects weak matches. A limit caps result count. A score alone does not establish a record\u2019s truth or usefulness.\n\nHNSW organizes vectors in a layered graph for approximate nearest-neighbor search. Sparse upper layers help find a useful area. Denser lower layers refine candidates. The diagram is schematic. It does not show Qdrant\u2019s actual traversal. This tiny collection does not establish HNSW performance or a scale advantage. Qdrant supports filterable HNSW.\n\nThe actual Edge query uses Query.Nearest with the named view vector, cosine distance, limit 10, threshold 0.94, and payloads. We retain positive and adverse outcomes. The supplied consumer abstains on closely scored conflicting evidence, using a 0.02 margin. The threshold and margin describe this tested toy descriptor. They are not universal settings. Sources: https://qdrant.tech/documentation/concepts/indexing/ ; https://qdrant.tech/documentation/edge/edge-api/reading-data/ .",
+    "number": 6
+  },
+  {
+    "id": "flydeck_09",
+    "kind": "eligibility",
+    "title": "Similarity needs a scope.",
+    "timing": "11:00\u201312:30",
+    "notes": "A similar record must also belong to the applicable context. Every query filters world and protocol. The protocol identifies compatible encoding and controller assumptions. Personal scope selects source_fly equal to the current fly. Shared scope excludes the current fly and permits compatible observations from others.\n\nThis workshop changes source eligibility while keeping the vector query and consumer fixed. In a real assistant, service, version, tenant, and access rules can determine eligibility. The application must enforce its access rules. These demonstration fields do not provide a complete authorization system. Source: pipeline.py ; https://qdrant.tech/documentation/concepts/filtering/ .",
+    "number": 7
+  },
+  {
+    "id": "flydeck_11",
+    "kind": "point",
+    "title": "A memory keeps the view and its evidence.",
+    "timing": "12:30\u201314:00",
+    "notes": "A Qdrant point has an ID, a vector, and a payload. The vector represents the entrance view. The payload says what happened after the fly traversed that entrance. It also records source, world, protocol, capture time, completion time, trial, and the view hash.\n\nThe application retains the immutable captured image. It verifies the hash when displaying it. Coordinates and evaluation route labels never enter the vector or policy. The displayed record is a directly observed return to the painted start line. It describes a completed circuit, rather than a dead end. The outcome detector belongs to the simulated task. Source: _internal/maze/simulation.py ; _internal/maze/presentation.py ; https://qdrant.tech/documentation/concepts/points/ . The vector graphic samples 16 components and scales their height for legibility.",
+    "number": 8
+  },
+  {
+    "id": "flydeck_12",
+    "kind": "write",
+    "title": "Observe first. Store after.",
+    "timing": "14:00\u201315:00",
+    "notes": "At the first fork, A captures the chosen entrance. It has no stored record and takes the circuit. A publishes the captured view only after physically returning to the visible start line. The observation pairs that earlier view with the completed return.\n\nWrites occur after the current movement and decisions. A later query can use only completed observations. A recalled guess never becomes a direct observation. In an AI agent, store a tool result after execution completes. Include the context required to reuse it. Source: _internal/maze/simulation.py .",
+    "number": 9
+  },
+  {
+    "id": "flydeck_13",
+    "kind": "personal",
+    "title": "Two functions give A a memory.",
+    "timing": "15:00\u201323:00",
+    "notes": "Open memory.py. Implement remember and recall. Keep the supplied decision function. Its result changes the opening policy before the brain adapter receives a bearing.\n\ndef remember(shard, point):\n    \"\"\"Add the supplied observation to Qdrant.\"\"\"\n    shard.update(UpdateOperation.upsert_points([point]))\n\ndef recall(shard, vector, scope):\n    \"\"\"Search the view vector. Apply the supplied eligibility filter.\"\"\"\n    return shard.query(QueryRequest(\n        query=Query.Nearest(vector, using=\"view\"),\n        limit=10,\n        score_threshold=MIN_SCORE,\n        filter=scope,\n        with_payload=True,\n    ))\n\nRun uv run run.py --check personal. Save and select Personal memory. Each personal run starts with an empty index. It receives no observations from the opening No memory demonstration. The fly must complete its own circuit before retrieval can change its next choice. The app reloads saved Python functions on each run. Sources: https://qdrant.tech/documentation/edge/edge-api/updating-data/ ; https://qdrant.tech/documentation/edge/edge-api/reading-data/ .",
+    "number": 10
+  },
+  {
+    "id": "flydeck_15",
+    "kind": "personal_demo",
+    "title": "A recognizes its own experience.",
+    "timing": "23:00\u201326:00",
+    "notes": "Run Personal memory. At its first visit, A has no match. It explores the loop. On returning to start, it stores its own completed observation. At its second fork visit, A retrieves that earlier record and avoids the loop. The same continuous run then reaches the exit.\n\nPoint to both captured images and the Observed by A, Used by A provenance. The gray ghost has identical initial pose, world, neural seed, and body parameters. Its consumer ignores memory and repeats the loop. Retrieval changes the chosen bearing. The actual neural readout still controls every turn. The fly starts empty each time Run again is clicked.",
+    "number": 11
+  },
+  {
+    "id": "flydeck_16",
+    "kind": "sharing",
+    "title": "B borrows the same experience.",
+    "timing": "26:00\u201329:00",
+    "notes": "B is a newcomer with zero observations of its own. It receives the same completed A circuit record that A used on its second visit. It can recognize that entrance before traversing it. The improvement comes from changing whose experience is eligible.\n\nThe gray comparison shows B with personal scope. It cannot retrieve A\u2019s record. It explores the loop, creates its own observation, and exits later. Both runs start from the same pose with the same neural seed. This distinguishes shared evidence from giving one fly an extra record.\n\nQdrant Edge runs locally inside the Python process. Shared mode uses the existing shard that A wrote. The workshop models shared access within one process. Network synchronization and transfer between different neural models are outside the lesson.",
+    "number": 12
+  },
+  {
+    "id": "flydeck_17",
+    "kind": "shared_build",
+    "title": "The filter decides whose experience counts.",
+    "timing": "29:00\u201333:00",
+    "notes": "Open pipeline.py. Keep the world and protocol filters. Select the current fly for personal memory. Exclude the current fly for shared memory.\n\ndef scope(world, protocol, fly, shared=False):\n    \"\"\"Use compatible observations from the current memory scope.\"\"\"\n    must = [\n        FieldCondition(\"world\", match=MatchValue(world)),\n        FieldCondition(\"protocol\", match=MatchValue(protocol)),\n    ]\n    source = FieldCondition(\"source_fly\", match=MatchValue(fly))\n    if shared:\n        return Filter(must=must, must_not=[source])\n    return Filter(must=[*must, source])\n\nRun uv run run.py --check shared. Save and select Shared memory. Query.Nearest, the vector, score threshold, and decision function stay the same. The source rule changes. Source: https://qdrant.tech/documentation/edge/edge-api/reading-data/ .",
+    "number": 13
+  },
+  {
+    "id": "flydeck_23",
+    "kind": "results",
+    "title": "Same brain. Different experience.",
+    "timing": "33:00\u201338:00",
+    "notes": "Run Shared memory. B uses A\u2019s completed return record on its first fork visit. Point to Observed by A, Used by B. B reaches the exit before its personal-memory ghost. That ghost must learn independently. The comparison keeps the initial pose, brain seed, scene, and engineered body fixed.\n\nThe summary uses 10 declared held-out seeds and a fixed 45-second task deadline. Report exit success, time, path, returns, collisions, stalls, and false exclusions together. The results describe this bounded simulated task. They establish neither biological intelligence nor search-engine scale performance. The development failure remains in artifacts/plans/maze-evidence/loop-pixel-development-failed.json. It motivated the declared column-pooled representation.\n\nThe inspector separates query results, selected evidence, applied exclusions, sensory rates, spikes, and movement. Disconnect steering is an optional live control. Spikes and retrieval still compute, while physical yaw becomes zero. A blocked fly cannot complete the task. The control shows that the neural readout supplies the turns.",
+    "number": 14
+  },
+  {
+    "id": "flydeck_24",
+    "kind": "transfer",
+    "title": "Your agent can use the same pattern.",
+    "timing": "38:00\u201342:00",
+    "notes": "Return to the incident assistant. Encode the current tool observation with a suitable model. Retrieve compatible completed incidents. Give the selected evidence to the agent as context. Execute its next action. Store the new observed result after it completes.\n\nPersonal memory can retrieve the current user\u2019s or agent\u2019s history. Shared memory can retrieve eligible team experience. Choose access rules, model compatibility, freshness, and conflict handling for the workload. Measure the consumer\u2019s outcome as well as retrieval quality. A search hit becomes useful only through that consumer.\n\nAsk attendees what evidence their agents currently rediscover. The transferable implementation is a vector query plus payload filters and an explicit consumer. The fly\u2019s motor adapter is the worked example.",
+    "number": 15
+  },
+  {
+    "id": "flylesson_27",
+    "kind": "closing",
+    "title": "What should your\nnext agent remember?",
+    "timing": "42:00\u201345:00",
+    "notes": "Take questions. The QR links to the same files used on stage. The download includes the starter files, hidden runtime, presenter guide, PDF, and recorded fallback. It requires Python 3.12, Node.js 22.18 or later, and uv for live computation. No setup is required to watch. The offline HTML opens directly and replays recorded computation. It does not execute edited Python.\n\nDownload: https://drive.google.com/file/d/1OQzqriEYKj4KyG4AuuVJOAPegMhSYkqY/view . Deck: https://docs.google.com/presentation/d/1aj-Nia6P6c8aZw6a_gu1u8tqcZn0tQ2mNLOttiZOWCI/edit .",
+    "number": 16
+  }
+]

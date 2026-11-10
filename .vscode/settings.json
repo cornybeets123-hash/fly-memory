@@ -1,0 +1,27 @@
+{
+  "editor.fontSize": 24,
+  "editor.minimap.enabled": false,
+  "editor.wordWrap": "on",
+  "files.exclude": {
+    "_internal": true,
+    "_maintainer": true,
+    ".venv": true,
+    ".pytest_cache": true,
+    ".ruff_cache": true,
+    ".firecrawl": true,
+    "__pycache__": true,
+    ".claude": true,
+    ".vscode": true,
+    "uv.lock": true,
+    "pyproject.toml": true,
+    "run.py": true,
+    "AGENTS.md": true,
+    ".python-version": true,
+    ".gitignore": true,
+    "CLAUDE.md": true
+  },
+  "search.exclude": {
+    "_internal/archive/**": true,
+    "_internal/artifacts/**": true
+  }
+}

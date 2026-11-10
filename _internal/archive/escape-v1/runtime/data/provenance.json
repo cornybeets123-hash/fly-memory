@@ -1,0 +1,20 @@
+{
+  "upstream": "https://github.com/dtecx/doodle-fly",
+  "commit": "2a8a0311e4e488e9bf9a7f8e79e42ffb8bcaadf5",
+  "dataset": "FlyWire FAFB v783",
+  "neurons": 138639,
+  "connections": 15091983,
+  "files": {
+    "graph.bin.gz": "9dcf99cef2a0712cc988e1dbb84d3b5c5780d8db2162069da993aafa7ac09e61",
+    "neurons.bin.gz": "6fe2c543c7037839f5babfe3ac851dc3c01594c2e01027e3ce26dc5b5c7021f5",
+    "meta.json": "3e032f55d4c0a90aa79fa66e013b4e944e5902a41c7403f2b21efa22535c6676"
+  },
+  "code_license": "MIT",
+  "data_license": "CC BY-NC 4.0",
+  "modifications": [
+    "Record natural external input events",
+    "Add a separate time-offset sensory replay channel",
+    "Preserve replay targets and externally driven refractory behavior",
+    "Share fixed weight arrays between sessions"
+  ]
+}

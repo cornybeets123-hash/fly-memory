@@ -1,0 +1,225 @@
+[
+  {
+    "kind": "cover",
+    "title": "Give a fly\na memory",
+    "timing": "0:00 to 0:30",
+    "notes": "0:00 to 0:30. This is a lesson on retrieval. By the end, the audience should explain what retrieval returns, how vector search and filters work together, and how to connect retrieved evidence to an action.\n\nThe worked example adds external memory to a fixed computational fly brain. The same files support optional coding. Keep the opening short.",
+    "id": "flydeck_01",
+    "number": 1,
+    "visual_sources": [
+      "Native editable technical diagram, code, or data"
+    ]
+  },
+  {
+    "kind": "projects",
+    "title": "People connect fly brains to bodies and games.",
+    "timing": "0:30 to 1:20",
+    "notes": "0:30 to 1:20. Show three existing projects. Eon connects a Shiu-style brain model to a NeuroMechFly body. NeuroCraft Fly uses a MaleCNS leaky-rate model to select scripted Minecraft body programs. DOOMFLY maps modeled sensory activity and neural readouts to a Doom controller. These are related fly-connectome projects with different datasets, dynamics, and controllers. They are not three demonstrations of this workshop's exact model.\n\nThe workshop uses the pinned Shiu v630 model for feeding, with a designed memory adapter. The screenshot gallery introduces the ecosystem; it does not establish biological fidelity or natural learning. Spend one minute, then show our no-memory failure.\n\nScreenshot sources and credits: Eon Systems, https://eon.systems/updates/embodied-brain-emulation ; Evan Sinclair Smith, https://github.com/evnsnclr/neurocraft-fly-public ; DOOMFLY contributors, https://github.com/nftechie/doomfly . Media provenance is in _maintainer/assets/NOTICE.md.",
+    "id": "flydeck_02",
+    "number": 2,
+    "visual_sources": [
+      "assets/eon-embodied.jpg",
+      "assets/neurocraft.jpg",
+      "assets/doomfly.jpg",
+      "assets/NOTICE.md"
+    ]
+  },
+  {
+    "kind": "opening",
+    "title": "What happens when experience leaves no trace?",
+    "timing": "1:20 to 4:00",
+    "notes": "1:20 to 4:00. Switch to the live demo. Select No memory and Run. Ask the audience to predict the marked meal. Reveal the injury, then the repeat encounter. Show the colony long enough to establish the failure. Return to the deck.\n\nTwelve flies must keep eating. Three poisoned meals kill one fly. The audience sees hazard marks; the fly receives a scent vector. No memory records the injury, so a later encounter cannot retrieve it. Movement, energy, and poison are engineered rules. The slide uses a cropped frame from the actual first injury.",
+    "id": "flydeck_03",
+    "number": 3,
+    "visual_sources": [
+      "assets/no-memory-demo.png"
+    ]
+  },
+  {
+    "kind": "neuron",
+    "title": "The model turns inputs into spikes.",
+    "timing": "4:00 to 5:30",
+    "notes": "4:00 to 5:30. The Shiu model uses FlyWire v630 connectivity and neurotransmitter identity. This pinned network contains 127,400 neurons and 14,687,178 modeled connections. A neuron integrates incoming activity, leaks toward rest, and emits a spike after crossing a voltage threshold. The schematic illustrates this rule; it is not a measured voltage trace. Rest and reset are -52 mV, and the spike threshold is -45 mV.\n\nThe feeding readout is left MN9 activity over one second. The demo permits feeding above 10 Hz. The network resets before each trial, and its weights stay fixed. Sugar and P9 stimulation stay at 150 Hz each; the memory adapter changes bitter stimulation. P9 IDs use the Sapkal v630 annotations.\n\nThe workshop replays archived computed trials. Verify live can separately recompute one condition. Movement and survival use an engineered controller and rules.\n\nSources: https://www.nature.com/articles/s41586-024-07763-9 ; https://www.nature.com/articles/s41586-024-07854-7 ; https://github.com/philshiu/Drosophila_brain_model/blob/91bdd1e7dcf193f3e7ca5a8933497fcef63b7960/model.py",
+    "id": "flydeck_05",
+    "number": 4,
+    "visual_sources": [
+      "Native editable technical diagram, code, or data"
+    ]
+  },
+  {
+    "kind": "general",
+    "title": "Vector search retrieves by similarity.",
+    "timing": "5:30 to 7:00",
+    "notes": "5:30 to 7:00. Define retrieval as selecting stored information relevant to a current task. Vector search does this by comparing numerical representations. A query describes what is needed. The search engine returns matching records. An application then uses those records.\n\nUse the illustrative documentation example. The question says undo a deployment. A relevant document says restore the previous version. Their words differ, but their meanings are related. A suitable text embedding model can place these observations near each other. Search returns the document; an assistant can use it as evidence in its answer.\n\nAn agent can use the same mechanism to retrieve a similar tool failure and a verified past result. In our worked example, a scent query returns an earlier meal observation. The representation and the evidence policy change with the application.\n\nSources: https://qdrant.tech/documentation/overview/ ; https://qdrant.tech/documentation/edge/edge-api/reading-data/",
+    "id": "flydeck_04",
+    "number": 5,
+    "visual_sources": [
+      "Native editable technical diagram, code, or data"
+    ]
+  },
+  {
+    "kind": "encoding",
+    "title": "An encoder makes observations comparable.",
+    "timing": "7:00 to 8:15",
+    "notes": "7:00 to 8:15. An encoder turns an observation into a vector. Each dimension is a number, and the representation determines what similarity means. A text application uses a compatible embedding model for stored document chunks and questions. Its dimension count depends on the chosen model.\n\nThe fly uses 24 receptor-response dimensions. The simulation designs mixtures from measured DoOR single-odorant responses, then adds fresh contact noise. OdorSpace.encode() subtracts a fixed library mean and normalizes the resulting vector to length one. The displayed bars show the actual current-query vector. Negative centered values mean below the library mean.\n\nThe mixture responses and poison assignments are designed assumptions. Query and stored vectors must use the same encoding. The odor vector enters retrieval; it does not directly stimulate a modeled olfactory circuit here.\n\nSources: _internal/senses.py ; https://doi.org/10.1038/srep21841",
+    "id": "flydeck_09",
+    "number": 6,
+    "visual_sources": [
+      "Native editable technical diagram, code, or data"
+    ]
+  },
+  {
+    "kind": "cosine",
+    "title": "Cosine compares the vector directions.",
+    "timing": "8:15 to 9:30",
+    "notes": "8:15 to 9:30. Show cosine as the dot product divided by both vector lengths. The angle drawing is a two-dimensional teaching schematic.\n\nThe actual match uses all 24 dimensions. The stored object five at step 52 and current object 13 at step 125 have measured cosine similarity 0.933418. Their vectors differ because the objects and contact noise differ.\n\nNormalization gives each vector length one, so cosine equals their dot product. This score measures alignment. It is not a probability of poison. \n\nSources: evidence.json; _internal/senses.py; https://qdrant.tech/documentation/concepts/collections/#distance-metrics",
+    "id": "flydeck_10",
+    "number": 7,
+    "visual_sources": [
+      "Native editable technical diagram, code, or data"
+    ]
+  },
+  {
+    "kind": "point",
+    "title": "A memory has a vector and a fact.",
+    "timing": "9:30 to 10:45",
+    "notes": "9:30 to 10:45. Work through the actual Point with ID 636. The named odor vector holds 24 numbers.\n\nVector comparison finds similar observations. The payload holds the directly observed outcome, simulation step, and zero-based source fly index. The UI calls index 11 Fly 12.\n\nOutcome -1 means observed harm and +1 means a safe meal. The vector does not contain the poison label. The object ID and position stay outside retrieval.\n\nThe point ID provides identity and traceability. This is the record created after Fly 12 is injured at step 52. \n\nSources: _internal/experiment.py; https://qdrant.tech/documentation/concepts/points/",
+    "id": "flydeck_08",
+    "number": 8,
+    "visual_sources": [
+      "Native editable technical diagram, code, or data"
+    ]
+  },
+  {
+    "kind": "eligibility",
+    "title": "Similarity ranks. Filters set eligibility.",
+    "timing": "10:45 to 12:30",
+    "notes": "10:45 to 12:30. The first three rows come from an actual unfiltered Edge query over Fly 12's personal observations before step 125. The labeled Example row is an illustrative contrast, not a measured candidate. It shows why a filter matters even when similarity is high.\n\nThe warning query requires outcome=-1 and cosine similarity at least 0.72. Point 636 is the only eligible measured result. The two measured safe rows fail the outcome filter and fall below the threshold. The Example row passes the threshold and fails only the outcome filter.\n\nA limit is a maximum, so a request for three can return one or zero. Similarity ranks eligible candidates; metadata rules determine which evidence may count. Other applications can filter by user, permissions, source, or time.\n\nSources: _internal/data/workshop-evidence.json personal_unfiltered_candidates ; https://qdrant.tech/documentation/edge/edge-api/reading-data/ ; https://qdrant.tech/documentation/concepts/filtering/",
+    "id": "flydeck_11",
+    "number": 9,
+    "visual_sources": [
+      "Native editable technical diagram, code, or data"
+    ]
+  },
+  {
+    "kind": "query",
+    "title": "The query combines similarity and context.",
+    "timing": "12:30 to 14:00",
+    "notes": "12:30 to 14:00. Explain each request argument. Query.Nearest compares the current vector with stored odor vectors. limit=3 caps the number of returned points. score_threshold=0.72 rejects weaker cosine matches. with_payload=True returns the evidence fields alongside each ID and score.\n\nharmful is a short name for Filter(must=[FieldCondition(\"outcome\", match=MatchValue(-1))]). It is the outcome filter from the previous slide. In memory.py, construct this filter inline or assign it to a local variable. The starter imports the required Edge types. The reference implementation writes the filter inline and later adds an optional source exclusion.\n\nA limit is a maximum. This checkpoint returns one hit, observation 636, with score 0.933418 and its payload. An empty eligible set returns no hits. Retrieval returns evidence for the policy; it does not decide by itself.\n\nSources: _internal/answers.py ; https://qdrant.tech/documentation/edge/edge-api/reading-data/",
+    "id": "flydeck_12",
+    "number": 10,
+    "visual_sources": [
+      "Native editable technical diagram, code, or data"
+    ]
+  },
+  {
+    "kind": "write",
+    "title": "Observation happens after the action.",
+    "timing": "14:00 to 15:00",
+    "notes": "14:00 to 15:00. Follow the execution order. The fly senses, retrieves earlier evidence, and acts.\n\nA meal reveals a safe or harmful outcome. That direct observation creates a point and remember() upserts it. A refusal gives no meal outcome, so it creates no memory of food safety.\n\nA retrieved prediction must not become a new observed fact. The upsert uses a stable point ID, named vector, and payload. The model weights stay fixed. \n\nSources: _internal/answers.py remember(); _internal/experiment.py; https://qdrant.tech/documentation/edge/edge-api/updating-data/",
+    "id": "flydeck_13",
+    "number": 11,
+    "visual_sources": [
+      "Native editable technical diagram, code, or data"
+    ]
+  },
+  {
+    "kind": "policy",
+    "title": "The application turns evidence into an input.",
+    "timing": "15:00 to 17:00",
+    "notes": "15:00 to 17:00. The application uses the maximum harmful score, or zero for no hits, then bounds it to zero through one. This is the evidence policy. Additional lower-ranked harmful matches do not change its maximum. The retrieval request and the downstream policy are separate choices.\n\nFor point 636, warning=0.933418. fly_brain.py computes ceil(warning*4)*50, bounded to zero through 200 Hz. This selects 200 Hz bitter stimulation. The matched recorded seed-107 trial gives left MN9=2 Hz, below the demo's feeding gate. Sugar, P9, and the neural seed remain fixed.\n\nAn eligible score from 0.72 through 0.75 selects 150 Hz bitter. At that dose, seed 102 gives MN9=13 Hz and still feeds. One of eight recorded 150 Hz seeds feeds. Query eligibility therefore does not guarantee refusal; the threshold and adapter interact. Keep their parameters fixed during the comparison.\n\nAn assistant can instead place returned documents into its context. A tool agent can use a verified past observation when choosing its next action.\n\nSources: _internal/answers.py decide() ; fly_brain.py ; _internal/data/brain-bank.json",
+    "id": "flydeck_15",
+    "number": 12,
+    "visual_sources": [
+      "Native editable technical diagram, code, or data"
+    ]
+  },
+  {
+    "kind": "personalbuild",
+    "title": "Personal memory needs three functions.",
+    "timing": "17:00 to 24:00",
+    "notes": "17:00 to 24:00. Code on stage in memory.py. The imports, constants, point construction, and Edge shards are ready.\n\nFirst implement remember() with the single upsert. Then implement recall() with the nearest query, outcome filter, threshold, and payload. Include optional source exclusion so the second build needs only two calls.\n\nImplement decide() as the strongest harmful score or zero, bounded to zero through one. Keep the actual editor large. The diagrams on prior slides explain each line.\n\nRun uv run run.py --check personal. Attendees can watch or use the exact same files. Allow seven minutes; if delayed, restore the completed functions through Build memory and explain the three contracts.\n\nDuring the first build, identify exclude_fly as the optional argument for the upcoming shared query. Its source filter is explained fully on slide 15.",
+    "id": "flydeck_16",
+    "number": 13,
+    "visual_sources": [
+      "Native editable technical diagram, code, or data"
+    ]
+  },
+  {
+    "kind": "intervention",
+    "title": "One memory changes this decision.",
+    "timing": "24:00 to 28:00",
+    "notes": "24:00 to 28:00. Run Personal in the live demo. Follow Fly 12's injury at step 52, then its contact with a different object at step 125.\n\nShow point 636 and similarity 0.933418. Ask what should happen if that point is removed. Reveal the 2 Hz response.\n\nRemove this memory and requery at the same checkpoint. The query returns no warning and the matched recorded trial for seed 107 at zero bitter gives 82 Hz. Restore the memory.\n\nThese are a matched single-decision intervention, not two population trajectories. The probe writes no new outcome. Show No memory versus Personal colony results, keeping safe meals and injuries visible. \n\nSources: personal seed 2000 checkpoint; probe personal:125:11.",
+    "id": "flydeck_17",
+    "number": 14,
+    "visual_sources": [
+      "Native editable technical diagram, code, or data"
+    ]
+  },
+  {
+    "kind": "sharedarchitecture",
+    "title": "Each fly keeps personal memory. The colony shares observations.",
+    "timing": "28:00 to 31:00",
+    "notes": "28:00 to 31:00. Recall the shared-run example. Fly 05 directly observes harm at step nine and creates point 113. Fly 11 reaches a different object at step 29. Its own personal history has no useful warning, but the shared query can retrieve 113 at cosine similarity 0.9388135.\n\nExplain both diagrams. After an observed meal, the source fly writes the point to its own personal shard and the shared shard. At a later contact, the querying fly reads its own personal shard and the shared shard. The shared shard is common. The personal shards belong to different flies. The application merges the returned lists.\n\nThe shared query excludes records whose source_fly equals the querying fly. This prevents its own published copy from appearing as social evidence. The payload keeps source and step so the presenter can inspect the observation. Source metadata does not establish reliability by itself.\n\nAll queries on a simulation step see only earlier observations. The simulation buffers new points until every fly has decided on that step. Two flies can therefore suffer the first new-poison injuries simultaneously. This is an application timing rule. Explain it here without a separate slide. The shared shard is local; this workshop does not implement network synchronization.\n\nSources: pipeline.py ; _internal/answers.py ; _internal/experiment.py ; shared run seed 2000.",
+    "id": "flydeck_19",
+    "number": 15,
+    "visual_sources": [
+      "Native editable technical diagram, code, or data"
+    ]
+  },
+  {
+    "kind": "sharedbuild",
+    "title": "Shared memory adds one read and one write.",
+    "timing": "31:00 to 35:00",
+    "notes": "31:00 to 35:00. Open pipeline.py. Inside retrieve(), keep the personal query and add memory.recall(shared, vector, exclude_fly=fly) to hits when mode is shared.\n\nInside observe(), keep the personal upsert and add memory.remember(shared, point) when mode is shared. The caller supplies direct observations and buffers them until after the step. Run uv run run.py --check shared.\n\nShow the filter argument and retained provenance before leaving the editor. These are the exact two additions in the reference implementation.",
+    "id": "flydeck_23",
+    "number": 16,
+    "visual_sources": [
+      "Native editable technical diagram, code, or data"
+    ]
+  },
+  {
+    "kind": "shareddemo",
+    "title": "Shared memory reuses another fly\u2019s experience.",
+    "timing": "35:00 to 40:00",
+    "notes": "35:00 to 40:00. Run Shared. Show Fly 05's first injury and Fly 11 retrieving point 113 at the different meal.\n\nInspect its source, score, bitter input, and motor response. Remove the point and requery, then restore it. Continue to the new poison.\n\nTwo simultaneous first injuries occur at step 357. Later, Fly 02 retrieves a new-poison observation at step 517 and refuses, with left MN9=1 Hz. Keep the personal and shared colonies visible at the end.\n\nEvidence first, then the population result. The default world is a selected story seed, 2000. \n\nSources: shared run chapters.",
+    "id": "flydeck_24",
+    "number": 17,
+    "visual_sources": [
+      "Native editable technical diagram, code, or data"
+    ]
+  },
+  {
+    "kind": "evaluation",
+    "title": "A useful memory system must still eat.",
+    "timing": "40:00 to 42:00",
+    "notes": "40:00 to 42:00. These means use the same 20 declared worlds, seeds 10000 through 10019, for all three policies. No memory: 0.25 alive, 82.7 safe meals, 35.75 poisoned meals.\n\nPersonal: 5.35 alive, 185.1 safe, 30.0 poisoned. Shared: 12.0 alive, 219.9 safe, 3.1 poisoned. Display all three outcomes because refusal can prevent poison while causing starvation.\n\nPersonal survival ranges from one to 11. The stage seed has 10 personal survivors and was chosen to make evidence traceable. These results describe this designed cue space and engineered world.\n\nSource: _internal/data/evaluation.json.\n\nDo not infer success from low poison alone. In a wrong-label control, shared memory gives only 10.4 safe meals and 11.2 starvation deaths on average. The full failed controls remain in the presenter guide and evaluation.json. Similarity cannot repair false evidence.",
+    "id": "flydeck_25",
+    "number": 18,
+    "visual_sources": [
+      "Native editable technical diagram, code, or data"
+    ]
+  },
+  {
+    "kind": "transfer",
+    "title": "An AI agent can use the same memory contract.",
+    "timing": "42:00 to 43:00",
+    "notes": "42:00 to 43:00. Use a concrete illustrative deployment-agent example. Encode the current tool observation, retrieve a similar verified past incident, then let the agent use that evidence when choosing a recovery action.\n\nStore the new result only after observing it. The vector represents the situation. The payload retains verified outcome, source, and observation time.\n\nA context filter might restrict service, tenant, permissions, and freshness. This slide is a mapping, not a second implementation. Text embeddings, evidence validation, and action policy must be chosen for that application.\n\nAsk which retrieved record would justify the next action. The illustrative record must retain the previous action as well as its observed result. Here the action is retry and the observed result is success.\n\nThat historical evidence informs a later decision; it does not guarantee another retry will work.",
+    "id": "flylesson_26",
+    "number": 19,
+    "visual_sources": [
+      "Native editable technical diagram, code, or data"
+    ]
+  },
+  {
+    "kind": "closing",
+    "title": "Which evidence changed the decision?",
+    "timing": "43:00 to 45:00",
+    "notes": "43:00 to 45:00. Take questions. The QR opens the download with the same memory.py and pipeline.py used on stage, the recorded offline replay, and the environment lockfile.\n\nThe central test is to inspect the returned evidence and remove it at a fixed checkpoint. A learner should now be able to name the representation, the eligibility rules, the returned record, the write trigger, and the consumer policy. Keep the optional setup in the download.\n\nEnd with questions rather than a product pitch.",
+    "id": "flylesson_27",
+    "number": 20,
+    "visual_sources": [
+      "Workshop download QR"
+    ]
+  }
+]
