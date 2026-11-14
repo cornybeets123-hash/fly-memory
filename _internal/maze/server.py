@@ -29,6 +29,7 @@ lock = Lock()
 attempts = OrderedDict()
 worker = None
 reference_mode = False
+webinar_mode = False
 progress = {"done": 0, "total": 0}
 
 
@@ -88,7 +89,7 @@ def kernel():
 
 @app.get("/")
 def index():
-    return FileResponse(STATIC / "index.html")
+    return FileResponse(STATIC / ("webinar.html" if webinar_mode else "index.html"))
 
 
 @app.get("/api/status")
@@ -101,6 +102,8 @@ def status():
         "code": "Completed code" if reference_mode else "Your code",
         "group_size": cohort.SIZE,
         "default_seed": cohort.DEFAULT_SEED,
+        "webinar": webinar_mode,
+        "deadline_ms": getattr(World, "deadline", cohort.DEADLINE) * 1000,
     }
 
 
@@ -120,14 +123,14 @@ def compute(request: Request):
         if request.count > 1:
             return compute_group(model, world, state, request)
         if request.mode in {"none", "personal"}:
-            history, variant, duration = [], 0, 65
+            history, variant, duration = [], 0, getattr(world, "deadline", 65)
         else:
             if "personal" not in state:
                 raise HTTPException(
                     409, "Run Personal memory before sharing its experience."
                 )
             history = state["personal"]["episodes"]
-            variant, duration = 0, 65
+            variant, duration = 0, getattr(world, "deadline", 65)
         backend = memory if reference_mode or request.mode == "none" else learner.load()
         common = None
         if request.mode != "none" and not request.disconnect:
@@ -228,11 +231,22 @@ def prepare_group(state, request):
 def group_payload(model, world, state, request, history, seeds, results):
     mode = request.mode
     prior = "none" if mode == "personal" else "personal" if mode == "shared" else None
+    if webinar_mode and mode == "shared":
+        prior = "none"
     comparisons = (
         state.get(mode if request.disconnect else prior, [])
         if prior or request.disconnect
         else []
     )
+    stages = {
+        name: cohort.totals(state[name])
+        for name in ("none", "personal", "shared")
+        if name in state
+    }
+    if webinar_mode and stages:
+        from .webinar_evaluate import summaries
+
+        stages = summaries({name: state[name] for name in stages}, world)
     return {
         "mode": mode,
         "flies": [pack(result, world) for result in results],
@@ -243,15 +257,16 @@ def group_payload(model, world, state, request, history, seeds, results):
         "source": "Computed now",
         "disconnect": request.disconnect,
         "code": "Completed code" if reference_mode else "Your code",
+        "comparison_mode": prior,
         "cohort": {
             "seeds": seeds,
-            "deadline_ms": cohort.DEADLINE * 1000,
-            "summary": cohort.totals(results) if results else None,
-            "stages": {
-                name: cohort.totals(state[name])
-                for name in ("none", "personal", "shared")
-                if name in state
-            },
+            "deadline_ms": getattr(world, "deadline", cohort.DEADLINE) * 1000,
+            "summary": (
+                stages.get(mode) if not request.disconnect else cohort.totals(results)
+            )
+            if results
+            else None,
+            "stages": stages,
         },
     }
 
@@ -325,7 +340,10 @@ def live(request: Request):
                     "owner": f"{'B' if request.mode == 'shared' else 'A'}{i + 1}",
                     "seed": seed,
                     "mode": request.mode,
-                    "summary": {"time_ms": cohort.DEADLINE * 1000, "exit": False},
+                    "summary": {
+                        "time_ms": getattr(world, "deadline", cohort.DEADLINE) * 1000,
+                        "exit": False,
+                    },
                     "frames": [],
                     "decisions": [],
                     "events": [],
@@ -351,7 +369,22 @@ def live(request: Request):
             if not request.disconnect:
                 state[request.mode] = results
             committed = True
-            yield {"type": "complete", "summary": cohort.totals(results)}
+            measured = {
+                name: cohort.totals(state[name])
+                for name in ("none", "personal", "shared")
+                if name in state
+            }
+            if webinar_mode and not request.disconnect:
+                from .webinar_evaluate import summaries
+
+                measured = summaries({name: state[name] for name in measured}, world)
+            yield {
+                "type": "complete",
+                "summary": measured.get(request.mode, cohort.totals(results))
+                if not request.disconnect
+                else cohort.totals(results),
+                "stages": measured,
+            }
         except Exception as error:  # noqa: BLE001 - report saved-code failures in the stream
             try:
                 simulation.close()

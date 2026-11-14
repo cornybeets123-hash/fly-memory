@@ -1,5 +1,20 @@
 # Give a fly a memory
 
+This branch contains the webinar demo. Run `uv run run.py` and open http://127.0.0.1:8766.
+
+Select **Play comparison** to race 1,000 flies without memory against 1,000 newcomers with shared memory. Both crowds use one clock and matched seeds. Playback runs at 4× and stops at the labeled 60-second checkpoint, after about 15 seconds. The shared pool contains completed observations from earlier explorers.
+
+Each maze shows recorded fly positions, with counts where flies overlap. Eight labeled close-ups follow distinct trials in each crowd. The small fly grid shows all 1,000 trial outcomes.
+
+Select **Why did this fly turn?** to pause at a recorded use of shared memory. Inspect the captured view, source observation, changed sensory input, and actual neural choice. **Replay this turn** shows the recorded passage at normal speed. The timeline can inspect the full 180-second trial. **Completed results and failed attempts** contains every condition and both stopped attempts.
+
+**Demo controls** contains the personal-memory condition, the eight-fly live demo, and population preparation. The larger maze has eight forks and a 180-second limit. The recorded comparison and live demo use the same sensory adapter, fixed wiring, and movement code. Playback speed changes the display clock.
+
+Select **Prepare 1,000-fly comparison** before the webinar if the recordings are missing. Preparation computes 3,000 real trials across the three conditions. It saves progress under `_internal/artifacts/webinar-hive/`. Run preparation from the terminal with `uv run python -m _internal.maze.webinar_population`. Completed groups resume when the source hashes match. The population display uses recorded trajectories and sampled neural frames.
+
+Run `uv run run.py --workshop` for the original workshop starter, or add `--solution` for its completed reference. The original workshop instructions follow.
+
+
 A 45-minute AI Dev Day workshop about retrieval. Watch the presenter, or use the same files.
 
 ## Run

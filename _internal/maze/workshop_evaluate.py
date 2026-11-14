@@ -28,7 +28,7 @@ OUTCOMES = {
 DEADLINE = 65
 
 
-def place(world, frame, view):
+def place(world, frame, view, outcomes=OUTCOMES):
     x, y = frame["x"], frame["y"]
     number, (cx, cy) = min(
         enumerate(world.junction_centers),
@@ -41,7 +41,7 @@ def place(world, frame, view):
         return None
     direction = ("east", "south", "west", "north")[round(axis / (math.pi / 2)) % 4]
     key = number, direction
-    if key not in OUTCOMES:
+    if key not in outcomes:
         raise ValueError("A camera points toward a closed arm")
     return key
 

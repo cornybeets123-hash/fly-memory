@@ -9,6 +9,7 @@ def main():
     parser.add_argument(
         "--solution", action="store_true", help="Rehearse with completed code."
     )
+    parser.add_argument("--workshop", action="store_true", help="Open the original coding workshop.")
     parser.add_argument(
         "--check", choices=("personal", "shared"), help="Check the saved code."
     )
@@ -58,11 +59,18 @@ def main():
 
     from _internal.maze import server
 
-    server.reference_mode = args.solution
+    server.reference_mode = args.solution or not args.workshop
+    if not args.workshop:
+        from _internal.maze.webinar_playback import router
+        from _internal.maze.webinar_world import WebinarWorld
+
+        server.World = WebinarWorld
+        server.webinar_mode = True
+        server.app.include_router(router)
     print("Open http://127.0.0.1:8766")
     print(
         "Completed code"
-        if args.solution
+        if server.reference_mode
         else "Edit memory.py, then pipeline.py. Save and click Run again."
     )
     uvicorn.run(server.app, host="127.0.0.1", port=8766, log_level="warning")

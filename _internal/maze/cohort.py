@@ -19,11 +19,20 @@ def batches(
     history=(),
     disconnect=False,
     progress=None,
+    owner_offset=0,
+    trace=True,
+    history_loaded=False,
 ):
     """Publish every 100 ms. Apply writes after all eight current-cycle decisions."""
     results = [None] * len(seeds)
     latest = [None] * len(seeds)
     writes = []
+    # Completed history is immutable during this stage. Load it once for the group.
+    loaded = history_loaded
+    if mode == "shared" and shard is not None and not loaded:
+        for episode in history:
+            backend.remember(shard, episode.point)
+        loaded = True
     with ExitStack() as cleanup:
         active = {}
         for index, seed in enumerate(seeds):
@@ -32,16 +41,17 @@ def batches(
                 world,
                 seed=seed,
                 mode=mode,
-                owner=f"{'B' if mode == 'shared' else 'A'}{index + 1}",
+                owner=f"{'B' if mode == 'shared' else 'A'}{owner_offset + index + 1}",
                 history=history if mode == "shared" else (),
-                duration=DEADLINE,
-                trace=True,
+                duration=getattr(world, "deadline", DEADLINE),
+                trace=trace,
                 backend=backend,
                 shard=shard,
                 control="mute" if disconnect else "normal",
                 # All B brains read the completed A group. No B can read another B's future.
                 publish=mode != "shared",
                 writes=writes,
+                history_loaded=loaded,
             )
             cleanup.callback(simulation.close)
             active[index] = simulation
@@ -100,6 +110,7 @@ def totals(results):
         "count": len(results),
         "exited": sum(s["exit"] for s in summaries),
         "mean_time_ms": sum(s["time_ms"] for s in summaries) / len(summaries),
+        "mean_path": sum(s["path"] for s in summaries) / len(summaries),
         "returns": sum(s["returns"] for s in summaries),
         "dead_ends": sum(s["detours"] for s in summaries),
         "collisions": sum(s["collisions"] for s in summaries),

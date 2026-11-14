@@ -14,8 +14,8 @@ from .workshop_evaluate import OUTCOMES, capture_frame, freeze, place
 from .workshop_world import WorkshopWorld
 
 
-def audit(stages, world):
-    atlas, errors = {}, []
+def audit(stages, world, outcomes=OUTCOMES, source_atlas=None):
+    atlas, errors = dict(source_atlas or {}), []
     for mode, results in stages.items():
         for result in results:
             decisions = {
@@ -32,14 +32,15 @@ def audit(stages, world):
                 capture = p["captured_at_ms"] - (p["observed_at_ms"] - event["time"])
                 d = decisions[capture]
                 view = d["views"][d["choice"]]
-                identity = place(world, capture_frame(result, d), view)
+                identity = place(world, capture_frame(result, d), view, outcomes)
                 atlas[episode.point.id] = identity
                 if (
-                    p["outcome"] != OUTCOMES[identity]
+                    p["outcome"] != outcomes[identity]
                     or p["snapshot"] != view["snapshot"]
                 ):
                     errors.append(f"{result['owner']}: incorrect observed record")
     query_count, uses, other_sources = 0, 0, 0
+    false_exclusions = 0
     queries = []
     for mode, results in stages.items():
         for result in results:
@@ -52,7 +53,7 @@ def audit(stages, world):
             for d in result["decisions"]:
                 frame = capture_frame(result, d)
                 for index, v in enumerate(d["views"]):
-                    identity = place(world, frame, v)
+                    identity = place(world, frame, v, outcomes)
                     if mode == "none":
                         if v["search_ms"] is not None or v["hits"]:
                             errors.append("No-memory fly performed retrieval")
@@ -74,7 +75,8 @@ def audit(stages, world):
                             )
                     if v["applied"]:
                         uses += 1
-                        if OUTCOMES[identity] == "open":
+                        if outcomes[identity] == "open":
+                            false_exclusions += 1
                             errors.append("A progress entrance was excluded")
                         if d["choice"] == index:
                             errors.append(
@@ -105,6 +107,7 @@ def audit(stages, world):
         "query_count": query_count,
         "memory_uses": uses,
         "borrowed_from_other_pair": other_sources,
+        "false_exclusions": false_exclusions,
     }
 
 

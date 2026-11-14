@@ -3,23 +3,31 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const vm=require('node:vm');
 
-function harness(offline=false){
-  const noop=()=>{},graphics=new Proxy({}, {get:(o,k)=>k in o?o[k]:noop});
+function harness(offline=false,webinar=false,presentation=false){
+  const fills=[];
+  const noop=()=>{},graphics=new Proxy({fillRect:(...args)=>fills.push(args),drawImage:source=>{if(source.width===0||source.height===0)throw Error("Zero-size source canvas");}}, {get:(o,k)=>k in o?o[k]:noop});
   class Element{
-    constructor(id){this.id=id;this.disabled=false;this.style={};this.dataset={};const classes=new Set();this.classList={toggle:(name,on)=>on?classes.add(name):classes.delete(name),remove:name=>classes.delete(name),contains:name=>classes.has(name)};}
-    getBoundingClientRect(){return {width:450,height:250};}getContext(){return graphics;}
-    addEventListener(){}setAttribute(){}replaceChildren(...children){this.children=children;}showModal(){}close(){}
+    constructor(id){this.id=id;if(id==='explanation-stage'&&presentation)this.hidden=true;this.disabled=false;this.style={};this.dataset={};const classes=new Set();this.classList={toggle:(name,on)=>on?classes.add(name):classes.delete(name),remove:name=>classes.delete(name),contains:name=>classes.has(name)};}
+    getBoundingClientRect(){return presentation&&this.id==='brain'&&get('explanation-stage').hidden?{width:0,height:0}:{width:450,height:250};}getContext(){return graphics;}
+    addEventListener(type,handler){(this.listeners??={})[type]=handler;}click(){this.listeners?.click?.({target:this});}setAttribute(){}replaceChildren(...children){this.children=children;}appendChild(child){(this.children??=[]).push(child);}showModal(){}close(){}
   }
   const specimens=[];
   const elements=new Map(),get=id=>{if(!elements.has(id))elements.set(id,new Element(id));return elements.get(id);};
   const stages=['none','personal','shared'].map(mode=>{const e=new Element(mode);e.dataset.mode=mode;return e;});
-  const document={body:{dataset:{}},getElementById:get,querySelectorAll:()=>stages,createElement:()=>new Element('created'),createTextNode:()=>new Element('text'),addEventListener:noop,documentElement:{}};
+  const documentHandlers={};
+  const document={body:{dataset:{}},getElementById:get,querySelectorAll:()=>stages,createElement:()=>new Element('created'),createTextNode:()=>new Element('text'),addEventListener:(type,handler)=>documentHandlers[type]=handler,documentElement:{}};
   const world={bounds:[0,0,860,660],rectangles:[],walls:[],landmarks:[],start:[260,580,-Math.PI/2],exit:[825,620]};
   function result(mode){return {mode,seed:2000,summary:{time_ms:1000,exit:true},events:[],decisions:[],observations:[],frames:[{ms:20,x:260,y:580,heading:-Math.PI/2,left_input:0,right_input:0,neural:{ids:[],left:0,right:0}}]};}
   const sentSeeds=[];
-  let requests=0,fail=false,deferred=null,truncated=false,hold=null;
+  let requests=0,fail=false,deferred=null,truncated=false,hold=null,hiveAudit={audit_errors:[]};
   const encoder=new TextEncoder();
   const fetch=async(url,options)=>{
+    if(url==='/api/hive/status')return {ok:true,json:async()=>({state:'ready',ready:['none','personal','shared'],count:1000,done:3000,total:3000})};
+    if(url.startsWith('/api/hive/')){
+      if(fail)throw Error('Deliberate population failure');
+      const parts=url.split('/'),condition=parts[3],index=Number(parts[5]||5),run=i=>{const row={...result(condition),seed:50000+i,owner:`${condition==='shared'?'B':'A'}${i+1}`};if(presentation){row.summary={time_ms:condition==='shared'||i<5?50000:180000,exit:condition==='shared'||i<5};if(condition==='shared')row.decisions=[junction()];}return row;};
+      return {ok:true,json:async()=>parts[4]==='fly'?{run:run(index),initial_memories:[]}:{flies:Array.from({length:1000},(_,i)=>run(i)),summary:{count:1000,exited:1000,mean_time_ms:1000},...hiveAudit,brain:{readout:{left:[],right:[]}}}};
+    }
     if(url.includes('positions'))return {ok:true,arrayBuffer:async()=>new Float32Array([0,0,10,10]).buffer};
     if(url.includes('status'))return {ok:true,json:async()=>({world})};
     requests++;sentSeeds.push(JSON.parse(options.body).seed);if(fail)throw Error('Deliberate request failure');
@@ -41,10 +49,12 @@ function harness(offline=false){
     })}};
   };
   const window={devicePixelRatio:1,matchMedia:()=>({matches:false}),addEventListener:noop};
+  if(webinar)window.WEBINAR=true;if(presentation)window.WEBINAR_PRESENTATION=true;
   if(offline)window.WORKSHOP_DATA={world,positions_b64:Buffer.from(new Float32Array([0,0,10,10]).buffer).toString('base64'),runs:Object.fromEntries(['none','personal','shared'].map(mode=>[`${mode}:normal`,{mode,flies:Array.from({length:8},(_,i)=>({...result(mode),owner:`${mode==='shared'?'B':'A'}${i+1}`})),comparisons:[],world,brain:{readout:{left:[],right:[]}},initial_memories:[],cohort:{}}]))};
-  const context=vm.createContext({window,document,fetch,atob,Math:Object.assign(Object.create(Math),{random:()=>.345678}),drawSpecimen:(g,size,heading)=>specimens.push({size,heading}),requestAnimationFrame:noop,console,TextDecoder,structuredClone});
-  vm.runInContext(fs.readFileSync('_internal/maze/static/app.js','utf8')+'\nglobalThis.api={start,ready,tick,junctionEvidence,viewRotation,imageInto,drawWorld,replayMemory,toggleSteering,addDecision:decision=>bundle.hero.decisions.push(decision),addFrame:frame=>bundle.hero.frames.push(frame),setEvidence:(decision,time,observations=[])=>{bundle.hero.decisions=[decision];bundle.initial_memories=observations;elapsed=time;lastEvidence="";update();},setMode:v=>mode=v,state:()=>({seed,busy,playing,elapsed,disconnected,bundleDisconnected:bundle?.disconnected,count:bundle?.flies.length,streaming:bundle?.streaming}),addMatch:()=>bundle.hero.decisions.push({time:100,choice:0,views:[{hits:[],selected:{score:1,payload:{source_fly:"A6",outcome:"returned"}},applied:true,bearing:0}]})};',context);
-  return {api:context.api,get,specimens,sentSeeds,requests:()=>requests,setFail:v=>fail=v,truncate:v=>truncated=v,hold:()=>hold=true,continue:()=>{const done=hold;hold=null;done();},defer:()=>deferred=true,release:()=>{const done=deferred;deferred=null;done();}};
+  const context=vm.createContext({window,document,fetch,atob,Math:Object.assign(Object.create(Math),{random:()=>.345678}),drawSpecimen:(g,size,heading)=>specimens.push({size,heading}),requestAnimationFrame:noop,setInterval:noop,console,TextDecoder,structuredClone});
+  vm.runInContext(fs.readFileSync('_internal/maze/static/app.js','utf8')+'\nglobalThis.api={start,ready,tick,junctionEvidence,viewRotation,imageInto,drawWorld,replayMemory,toggleSteering,addDecision:decision=>bundle.hero.decisions.push(decision),addFrame:frame=>bundle.hero.frames.push(frame),setEvidence:(decision,time,observations=[])=>{bundle.hero.decisions=[decision];bundle.initial_memories=observations;elapsed=time;lastEvidence="";update();},setMode:v=>mode=v,state:()=>({seed,mode,busy,playing,elapsed,disconnected,bundleDisconnected:bundle?.disconnected,count:bundle?.flies.length,streaming:bundle?.streaming}),addMatch:()=>bundle.hero.decisions.push({time:100,choice:0,views:[{hits:[],selected:{score:1,payload:{source_fly:"A6",outcome:"returned"}},applied:true,bearing:0}]})};',context);
+  if(webinar){vm.runInContext(fs.readFileSync('_internal/maze/static/webinar.js','utf8')+'\napi.start=(...args)=>start(...args);api.population=choosePopulation;api.presentationReady=window.webinarReady;api.explain=showExplanation;api.replayMemory=(...args)=>replayMemory(...args);api.playbackEnd=playbackEnd;api.motion=movementFrameAt;api.rawFrame=frameAt;api.refreshHive=refreshHive;api.loadPopulationFly=window.loadPopulationFly;api.hero=()=>bundle.hero.owner;api.setSampledFrames=frames=>{bundle.hero.frames=frames;elapsed=frames.at(-1).ms;drawBrain();};',context);}
+  return {api:context.api,get,specimens,fills,key:documentHandlers.keydown,sentSeeds,setHiveAudit:v=>hiveAudit=v,requests:()=>requests,setFail:v=>fail=v,truncate:v=>truncated=v,hold:()=>hold=true,continue:()=>{const done=hold;hold=null;done();},defer:()=>deferred=true,release:()=>{const done=deferred;deferred=null;done();}};
 }
 for(const mode of ['none','personal','shared'])test(`${mode}: rerun, busy guard, and recovery`,async()=>{
   const h=harness();await h.api.ready;h.api.setMode(mode);
@@ -239,4 +249,84 @@ test('only an explicit successful New group changes the comparison seed',async()
   h.api.setMode('none');await h.api.start({newGroup:true});
   assert.equal(h.api.state().seed,345678);
   assert.equal(h.sentSeeds.at(-1),345678);
+});
+
+test('the webinar uses a four-times clock and clears live state when switching populations',async()=>{
+  const h=harness(false,true);await h.api.ready;await h.api.start();
+  h.api.tick(100);h.api.tick(150);assert.equal(h.api.state().elapsed,200);
+  h.api.population('hive');assert.equal(h.api.state().count,undefined);assert.equal(h.api.state().playing,false);
+  assert.equal(h.get('group-result').textContent,'0/1,000');
+  assert.match(h.get('message').textContent,/recorded, independently computed/);
+});
+
+test('sampled population frames draw actual spikes at their timestamps',async()=>{
+  const h=harness(false,true);await h.api.ready;await h.api.start();h.fills.length=0;
+  h.api.setSampledFrames([100,200,300].map(ms=>({ms,x:260,y:580,heading:0,neural:{ids:[0],left:0,right:0}})));
+  assert.ok(h.fills.some(args=>args[2]===2&&args[3]===2),'The sparse recorded frame must display its measured spikes.');
+});
+
+test('the thousand-fly display loads one recorded evidence file at a time and recovers after failure',async()=>{
+  const h=harness(false,true);await h.api.ready;await h.api.refreshHive();h.api.population('hive');
+  await h.api.start();assert.equal(h.api.state().count,1000,h.get('message').textContent);assert.equal(h.api.hero(),'A6');
+  assert.equal(h.get('playback-source').textContent,'Recorded population');
+  assert.equal(h.get('spike-source').textContent,'Recorded spikes · sampled frames');
+  await h.api.loadPopulationFly(999);assert.equal(h.api.hero(),'A1000');
+  h.setFail(true);await h.api.loadPopulationFly(998);assert.equal(h.api.hero(),'A1000');
+  assert.match(h.get('message').textContent,/Deliberate population failure/);
+  h.setFail(false);await h.api.loadPopulationFly(998);assert.equal(h.api.hero(),'A999');
+});
+
+test('population playback accepts classified stopped attempts and still blocks evidence corruption',async()=>{
+  const accepted=harness(false,true);await accepted.api.ready;await accepted.api.refreshHive();
+  accepted.setHiveAudit({audit_errors:['none/A51: movement failure'],evidence_errors:[],behavior_failures:[{fly:'A51'}]});
+  accepted.api.population('hive');await accepted.api.start();assert.equal(accepted.api.state().count,1000);
+  const blocked=harness(false,true);await blocked.api.ready;await blocked.api.refreshHive();
+  blocked.setHiveAudit({audit_errors:['wrong-place match'],evidence_errors:['wrong-place match']});
+  blocked.api.population('hive');await blocked.api.start();assert.equal(blocked.api.state().count,undefined);
+  assert.match(blocked.get('message').textContent,/failed its evidence audit/);
+});
+
+test('the recorded comparison shares one clock and stops at the sixty-second checkpoint',async()=>{
+  const h=harness(false,true,true);await h.api.presentationReady;await h.api.start();
+  assert.equal(h.api.state().count,1000);assert.equal(h.api.playbackEnd(),60000);
+  for(let time=1;time<=16001;time+=250)h.api.tick(time);
+  assert.equal(h.api.state().elapsed,60000);assert.equal(h.api.state().playing,false);
+  assert.equal(h.get('race-clock').textContent,'60.0');
+  assert.equal(h.get('race-none-count').textContent,'5');assert.equal(h.get('race-shared-count').textContent,'1,000');
+  assert.match(h.get('race-source').textContent,/4× playback/);
+});
+
+test('the explanation opens paused at a real changed-input decision',async()=>{
+  const h=harness(false,true,true);await h.api.presentationReady;await h.api.start();await h.api.explain();
+  assert.equal(h.api.state().elapsed,100);assert.equal(h.api.state().playing,false);
+  assert.equal(h.get('race-stage').hidden,true);assert.equal(h.get('explanation-stage').hidden,false);
+  assert.equal(h.get('left-input').textContent,'0');assert.equal(h.get('decision-choice').textContent,'→');
+  assert.equal(h.api.playbackEnd(),180000);
+});
+
+test('movement interpolation uses only adjacent recorded positions and leaves evidence frames unchanged',async()=>{
+  const h=harness(false,true);await h.api.ready;
+  const run={frames:[{ms:0,x:0,y:2,heading:3},{ms:200,x:12,y:8,heading:-3}]};
+  const mid=h.api.motion(run,100);assert.equal(mid.x,6);assert.equal(mid.y,5);assert.ok(Math.abs(mid.heading-Math.PI)<1e-10);
+  assert.equal(h.api.rawFrame(run,100),run.frames[0]);assert.equal(h.api.motion(run,500),run.frames[1]);
+});
+
+test('typing in a fly selector cannot switch conditions or pause the demo',async()=>{
+  const h=harness(false,true,true);await h.api.presentationReady;await h.api.start();const before=h.api.state();
+  let prevented=false;
+  h.key({target:{tagName:'SELECT'},key:'1',code:'Digit1',preventDefault(){prevented=true;}});
+  h.key({target:{tagName:'SELECT'},key:' ',code:'Space',preventDefault(){prevented=true;}});
+  assert.equal(h.api.state().mode,before.mode);assert.equal(h.api.state().playing,before.playing);assert.equal(prevented,false);
+});
+
+test('the turn replay stops on the recorded junction exit and restores the comparison speed',async()=>{
+  const h=harness(false,true,true);await h.api.presentationReady;await h.api.start();
+  for(const [ms,junction] of [[100,true],[300,true],[1000,false]])h.api.addFrame({ms,junction,x:260,y:580,heading:0,left_input:0,right_input:30,neural:{ids:[],left:0,right:0}});
+  await h.api.explain();h.get('replay-memory').click();
+  assert.equal(h.api.playbackEnd(),1000);assert.equal(h.api.state().playing,true);
+  assert.equal(h.get('speed').textContent,'1× playback');
+  for(let time=1;time<=1001;time+=100)h.api.tick(time);
+  assert.equal(h.api.state().elapsed,1000);assert.equal(h.api.state().playing,false);
+  assert.equal(h.get('speed').textContent,'4× playback');assert.equal(h.get('pause').disabled,false);
+  assert.equal(h.api.playbackEnd(),180000);
 });

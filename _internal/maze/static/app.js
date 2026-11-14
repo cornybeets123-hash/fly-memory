@@ -4,10 +4,10 @@ const COLORS = {mint:'#8ce5c0',pink:'#ff527d',purple:'#b49aff',blue:'#83ccff',mu
 const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 let seed=300, focusIndex=5;
 let flyButtons=[];
-let mode='none', bundle=null, world=null, busy=false, playing=false, elapsed=0, lastTime=0, speed=2;
+let mode='none', bundle=null, world=null, busy=false, playing=false, elapsed=0, lastTime=0, speed=window.WEBINAR?4:2;
 let disconnected=false;
 let positions=null, brainBackground=null, projectNeuron=null, lastEvidence='';
-function playbackSource(){const source=window.WORKSHOP_DATA?'Recorded fallback':bundle?.failed?'Interrupted computation':bundle?.streaming?'Live computation':'Computed now';return source+(bundle?.disconnected?' · Steering disconnected':'');}
+function playbackSource(){const source=bundle?.population?'Recorded population':window.WORKSHOP_DATA?'Recorded fallback':bundle?.failed?'Interrupted computation':bundle?.streaming?'Live computation':'Computed now';return source+(bundle?.disconnected?' · Steering disconnected':'');}
 
 function canvas(id){
   const element=$(id), box=element.getBoundingClientRect(), dpr=Math.min(window.devicePixelRatio||1,2);
@@ -20,11 +20,20 @@ function canvas(id){
 function label(g,value,x,y,size=14,color=COLORS.muted,align='left'){
   g.fillStyle=color;g.font=`${size>20?650:500} ${size}px Mona,system-ui`;g.textAlign=align;g.fillText(value,x,y);
 }
-function frameAt(run,time){
-  if(!run?.frames.length)return null;
+function frameIndexAt(run,time){
+  if(!run?.frames.length)return -1;
   let lo=0,hi=run.frames.length-1;
   while(lo<hi){const mid=Math.ceil((lo+hi)/2);if(run.frames[mid].ms<=time)lo=mid;else hi=mid-1;}
-  return run.frames[lo];
+  return lo;
+}
+function frameAt(run,time){const index=frameIndexAt(run,time);return index<0?null:run.frames[index];}
+function movementFrameAt(run,time){
+  const index=frameIndexAt(run,time);if(index<0)return null;
+  const before=run.frames[index],after=run.frames[index+1];
+  if(!window.WEBINAR||!after||time<=before.ms||after.ms-before.ms>250)return before;
+  const amount=Math.min(1,(time-before.ms)/(after.ms-before.ms));
+  const turn=Math.atan2(Math.sin(after.heading-before.heading),Math.cos(after.heading-before.heading));
+  return {...before,x:before.x+(after.x-before.x)*amount,y:before.y+(after.y-before.y)*amount,heading:before.heading+turn*amount};
 }
 function latestDecision(){return bundle?.hero.decisions.findLast(d=>d.time<=elapsed);}
 function currentMemories(){
@@ -61,9 +70,9 @@ function evidence(){
   if(!bundle)return;
   const decision=shownDecision(),{applied,view,hit,option,choice,rates}=junctionEvidence(decision);
   const signature=`${bundle.hero.owner}:${mode}:${decision?.time}`;
-  const count=mode==='shared'?bundle.initial_memories.length:currentMemories().length;
+  const count=mode==='shared'?(bundle.memory_count??bundle.initial_memories.length):currentMemories().length;
   $('memory-count').textContent=mode==='none'?'Off':mode==='personal'?`${bundle.hero.owner} · ${count} stored`:`A group · ${count} stored`;
-  $('spike-source').textContent=`${window.WORKSHOP_DATA?'Recorded':'Computed'} spikes`;
+  $('spike-source').textContent=bundle.population?'Recorded spikes · sampled frames':`${window.WORKSHOP_DATA?'Recorded':'Computed'} spikes`;
   $('brain-owner').textContent=bundle.hero.owner;
   const current=frameAt(bundle.hero,elapsed);
   $('brain-time').textContent=`Now · ${((current?.ms||0)/1000).toFixed(1)} s`;
@@ -98,15 +107,23 @@ function evidence(){
 
 function selectFly(index){
   if(!bundle)return;
+  if(bundle.population&&!bundle.flies[index]?.detailLoaded){window.loadPopulationFly?.(index);return;}
   focusIndex=Math.min(index,bundle.flies.length-1);
   bundle.hero=bundle.flies[focusIndex];bundle.ghost=bundle.comparisons[focusIndex]||null;
   $('hero-name').textContent=`Fly ${bundle.hero.owner||'A'}`;
   $('playback-source').textContent=playbackSource();
   $('ghost-key').hidden=!bundle.ghost;
-  $('ghost-key').replaceChildren(Object.assign(document.createElement('i'),{className:'ghost-dot'}),document.createTextNode(bundle.disconnected?' Connected run':mode==='shared'?' Personal run':' No-memory run'));
+  $('ghost-key').replaceChildren(Object.assign(document.createElement('i'),{className:'ghost-dot'}),document.createTextNode(bundle.disconnected?' Connected run':mode==='shared'&&bundle.comparison_mode!=='none'?' Personal run':' No-memory run'));
   lastEvidence='';update();
 }
 function groupControls(){
+  if(bundle.population){
+    flyButtons=[];
+    const select=document.createElement('select');select.id='population-fly';select.setAttribute('aria-label','Select a recorded fly to inspect');
+    for(const [i,run] of bundle.flies.entries()){const option=document.createElement('option');option.value=String(i);option.textContent=`${run.owner} · seed ${run.seed}`;select.appendChild(option);}
+    select.value=String(focusIndex);select.addEventListener('change',()=>selectFly(Number(select.value)));
+    $('fly-selector').replaceChildren(select);return;
+  }
   flyButtons=bundle.flies.map((run,index)=>{
     const button=document.createElement('button');button.textContent=run.owner||`A${index+1}`;
     button.setAttribute('aria-label',`Inspect fly ${button.textContent}`);
@@ -114,11 +131,11 @@ function groupControls(){
   });
   $('fly-selector').replaceChildren(...flyButtons);
 }
-function playbackEnd(){return Math.max(...bundle.flies.map(r=>r.summary.time_ms),bundle.ghost?.summary.time_ms||0);}
+function playbackEnd(){return window.webinarPlaybackEnd?.(bundle)??Math.max(...bundle.flies.map(r=>r.summary.time_ms),bundle.ghost?.summary.time_ms||0);}
 
 function drawWorld(){
   const {g,w,h}=canvas('world');if(!world)return;
-  const [x0,y0,x1,y1]=world.bounds,pad=44,scale=Math.min((w-pad*2)/(x1-x0),(h-pad*2)/(y1-y0));
+  const [x0,y0,x1,y1]=world.bounds,pad=window.WEBINAR?12:44,scale=Math.min((w-pad*2)/(x1-x0),(h-pad*2)/(y1-y0));
   const ox=(w-(x1-x0)*scale)/2-x0*scale,oy=(h-(y1-y0)*scale)/2-y0*scale;
   const point=(x,y)=>[ox+x*scale,oy+y*scale];
   g.save();g.translate(ox,oy);g.scale(scale,scale);
@@ -136,12 +153,14 @@ function drawWorld(){
   const heroColor=mode==='shared'?COLORS.pink:COLORS.mint;
   const [ex,ey]=point(...world.exit);
   g.fillStyle='#07352d';g.strokeStyle=COLORS.mint;g.lineWidth=1.5;
-  g.beginPath();g.roundRect(ex-36,ey-58,72,34,5);g.fill();g.stroke();label(g,'EXIT',ex,ey-35,18,COLORS.mint,'center');
-  const [gx,gy]=point(world.exit[0]-20,world.exit[1]);g.strokeStyle=COLORS.mint;g.lineWidth=3;g.beginPath();g.moveTo(gx,gy-35*scale);g.lineTo(gx,gy+35*scale);g.stroke();
+  const exitLabelY=window.WEBINAR?Math.max(4,ey-50):ey-58;
+  g.beginPath();g.roundRect(ex-36,exitLabelY,72,34,5);g.fill();g.stroke();label(g,'EXIT',ex,exitLabelY+23,18,COLORS.mint,'center');
+  const [gx,gy]=point(world.exit[0]-(window.WEBINAR?0:20),world.exit[1]+(window.WEBINAR?15:0));g.strokeStyle=COLORS.mint;g.lineWidth=3;g.beginPath();
+  if(window.WEBINAR){g.moveTo(gx-35*scale,gy);g.lineTo(gx+35*scale,gy);}else{g.moveTo(gx,gy-35*scale);g.lineTo(gx,gy+35*scale);}g.stroke();
   const [sx,sy]=point(world.start[0],world.start_line?.[2]||world.start[1]);
   g.strokeStyle='#5b506d';g.lineWidth=3;g.beginPath();g.moveTo(sx-40*scale,sy);g.lineTo(sx+40*scale,sy);g.stroke();
   label(g,'START',sx,sy+26,14,'#43394f','center');
-  const [lx,ly]=point(150,430);label(g,'LOOP',lx,ly,19,COLORS.muted,'center');
+  if(!window.WEBINAR){const [lx,ly]=point(150,430);label(g,'LOOP',lx,ly,19,COLORS.muted,'center');}
   function trail(run,color,ghost){
     if(!run)return;
     g.beginPath();let started=false;
@@ -149,7 +168,7 @@ function drawWorld(){
     g.lineWidth=ghost?2:3;g.strokeStyle=color;g.globalAlpha=ghost?.35:.85;g.setLineDash(ghost?[4,6]:[]);g.stroke();g.setLineDash([]);g.globalAlpha=1;
   }
   trail(bundle?.ghost,'#7e7b94',true);
-  for(const run of bundle?.flies||[])if(run!==bundle.hero)trail(run,heroColor,true);
+  if(!bundle?.population)for(const run of bundle?.flies||[])if(run!==bundle.hero)trail(run,heroColor,true);
   trail(bundle?.hero,heroColor,false);
   // The outline and rotated thumbnails share the maze's orientation.
   const shown=shownDecision(),shownView=junctionEvidence(shown).view;
@@ -165,15 +184,20 @@ function drawWorld(){
     if(ghost)g.globalAlpha=.3;
     if(focused){
       g.shadowColor=heroColor;g.shadowBlur=22;g.strokeStyle=heroColor;g.lineWidth=3;
-      g.beginPath();g.arc(0,0,45,0,Math.PI*2);g.stroke();g.shadowBlur=0;
-      g.fillStyle='#101423b0';g.beginPath();g.arc(0,0,39,0,Math.PI*2);g.fill();
+      g.beginPath();g.arc(0,0,window.WEBINAR?20:45,0,Math.PI*2);g.stroke();g.shadowBlur=0;
+      g.fillStyle='#101423b0';g.beginPath();g.arc(0,0,window.WEBINAR?17:39,0,Math.PI*2);g.fill();
     }
-    if(typeof drawSpecimen==='function')drawSpecimen(g,focused?32:25,frame.heading,reducedMotion?0:elapsed*.009,ghost?'#aaa8c4':heroColor);
+    if(typeof drawSpecimen==='function')drawSpecimen(g,window.WEBINAR?(focused?14:9):(focused?32:25),frame.heading,reducedMotion?0:elapsed*.009,ghost?'#aaa8c4':heroColor);
     g.restore();
   }
-  actor(frameAt(bundle?.ghost,elapsed),false,true);
-  for(const run of bundle?.flies||[])if(run!==bundle.hero)actor(frameAt(run,elapsed));
-  actor(frameAt(bundle?.hero,elapsed)||{x:world.start[0],y:world.start[1],heading:world.start[2]},true);
+  actor(movementFrameAt(bundle?.ghost,elapsed),false,true);
+  if(window.WEBINAR_PRESENTATION&&bundle?.population&&typeof drawCrowd==='function')drawCrowd(g,bundle.flies.filter(run=>run!==bundle.hero),elapsed,point,heroColor,h);
+  else for(const run of bundle?.flies||[])if(run!==bundle.hero){
+    const frame=movementFrameAt(run,elapsed);
+    if(bundle.population&&frame){const [x,y]=point(frame.x,frame.y);g.fillStyle=run.summary.exit&&elapsed>=run.summary.time_ms?COLORS.mint:heroColor;g.globalAlpha=.35;g.beginPath();g.arc(x,y,2.5,0,Math.PI*2);g.fill();g.globalAlpha=1;}
+    else actor(frame);
+  }
+  actor(movementFrameAt(bundle?.hero,elapsed)||{x:world.start[0],y:world.start[1],heading:world.start[2]},true);
   const decision=latestDecision();
   if(decision&&elapsed-decision.time<2500){
     const f=frameAt(bundle.hero,decision.capture_time??decision.time), [x,y]=point(f.x,f.y);
@@ -190,6 +214,7 @@ function drawWorld(){
 
 function prepareBrain(){
   if(!positions)return;const {w,h,dpr}=canvas('brain');
+  if(w<2||h<2){brainBackground=null;projectNeuron=null;return;}
   const xs=[],ys=[];for(let i=0;i<positions.length;i+=2){if(Number.isFinite(positions[i])&&Number.isFinite(positions[i+1])){xs.push(positions[i]);ys.push(positions[i+1]);}}
   xs.sort((a,b)=>a-b);ys.sort((a,b)=>a-b);
   const loX=xs[Math.floor(xs.length*.001)],hiX=xs[Math.floor(xs.length*.999)],loY=ys[Math.floor(ys.length*.001)],hiY=ys[Math.floor(ys.length*.999)];
@@ -200,11 +225,12 @@ function prepareBrain(){
   for(let i=0;i<positions.length/2;i++){const [x,y]=projectNeuron(i);g.fillRect(x,y,.65,.65);}
 }
 function drawBrain(){
-  const {g,w,h}=canvas('brain');if(brainBackground)g.drawImage(brainBackground,0,0,w,h);
+  const {g,w,h}=canvas('brain');if(brainBackground?.width&&brainBackground.height)g.drawImage(brainBackground,0,0,w,h);
   const current=frameAt(bundle?.hero,elapsed);
   if(bundle&&projectNeuron){
     const frames=bundle.hero.frames,fired=new Set();
-    for(let i=Math.max(0,Math.floor(elapsed/20)-5);i<frames.length&&i<=Math.floor(elapsed/20);i++){
+    const last=frameIndexAt(bundle.hero,elapsed);
+    for(let i=Math.max(0,last-5);i<=last;i++){
       const f=frames[i];if(f.ms>elapsed||f.ms<elapsed-100)continue;
       g.globalAlpha=Math.max(.1,1-(elapsed-f.ms)/120);g.fillStyle=COLORS.mint;
       for(const id of f.neural.ids){fired.add(id);const [x,y]=projectNeuron(id);g.fillRect(x-1,y-1,2,2);}
@@ -212,11 +238,11 @@ function drawBrain(){
     g.globalAlpha=1;
     for(const [side,color] of [['left',COLORS.purple],['right',COLORS.pink]]){
       g.strokeStyle=color;g.fillStyle=color;
-      for(const id of bundle.brain.readout[side]){const [x,y]=projectNeuron(id),active=fired.has(id);g.beginPath();g.arc(x,y,active?3.5:2,0,Math.PI*2);if(active)g.fill();else g.stroke();}
+      for(const id of bundle.brain?.readout?.[side]||[]){const [x,y]=projectNeuron(id),active=fired.has(id);g.beginPath();g.arc(x,y,active?3.5:2,0,Math.PI*2);if(active)g.fill();else g.stroke();}
     }
   }
   const neural=current?.neural;
-  const calibration=bundle?.brain.calibration,scale=100/((calibration?.reference||250)*1.6);
+  const calibration=bundle?.brain?.calibration,scale=100/((calibration?.reference||250)*1.6);
   $('left-bar').style.width=`${Math.min(100,(neural?.rateL||0)*(calibration?.gainL||1)*scale)}%`;
   $('right-bar').style.width=`${Math.min(100,(neural?.rateR||0)*(calibration?.gainR||1)*scale)}%`;
   const yaw=current?.applied_yaw||0;
@@ -227,8 +253,9 @@ function drawBrain(){
   $('input').textContent=`${current?.deliberating?'Choice input':'Steering input'}: ${Math.round(current?.left_input||0)} / ${Math.round(current?.right_input||0)} Hz`;
 }
 function update(){
+  if(window.webinarUpdateRace?.())return;
   drawWorld();drawBrain();evidence();
-  $('timer').replaceChildren(document.createTextNode((Math.min(elapsed,bundle?.hero.summary.time_ms??elapsed)/1000).toFixed(1)),Object.assign(document.createElement('span'),{textContent:'s'}));
+  $('timer').replaceChildren(document.createTextNode(((window.WEBINAR?elapsed:Math.min(elapsed,bundle?.hero.summary.time_ms??elapsed))/1000).toFixed(1)),Object.assign(document.createElement('span'),{textContent:'s'}));
   if(!bundle)return;
   const done=bundle.hero.complete!==false&&elapsed>=bundle.hero.summary.time_ms;
   const exited=bundle.flies.filter(r=>r.summary.exit&&elapsed>=r.summary.time_ms).length;
@@ -241,29 +268,32 @@ function update(){
     button.setAttribute('aria-label',`Inspect ${run.owner}. ${finished?(run.summary.exit?'Reached exit':'Time expired'):'Exploring'}.`);
   });
   $('replay-memory').hidden=!bundle.hero.decisions.some(d=>d.time<=elapsed&&junctionEvidence(d).applied);
-  $('result').textContent=done?(bundle.hero.summary.exit?`Exit found in ${(bundle.hero.summary.time_ms/1000).toFixed(1)} s`:(bundle.hero.summary.no_decision?'No neural decision.':`No exit within 65 s.`)):'';
+  $('result').textContent=done?(bundle.hero.summary.exit?`Exit found in ${(bundle.hero.summary.time_ms/1000).toFixed(1)} s`:(bundle.hero.summary.no_decision?'No neural decision.':`No exit within ${(bundle.cohort?.deadline_ms??65000)/1000} s.`)):'';
   $('pause').textContent=playing?'Pause':'Resume';
   $('playback-source').textContent=playbackSource();
+  window.webinarAfterUpdate?.();
 }
 function tick(time){
   if(playing&&bundle){
-    const delta=lastTime?Math.min(80,time-lastTime):0;lastTime=time;
+    const delta=lastTime?Math.min(window.WEBINAR?250:80,time-lastTime):0;lastTime=time;
     const end=playbackEnd(),available=bundle.streaming||bundle.failed?Math.min(end,bundle.buffer_ms):end;
     elapsed=Math.min(available,elapsed+delta*speed);
-    if(elapsed>=end&&!bundle.streaming){playing=false;$('pause').disabled=true;$('message').textContent=mode==='none'?'Build personal memory in memory.py.':mode==='personal'?'Share the observed experience in pipeline.py.':'The new group used completed A-group experience.';}
+    if(elapsed>=end&&!bundle.streaming){playing=false;$('pause').disabled=true;$('message').textContent=window.WEBINAR?(mode==='none'?'Compare these attempts with personal memory.':mode==='personal'?'Newcomers can now read the completed explorers’ observations.':'Inspect a memory to see which explorer supplied it.'):(mode==='none'?'Build personal memory in memory.py.':mode==='personal'?'Share the observed experience in pipeline.py.':'The new group used completed A-group experience.');}
     update();
   }
   requestAnimationFrame(tick);
 }
 function begin(data,streaming=false){
+  window.webinarOnBegin?.(data);
   bundle={...data,flies:data.flies||[data.hero],comparisons:data.comparisons||(data.ghost?[data.ghost]:[]),disconnected,streaming,buffer_ms:0};
   if(streaming)for(const fly of bundle.flies)fly.complete=false;
   seed=data.cohort?.seeds?.[0]??data.seed??bundle.flies[0]?.seed??seed;
   world=data.world;elapsed=0;lastEvidence='';lastTime=0;playing=true;
   groupControls();selectFly(focusIndex);
   document.body.dataset.mode=mode;
-  $('chapter').textContent=mode==='none'?'EIGHT INDEPENDENT BRAINS':mode==='personal'?'EACH FLY STARTS EMPTY':'COMPLETED A-GROUP EXPERIENCE';
-  $('headline').textContent=mode==='none'?'Find the exit.':mode==='personal'?'Remember the last visit.':'Use another fly’s experience.';
+  for(const button of document.querySelectorAll('.stage')){button.classList.toggle('selected',button.dataset.mode===mode);button.setAttribute('aria-pressed',String(button.dataset.mode===mode));}
+  $('chapter').textContent=mode==='none'?`${bundle.flies.length.toLocaleString()} INDEPENDENT BRAINS`:mode==='personal'?'EACH FLY STARTS EMPTY':'COMPLETED A-GROUP EXPERIENCE';
+  $('headline').textContent=window.webinarHeadline?.(mode)??(mode==='none'?'Find the exit.':mode==='personal'?'Remember the last visit.':'Use another fly’s experience.');
   $('message').textContent=`${data.code||'Completed code'}. ${playbackSource()}.`;
   $('run').textContent=mode==='none'&&!window.WORKSHOP_DATA?'New group':'Run again';$('pause').disabled=false;update();
 }
@@ -282,8 +312,9 @@ function receive(message){
     if(!playing)update();
   }else if(message.type==='complete'){
     bundle.streaming=false;bundle.cohort.summary=message.summary;
+    if(message.stages)bundle.cohort.stages=message.stages;
     if(!disconnected)(bundle.cohort.stages??={})[mode]=message.summary;
-    $('message').textContent=`${bundle.code}. Computed now. All eight runs are available.`;
+    $('message').textContent=`${bundle.code}. Computed now. All ${bundle.flies.length} runs are available.`;
     update();
   }else throw Error('The live run sent an unknown event.');
 }
@@ -355,7 +386,7 @@ ready.catch(error=>$('message').textContent=error.message);
 $('run').addEventListener('click',()=>start({newGroup:mode==='none'}));
 for(const button of document.querySelectorAll('.stage'))button.addEventListener('click',()=>selectStage(button.dataset.mode));
 $('pause').addEventListener('click',()=>{if(!bundle)return;playing=!playing;lastTime=0;update();});
-$('speed').addEventListener('click',()=>{speed=speed===2?1:speed===1?4:2;$('speed').textContent=`${speed}× speed`;$('speed').setAttribute('aria-label',`Simulation display speed ${speed} times. Change speed.`);});
+$('speed').addEventListener('click',()=>{const speeds=window.WEBINAR?[1,2,4,8]:[2,1,4];speed=speeds[(speeds.indexOf(speed)+1)%speeds.length];$('speed').textContent=`${speed}× ${window.WEBINAR?'playback':'speed'}`;$('speed').setAttribute('aria-label',`Simulation display speed ${speed} times. Change speed.`);});
 async function toggleSteering(){if(busy||window.WORKSHOP_DATA)return;disconnected=!disconnected;$('disconnect').setAttribute('aria-pressed',String(disconnected));$('inspector').close();if(bundle)await start();}
 $('disconnect').addEventListener('click',toggleSteering);
 $('fullscreen').addEventListener('click',()=>{const request=document.documentElement.requestFullscreen?.();request?.catch?.(()=>$('message').textContent='Use the browser’s full-screen control.');});
@@ -364,8 +395,9 @@ $('inspect').addEventListener('click',()=>{const decision=shownDecision();
   $('retrieval-table').innerHTML=rows.length?`<table><thead><tr><th>View</th><th>Rank</th><th>Source</th><th>Outcome</th><th>Cosine</th><th>Search</th><th>Policy</th></tr></thead><tbody>${rows.join('')}</tbody></table>`:'No records returned at this decision.';
   $('details').textContent=JSON.stringify(bundle?{source:playbackSource(),mode,seed:bundle.hero.seed,summary:bundle.hero.summary,group:bundle.cohort,comparison:bundle.ghost?.summary,current_decision:latestDecision(),displayed_decision:shownDecision(),neural_frame:frameAt(bundle.hero,elapsed),memory_protocol:bundle.initial_memories[0]?.payload.protocol} :{status:'Run the demo to inspect its evidence.'},null,2);$('inspector').showModal();});
 function replayMemory(){const decision=bundle?.hero.decisions.find(d=>d.time<=elapsed&&junctionEvidence(d).applied);if(!decision)return;elapsed=decision.time;playing=false;lastTime=0;$('pause').disabled=false;update();$('message').textContent='Paused at the first use of retrieved experience.';}
-$('replay-memory').addEventListener('click',replayMemory);
+$('replay-memory').addEventListener('click',()=>replayMemory());
 $('close-inspector').addEventListener('click',()=>$('inspector').close());
 window.addEventListener('resize',()=>{prepareBrain();update();});
-document.addEventListener('keydown',event=>{if(['INPUT','TEXTAREA'].includes(event.target.tagName)||$('inspector').open)return;if(event.code==='Space'){event.preventDefault();$('pause').click();}else if(event.key==='r')start({newGroup:mode==='none'});else if(['1','2','3'].includes(event.key))selectStage(['none','personal','shared'][Number(event.key)-1]);});
+document.addEventListener('keydown',event=>{if(['INPUT','TEXTAREA','SELECT','BUTTON','SUMMARY'].includes(event.target.tagName)||event.target.isContentEditable||$('inspector').open)return;if(event.code==='Space'){event.preventDefault();$('pause').click();}else if(event.key==='r')start({newGroup:mode==='none'});else if(['1','2','3'].includes(event.key)&&(!window.WEBINAR_PRESENTATION||document.body.dataset.view==='explain'))selectStage(['none','personal','shared'][Number(event.key)-1]);});
+document.addEventListener('visibilitychange',()=>{lastTime=0;});
 requestAnimationFrame(tick);

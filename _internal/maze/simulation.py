@@ -45,6 +45,7 @@ def steps(
     owner=None,
     publish=True,
     writes=None,
+    history_loaded=False,
 ):
     if mode not in {"none", "personal", "shared"}:
         raise ValueError("Unknown memory mode")
@@ -109,7 +110,7 @@ def steps(
                 ),
             )
             stack.callback(shard.close)
-        if mode != "none":
+        if mode != "none" and not history_loaded:
             for episode in history:
                 active_memory.remember(shard, episode.point)
         for tick in range(round(duration / STEP)):
