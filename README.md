@@ -19,10 +19,10 @@ A 45-minute AI Dev Day workshop about retrieval. Watch the presenter, or use the
 
 ## Run
 
-Clone the [workshop repository](https://github.com/Dylancouzon/fly-memory) before the session. Use Python 3.12, Node.js 22.18 or later, and uv.
+Clone the [workshop repository](https://github.com/qdrant-labs/fly-memory) before the session. Use Python 3.12, Node.js 22.18 or later, and uv.
 
 ```sh
-git clone --depth 1 https://github.com/Dylancouzon/fly-memory.git
+git clone --depth 1 https://github.com/qdrant-labs/fly-memory.git
 cd fly-memory
 uv sync --locked
 uv run run.py

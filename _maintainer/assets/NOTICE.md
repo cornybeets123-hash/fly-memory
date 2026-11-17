@@ -14,4 +14,4 @@ The project gallery shows related fly-connectome projects. They use different da
 Sources were inspected on November 9, 2026. The screenshots illustrate the projects; they do not establish biological fidelity or reproduce their experiments. Project names and images retain their creators' rights. NeuroCraft Fly software uses MIT; Minecraft assets retain their separate terms. See each linked project for its notices.
 
 
-`repository-qr.png` encodes https://github.com/Dylancouzon/fly-memory . Generated locally with the qrcode package. The opening and closing slides use the same repository destination.
+`repository-qr.png` encodes https://github.com/qdrant-labs/fly-memory . Generated locally with the qrcode package. The opening and closing slides use the same repository destination.

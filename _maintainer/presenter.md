@@ -1,6 +1,6 @@
 # Present the workshop
 
-[Google Slides](https://docs.google.com/presentation/d/1aj-Nia6P6c8aZw6a_gu1u8tqcZn0tQ2mNLOttiZOWCI/edit) · [PDF](slides.pdf) · [Repository](https://github.com/Dylancouzon/fly-memory) · [ZIP fallback](https://drive.google.com/file/d/1OQzqriEYKj4KyG4AuuVJOAPegMhSYkqY/view)
+[Google Slides](https://docs.google.com/presentation/d/1aj-Nia6P6c8aZw6a_gu1u8tqcZn0tQ2mNLOttiZOWCI/edit) · [PDF](slides.pdf) · [Repository](https://github.com/qdrant-labs/fly-memory) · [ZIP fallback](https://drive.google.com/file/d/1OQzqriEYKj4KyG4AuuVJOAPegMhSYkqY/view)
 
 **45 minutes. 16 slides. Two presenter-led builds.** Attendees can watch or use the same files.
 
@@ -9,7 +9,7 @@
 Use Python 3.12, Node.js 22.18 or later, and uv.
 
 ```sh
-git clone --depth 1 https://github.com/Dylancouzon/fly-memory.git
+git clone --depth 1 https://github.com/qdrant-labs/fly-memory.git
 cd fly-memory
 uv sync --locked
 uv run run.py

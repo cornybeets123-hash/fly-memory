@@ -226,7 +226,7 @@ The fuller taste grid contains 120 trials before the eight walking baselines. If
 - [Pinned upstream input definitions and experimental sweeps](https://github.com/philshiu/Drosophila_brain_model/blob/91bdd1e7dcf193f3e7ca5a8933497fcef63b7960/figures.ipynb).
 - [Version-matched v630 classification data](https://github.com/murthylab/flywire-network-analysis/tree/ee4944c03429edf857a6b10bcf98bea7dcef35b8/v630_data).
 - [Pinned DoOR receptor mappings](https://github.com/ropensci/DoOR.data/blob/db323a496577c4b4a72b5c2fcd1859e07521ffb5/data/door_mappings.csv).
-- [Current workshop source](https://github.com/Dylancouzon/fly-memory/tree/a75aa682d4f5b2f29a2141ca4bf400eda0a194ad/workshop).
+- [Current workshop source](https://github.com/qdrant-labs/fly-memory/tree/a75aa682d4f5b2f29a2141ca4bf400eda0a194ad/workshop).
 
 Opus 5.5 reviewed the source and challenged the design in two cc consultations. Its strongest criticism was: "The opening does not lack wow because the visuals are weak. It lacks wow because the cause is hidden."
 
