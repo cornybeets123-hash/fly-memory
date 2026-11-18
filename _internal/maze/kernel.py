@@ -4,7 +4,8 @@ import json
 import shutil
 import subprocess
 from pathlib import Path
-from selectors import EVENT_READ, DefaultSelector
+from queue import Empty, Queue
+from threading import Thread
 
 
 class Kernel:
@@ -20,23 +21,35 @@ class Kernel:
             text=True,
             bufsize=1,
         )
-        self.selector = DefaultSelector()
-        self.selector.register(self.process.stdout, EVENT_READ)
+        # A reader thread keeps the 30-second deadline portable; Windows cannot select() pipes.
+        self.lines = Queue()
+        Thread(target=self._read, daemon=True).start()
         try:
             self.info = self.request({"command": "info"})
         except Exception:
             self.close()
             raise
 
+    def _read(self):
+        try:
+            for line in self.process.stdout:
+                self.lines.put(line)
+        except (OSError, ValueError):
+            pass
+        self.lines.put("")
+
     def request(self, message):
         if self.process.poll() is not None:
             raise RuntimeError("The neural worker stopped. Restart the workshop.")
         self.process.stdin.write(json.dumps(message) + "\n")
         self.process.stdin.flush()
-        if not self.selector.select(timeout=30):
+        try:
+            line = self.lines.get(timeout=30)
+        except Empty:
             self.close()
-            raise RuntimeError("The neural worker exceeded its 30-second deadline.")
-        line = self.process.stdout.readline()
+            raise RuntimeError(
+                "The neural worker exceeded its 30-second deadline."
+            ) from None
         if not line:
             detail = self.process.stderr.read()[-600:]
             raise RuntimeError(f"The neural worker stopped: {detail}")
@@ -62,7 +75,6 @@ class Kernel:
         return self.request({"command": "drop", "fly": fly})
 
     def close(self):
-        self.selector.close()
         if self.process.poll() is None:
             self.process.terminate()
         try:

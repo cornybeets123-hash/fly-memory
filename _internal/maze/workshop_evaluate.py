@@ -186,7 +186,7 @@ def freeze():
         *sorted((root / "_internal/brain/data").glob("*.gz")),
     ]
     return {
-        str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest()
+        p.relative_to(root).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
         for p in files
     }
 

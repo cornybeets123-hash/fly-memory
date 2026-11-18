@@ -47,7 +47,7 @@ def steps(
     writes=None,
     history_loaded=False,
 ):
-    if mode not in {"none", "personal", "shared"}:
+    if mode not in {"none", "personal", "shared", "hive"}:
         raise ValueError("Unknown memory mode")
     if control not in {
         "normal",
@@ -58,7 +58,7 @@ def steps(
         "reverse_choice",
     }:
         raise ValueError("Unknown control")
-    owner = owner or ("B" if mode == "shared" else "A")
+    owner = owner or {"shared": "B", "hive": "H"}.get(mode, "A")
     session = f"{owner}:{mode}:{seed}:{control}:{pose_variant}"
     kernel.drop(session)
     brain = FlyBrain(kernel, session, seed)
@@ -193,6 +193,8 @@ def steps(
                             exclude_fly=owner if mode == "shared" else None,
                             protocol=protocol,
                             owner=owner,
+                            # Hive: one memory for every fly, including its own entries.
+                            **({"everyone": True} if mode == "hive" else {}),
                         )
                         if searched
                         else []

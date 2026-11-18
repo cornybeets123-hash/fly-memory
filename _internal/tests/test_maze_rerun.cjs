@@ -255,7 +255,7 @@ test('the webinar uses a four-times clock and clears live state when switching p
   const h=harness(false,true);await h.api.ready;await h.api.start();
   h.api.tick(100);h.api.tick(150);assert.equal(h.api.state().elapsed,200);
   h.api.population('hive');assert.equal(h.api.state().count,undefined);assert.equal(h.api.state().playing,false);
-  assert.equal(h.get('group-result').textContent,'0/1,000');
+  assert.equal(h.get('group-result').textContent,'0/50');
   assert.match(h.get('message').textContent,/recorded, independently computed/);
 });
 

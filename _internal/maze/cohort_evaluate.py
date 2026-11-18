@@ -69,7 +69,11 @@ def audit(stages, world, outcomes=OUTCOMES, source_atlas=None):
                         source = h["payload"]["source_fly"]
                         if mode == "personal" and source != result["owner"]:
                             errors.append(f"Personal fly borrowed {source}")
-                        if mode == "shared" and not source.startswith("A"):
+                        if result["mode"] == "hive":
+                            observed = h["payload"]["observed_at_ms"] - 100
+                            if observed > d["time"]:
+                                errors.append("Hive fly read a future observation")
+                        elif mode == "shared" and not source.startswith("A"):
                             errors.append(
                                 "Shared fly read another B's current-group observation"
                             )

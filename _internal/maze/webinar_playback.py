@@ -24,6 +24,7 @@ def recording_sources_match(source):
     required = {
         "_internal/maze/simulation.py",
         "_internal/maze/cohort.py",
+        "_internal/maze/memory.py",
         "_internal/maze/neural.ts",
         "_internal/maze/webinar_world.py",
         "fly_brain.py",
@@ -116,9 +117,9 @@ def status():
     if not path.exists():
         return {
             "state": "missing",
-            "count": 1000,
+            "count": producer.COUNT,
             "done": 0,
-            "total": 3000,
+            "total": producer.COUNT * 3,
             "ready": [],
         }
     current = producer.read_json(path)
@@ -199,7 +200,7 @@ def detail(mode: str, index: int):
         }
         observations = [
             record(producer.restored_episode(e))
-            for e in producer.read_gzip(producer.DIRECTORY / "pool.json.gz")
+            for e in producer.read_gzip(producer.DIRECTORY / "hive-pool.json.gz")
             if e["id"] in ids
         ]
     return {

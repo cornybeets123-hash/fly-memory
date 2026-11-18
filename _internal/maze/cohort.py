@@ -41,7 +41,7 @@ def batches(
                 world,
                 seed=seed,
                 mode=mode,
-                owner=f"{'B' if mode == 'shared' else 'A'}{owner_offset + index + 1}",
+                owner=f"{ {'shared': 'B', 'hive': 'H'}.get(mode, 'A') }{owner_offset + index + 1}",
                 history=history if mode == "shared" else (),
                 duration=getattr(world, "deadline", DEADLINE),
                 trace=trace,
@@ -49,6 +49,7 @@ def batches(
                 shard=shard,
                 control="mute" if disconnect else "normal",
                 # All B brains read the completed A group. No B can read another B's future.
+                # Hive brains start empty and publish into one memory after each cycle.
                 publish=mode != "shared",
                 writes=writes,
                 history_loaded=loaded,

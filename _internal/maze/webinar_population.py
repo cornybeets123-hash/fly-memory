@@ -34,13 +34,12 @@ MODES = ("none", "personal", "shared")
 router = APIRouter(prefix="/api/hive")
 _job = None
 _job_lock = Lock()
+COUNT = 50
 _worker_kernel = None
 _worker_world = None
-_worker_history = None
-_worker_shard = None
 
 
-def signature(count=1000, seed=50000):
+def signature(count=COUNT, seed=50000):
     return hashlib.sha256(
         json.dumps(
             {
@@ -48,6 +47,7 @@ def signature(count=1000, seed=50000):
                 "count": count,
                 "seed": seed,
                 "world": WebinarWorld.id,
+                "shared": "hive",
             },
             sort_keys=True,
         ).encode()
@@ -93,8 +93,6 @@ def restored_episode(item):
 
 
 def close_worker():
-    if _worker_shard is not None:
-        _worker_shard.close()
     if _worker_kernel is not None:
         _worker_kernel.close()
 
@@ -108,61 +106,36 @@ def initialize_worker():
 
 
 def run_batch(mode, offset, seeds, directory):
-    """One worker advances a small group. Personal stores remain owner-filtered."""
+    """One worker advances a group on one clock with one Qdrant shard.
+
+    Personal flies filter that shard to their own entries. The shared condition is a hive:
+    every fly starts with the same empty shard, writes completed observations after each
+    cycle, and reads every fly's entries.
+    """
     from tempfile import TemporaryDirectory
 
-    global _worker_history, _worker_shard
     directory = Path(directory)
-    history, source_atlas = [], {}
-    if mode == "shared":
-        if _worker_history is None:
-            _worker_history = [
-                restored_episode(e) for e in read_gzip(directory / "pool.json.gz")
-            ]
-            location = directory / f"edge-{os.getpid()}"
-            location.mkdir(exist_ok=True)
-            _worker_shard = EdgeShard.create(
-                str(location),
-                EdgeConfig(
-                    vectors={
-                        "view": EdgeVectorParams(size=192, distance=Distance.Cosine)
-                    }
-                ),
-            )
-            for episode in _worker_history:
-                memory.remember(_worker_shard, episode.point)
-        history = _worker_history
-        source_atlas = {
-            int(k): tuple(v) for k, v in read_json(directory / "atlas.json").items()
-        }
+    simulated = "hive" if mode == "shared" else mode
     with TemporaryDirectory(prefix="webinar-batch-") as temporary:
         path = Path(temporary) / "edge"
         path.mkdir()
-        shard = (
-            _worker_shard
-            if mode == "shared"
-            else EdgeShard.create(
-                str(path),
-                EdgeConfig(
-                    vectors={
-                        "view": EdgeVectorParams(size=192, distance=Distance.Cosine)
-                    }
-                ),
-            )
+        shard = EdgeShard.create(
+            str(path),
+            EdgeConfig(
+                vectors={"view": EdgeVectorParams(size=192, distance=Distance.Cosine)}
+            ),
         )
         try:
             results = cohort.simulate(
                 _worker_kernel,
                 _worker_world,
-                mode,
+                simulated,
                 seeds,
                 memory,
                 shard,
-                history=history,
                 owner_offset=offset,
-                history_loaded=mode == "shared",
             )
-            checked = audit({mode: results}, _worker_world, OUTCOMES, source_atlas)
+            checked = audit({mode: results}, _worker_world, OUTCOMES)
             atlas, episodes, movements = {}, [], []
             for i, result in enumerate(results):
                 decisions = {
@@ -184,7 +157,7 @@ def run_batch(mode, offset, seeds, directory):
                     atlas[str(episode.point.id)] = place(
                         _worker_world, capture_frame(result, decision), view, OUTCOMES
                     )
-                    if mode == "personal":
+                    if mode == "shared":
                         episodes.append(serialized_episode(episode))
                 packed = pack(result, _worker_world)
                 captures = {
@@ -217,8 +190,7 @@ def run_batch(mode, offset, seeds, directory):
             save_gzip(directory / f"batch-{mode}-{offset}.json.gz", batch)
             return offset
         finally:
-            if mode != "shared":
-                shard.close()
+            shard.close()
 
 
 def aggregate(rows):
@@ -234,7 +206,7 @@ def aggregate(rows):
     }
 
 
-def prepare(directory=DIRECTORY, count=1000, seed=50000, workers=8):
+def prepare(directory=DIRECTORY, count=COUNT, seed=50000, workers=8):
     """Resume completed groups only when their code and declared seeds match."""
     directory = Path(directory)
     directory.mkdir(parents=True, exist_ok=True)
@@ -263,16 +235,22 @@ def prepare(directory=DIRECTORY, count=1000, seed=50000, workers=8):
         "workers": workers,
     }
     write_json(status_path, state)
-    chunks = [
-        (offset, list(range(seed + offset, seed + min(offset + 8, count))))
-        for offset in range(0, count, 8)
-    ]
+    groups = {
+        mode: [
+            (offset, list(range(seed + offset, seed + min(offset + 8, count))))
+            for offset in range(0, count, 8)
+        ]
+        for mode in MODES
+    }
+    # The hive is one group: every fly shares one memory on one clock.
+    groups["shared"] = [(0, list(range(seed, seed + count)))]
     try:
         with ProcessPoolExecutor(
             max_workers=workers, initializer=initialize_worker
         ) as executor:
             for mode in MODES:
                 state["mode"] = mode
+                chunks = groups[mode]
                 completed = {
                     offset
                     for offset, _ in chunks
@@ -289,7 +267,7 @@ def prepare(directory=DIRECTORY, count=1000, seed=50000, workers=8):
                 ]
                 for future in as_completed(futures):
                     offset = future.result()
-                    state["done"] += min(8, count - offset)
+                    state["done"] += next(len(c) for o, c in chunks if o == offset)
                     state["wall_seconds"] = round(perf_counter() - started, 1)
                     write_json(status_path, state)
                     print(
@@ -318,14 +296,10 @@ def prepare(directory=DIRECTORY, count=1000, seed=50000, workers=8):
                 state["summary"][mode]["queries"] = sum(
                     b["audit"]["query_count"] for b in batches
                 )
-                if mode == "personal":
+                if mode == "shared":
                     save_gzip(
-                        directory / "pool.json.gz",
+                        directory / "hive-pool.json.gz",
                         [e for b in batches for e in b["episodes"]],
-                    )
-                    write_json(
-                        directory / "atlas.json",
-                        {k: v for b in batches for k, v in b["atlas"].items()},
                     )
                     state["memory_count"] = sum(len(b["episodes"]) for b in batches)
                 write_json(
@@ -336,6 +310,12 @@ def prepare(directory=DIRECTORY, count=1000, seed=50000, workers=8):
                         "summary": state["summary"][mode],
                         "audit_errors": errors,
                         "brain": batches[0]["brain"],
+                        # Hive store growth: when each completed observation was written.
+                        "memory_times": sorted(
+                            e["payload"]["observed_at_ms"] - 100
+                            for b in batches
+                            for e in b["episodes"]
+                        ),
                     },
                 )
                 state["ready"].append(mode)
@@ -356,9 +336,9 @@ def status():
     if not path.exists():
         return {
             "state": "missing",
-            "count": 1000,
+            "count": COUNT,
             "done": 0,
-            "total": 3000,
+            "total": COUNT * 3,
             "ready": [],
         }
     result = read_json(path)
@@ -436,7 +416,7 @@ def detail(mode: str, index: int):
         }
         observations = [
             record(restored_episode(e))
-            for e in read_gzip(DIRECTORY / "pool.json.gz")
+            for e in read_gzip(DIRECTORY / "hive-pool.json.gz")
             if e["id"] in ids
         ]
     return {"run": result, "initial_memories": observations}
@@ -450,7 +430,7 @@ def overview(mode: str):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--count", type=int, default=1000)
+    parser.add_argument("--count", type=int, default=COUNT)
     parser.add_argument("--seed", type=int, default=50000)
     parser.add_argument("--workers", type=int, default=8)
     parser.add_argument("--output", type=Path, default=DIRECTORY)

@@ -18,7 +18,9 @@ def remember(shard, point):
     shard.update(UpdateOperation.upsert_points([point]))
 
 
-def recall(shard, vector, world, exclude_fly=None, protocol=PROTOCOL, owner="A"):
+def recall(
+    shard, vector, world, exclude_fly=None, protocol=PROTOCOL, owner="A", everyone=False
+):
     if vector is None:
         return []
     return shard.query(
@@ -33,7 +35,7 @@ def recall(shard, vector, world, exclude_fly=None, protocol=PROTOCOL, owner="A")
                 ]
                 + (
                     []
-                    if exclude_fly
+                    if exclude_fly or everyone
                     else [FieldCondition("source_fly", match=MatchValue(owner))]
                 ),
                 must_not=[FieldCondition("source_fly", match=MatchValue(exclude_fly))]

@@ -38,7 +38,9 @@ function movementFrameAt(run,time){
 function latestDecision(){return bundle?.hero.decisions.findLast(d=>d.time<=elapsed);}
 function currentMemories(){
   if(!bundle)return [];
-  return [...bundle.initial_memories,...bundle.hero.observations.filter(o=>{
+  // Hive recordings list every memory the fly hit; show each only once it was written.
+  const written=bundle.initial_memories.filter(o=>!bundle.memory_times||o.payload.observed_at_ms-100<=elapsed);
+  return [...written,...bundle.hero.observations.filter(o=>{
     const event=bundle.hero.events.find(e=>e.kind==='observed'&&e.snapshot===o.payload.snapshot&&e.observed_at_ms===o.payload.observed_at_ms);
     return event&&event.time<=elapsed;
   })];
@@ -70,8 +72,8 @@ function evidence(){
   if(!bundle)return;
   const decision=shownDecision(),{applied,view,hit,option,choice,rates}=junctionEvidence(decision);
   const signature=`${bundle.hero.owner}:${mode}:${decision?.time}`;
-  const count=mode==='shared'?(bundle.memory_count??bundle.initial_memories.length):currentMemories().length;
-  $('memory-count').textContent=mode==='none'?'Off':mode==='personal'?`${bundle.hero.owner} · ${count} stored`:`A group · ${count} stored`;
+  const count=bundle.memory_times?bundle.memory_times.filter(t=>t<=elapsed).length:mode==='shared'?(bundle.memory_count??bundle.initial_memories.length):currentMemories().length;
+  $('memory-count').textContent=mode==='none'?'Off':mode==='personal'?`${bundle.hero.owner} · ${count} stored`:`${bundle.memory_times?'Hive':'A group'} · ${count} stored`;
   $('spike-source').textContent=bundle.population?'Recorded spikes · sampled frames':`${window.WORKSHOP_DATA?'Recorded':'Computed'} spikes`;
   $('brain-owner').textContent=bundle.hero.owner;
   const current=frameAt(bundle.hero,elapsed);
@@ -278,7 +280,7 @@ function tick(time){
     const delta=lastTime?Math.min(window.WEBINAR?250:80,time-lastTime):0;lastTime=time;
     const end=playbackEnd(),available=bundle.streaming||bundle.failed?Math.min(end,bundle.buffer_ms):end;
     elapsed=Math.min(available,elapsed+delta*speed);
-    if(elapsed>=end&&!bundle.streaming){playing=false;$('pause').disabled=true;$('message').textContent=window.WEBINAR?(mode==='none'?'Compare these attempts with personal memory.':mode==='personal'?'Newcomers can now read the completed explorers’ observations.':'Inspect a memory to see which explorer supplied it.'):(mode==='none'?'Build personal memory in memory.py.':mode==='personal'?'Share the observed experience in pipeline.py.':'The new group used completed A-group experience.');}
+    if(elapsed>=end&&!bundle.streaming){playing=false;$('pause').disabled=true;$('message').textContent=window.WEBINAR?(mode==='none'?'Compare these attempts with personal memory.':mode==='personal'?'Next, all flies share one memory from the start.':'Inspect a memory to see which explorer supplied it.'):(mode==='none'?'Build personal memory in memory.py.':mode==='personal'?'Share the observed experience in pipeline.py.':'The new group used completed A-group experience.');}
     update();
   }
   requestAnimationFrame(tick);
@@ -292,7 +294,7 @@ function begin(data,streaming=false){
   groupControls();selectFly(focusIndex);
   document.body.dataset.mode=mode;
   for(const button of document.querySelectorAll('.stage')){button.classList.toggle('selected',button.dataset.mode===mode);button.setAttribute('aria-pressed',String(button.dataset.mode===mode));}
-  $('chapter').textContent=mode==='none'?`${bundle.flies.length.toLocaleString()} INDEPENDENT BRAINS`:mode==='personal'?'EACH FLY STARTS EMPTY':'COMPLETED A-GROUP EXPERIENCE';
+  $('chapter').textContent=mode==='none'?`${bundle.flies.length.toLocaleString()} INDEPENDENT BRAINS`:mode==='personal'?'EACH FLY STARTS EMPTY':bundle.memory_times?'ONE SHARED MEMORY, EMPTY AT START':'COMPLETED A-GROUP EXPERIENCE';
   $('headline').textContent=window.webinarHeadline?.(mode)??(mode==='none'?'Find the exit.':mode==='personal'?'Remember the last visit.':'Use another fly’s experience.');
   $('message').textContent=`${data.code||'Completed code'}. ${playbackSource()}.`;
   $('run').textContent=mode==='none'&&!window.WORKSHOP_DATA?'New group':'Run again';$('pause').disabled=false;update();
