@@ -119,7 +119,7 @@ def status():
             "state": "missing",
             "count": producer.COUNT,
             "done": 0,
-            "total": producer.COUNT * 3,
+            "total": producer.COUNT * len(producer.MODES),
             "ready": [],
         }
     current = producer.read_json(path)
@@ -194,13 +194,13 @@ def detail(mode: str, index: int):
         raise HTTPException(404, "Unknown fly.")
     run = producer.read_gzip(producer.DIRECTORY / f"{mode}-{index}.json.gz")
     observations = []
-    if mode == "shared":
+    if mode in producer.POOLS:
         ids = {
             hit["id"] for d in run["decisions"] for v in d["views"] for hit in v["hits"]
         }
         observations = [
             record(producer.restored_episode(e))
-            for e in producer.read_gzip(producer.DIRECTORY / "hive-pool.json.gz")
+            for e in producer.read_gzip(producer.DIRECTORY / producer.POOLS[mode])
             if e["id"] in ids
         ]
     return {

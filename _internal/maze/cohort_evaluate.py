@@ -73,7 +73,9 @@ def audit(stages, world, outcomes=OUTCOMES, source_atlas=None):
                             observed = h["payload"]["observed_at_ms"] - 100
                             if observed > d["time"]:
                                 errors.append("Hive fly read a future observation")
-                        elif mode == "shared" and not source.startswith("A"):
+                        elif mode in ("shared", "inherited") and not source.startswith(
+                            "A"
+                        ):
                             errors.append(
                                 "Shared fly read another B's current-group observation"
                             )
@@ -88,7 +90,8 @@ def audit(stages, world, outcomes=OUTCOMES, source_atlas=None):
                             )
                         source = v["selected"]["payload"]["source_fly"]
                         other_sources += (
-                            mode == "shared" and source[1:] != result["owner"][1:]
+                            mode in ("shared", "inherited")
+                            and source[1:] != result["owner"][1:]
                         )
                     queries.append(
                         {

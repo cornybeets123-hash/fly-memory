@@ -72,7 +72,7 @@ function evidence(){
   if(!bundle)return;
   const decision=shownDecision(),{applied,view,hit,option,choice,rates}=junctionEvidence(decision);
   const signature=`${bundle.hero.owner}:${mode}:${decision?.time}`;
-  const count=bundle.memory_times?bundle.memory_times.filter(t=>t<=elapsed).length:mode==='shared'?(bundle.memory_count??bundle.initial_memories.length):currentMemories().length;
+  const count=bundle.memory_times?bundle.memory_times.filter(t=>t<=elapsed).length:mode==='shared'||mode==='inherited'?(bundle.memory_count??bundle.initial_memories.length):currentMemories().length;
   $('memory-count').textContent=mode==='none'?'Off':mode==='personal'?`${bundle.hero.owner} · ${count} stored`:`${bundle.memory_times?'Hive':'A group'} · ${count} stored`;
   $('spike-source').textContent=bundle.population?'Recorded spikes · sampled frames':`${window.WORKSHOP_DATA?'Recorded':'Computed'} spikes`;
   $('brain-owner').textContent=bundle.hero.owner;

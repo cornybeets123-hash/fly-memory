@@ -23,7 +23,7 @@ function drawPopulationGrid(){
 function metric(value,digits=0){return Number.isFinite(value)?value.toLocaleString(undefined,{maximumFractionDigits:digits}):'Unmeasured';}
 function comparisonTable(){
   const rows=measured[population];
-  const labels={none:'No memory',personal:'Personal',shared:'Shared'};
+  const labels={none:'No memory',personal:'Personal',inherited:'Inherited',shared:'Shared hive'};
   const cells=Object.entries(rows).map(([key,s])=>`<tr><th scope="row">${labels[key]}</th><td>${s.exited}/${s.count}</td><td>${metric(s.mean_time_ms/1000,1)} s</td><td>${metric(s.mean_path)}</td><td>${metric(s.returns)}</td><td>${metric(s.dead_ends)}</td><td>${metric(s.collisions)}</td><td>${metric(s.false_exclusions)}</td></tr>`);
   $('behavior-table').innerHTML=cells.length?`<table><thead><tr><th>Condition</th><th>Exits</th><th>Mean time</th><th>Mean path (units)</th><th>START returns</th><th>Dead ends</th><th>Collisions</th><th>False exclusions</th></tr></thead><tbody>${cells.join('')}</tbody></table>`:'Run the conditions to compare behavior.';
   const failures=population==='hive'?Object.entries(hiveStatus.behavior_failures||{}).flatMap(([condition,attempts])=>attempts.map(f=>`${labels[condition]}: ${f.fly} (seed ${f.seed}) stopped ${f.reason==='ambiguous_options'?'at an ambiguous fork':'after a zero neural readout'}.`)):[];
@@ -40,7 +40,7 @@ window.webinarAfterUpdate=()=>{
   $('brain-time').textContent=`Fly time · ${((frameAt(bundle.hero,elapsed)?.ms||0)/1000).toFixed(1)} s`;
   const hit=junctionEvidence(shownDecision()).hit;
   const outcome=hit?.payload.outcome==='returned'?'returned to START':hit?.payload.outcome.replace('_',' ');
-  $('visible-provenance').textContent=hit?`${hit.payload.source_fly} observed “${outcome}”. ${bundle.hero.owner} ${junctionEvidence(shownDecision()).applied?'uses that evidence.':'keeps both options.'}`:mode==='shared'?`All ${bundle.flies.length} flies start with one empty memory. Each completed observation is written at once, and every fly reads it.`:mode==='personal'?'Each fly can retrieve only its own completed observations.':'Each fly explores without external memory.';
+  $('visible-provenance').textContent=hit?`${hit.payload.source_fly} observed “${outcome}”. ${bundle.hero.owner} ${junctionEvidence(shownDecision()).applied?'uses that evidence.':'keeps both options.'}`:mode==='shared'?`All ${bundle.flies.length} flies start with one empty memory. Each completed observation is written at once, and every fly reads it.`:mode==='inherited'?'Newcomers read the completed observations of an earlier group. They publish nothing of their own.':mode==='personal'?'Each fly can retrieve only its own completed observations.':'Each fly explores without external memory.';
   if(!bundle.streaming&&bundle.cohort?.summary){
     const summary=bundle.cohort.summary;
     if(measured[population][mode]!==summary){measured[population][mode]=summary;comparisonTable();if(summary.audit_errors?.length)$('message').textContent='Evidence audit failed. Inspect the raw results before presenting this run.';}
@@ -95,7 +95,7 @@ async function startPopulation(options={}){
     disconnected=false;
     begin({mode:selectedMode,flies,comparisons:comparison?.flies||[],population:true,
       presentation_end_ms:selectedMode==='shared'?60000:180000,
-      initial_memories:detail.initial_memories,memory_count:hiveStatus.memory_count,memory_times:data.memory_times,
+      initial_memories:detail.initial_memories,memory_count:selectedMode==='inherited'?hiveStatus.inherited_memory_count:hiveStatus.memory_count,memory_times:selectedMode==='shared'?data.memory_times:undefined,
       comparison_mode:'none',world,brain:data.brain,code:'Recorded population',
       cohort:{seeds:flies.map(r=>r.seed),deadline_ms:180000,summary:data.summary}});
     $('disconnect').hidden=true;$('run').textContent=`Replay ${flyCount()} flies`;$('message').textContent='Recorded population. Each fly follows its own computed run.';
@@ -128,7 +128,7 @@ async function refreshHive(){
     const response=await fetch('/api/hive/status');if(!response.ok)throw Error('Population status is unavailable.');
     hiveStatus=await response.json();applyFlyCount();
     const state=hiveStatus.state;
-    $('hive-status').textContent=state==='ready'||state==='ready_with_failures'?`${flyCount().toLocaleString()} flies measured in all three conditions. Stopped attempts remain included.`:state==='missing'?'Prepare the population before the webinar.':state==='computing'||state==='starting'?`${hiveStatus.done.toLocaleString()} / ${hiveStatus.total.toLocaleString()} trials computed · ${hiveStatus.mode||'starting'}`:state==='stale'?'Population source changed. Archive earlier artifacts and prepare again.':state==='audit_failed'?'Population evidence audit failed. Read compute.log.':`Population ${state}${hiveStatus.detail?`: ${hiveStatus.detail}`:''}.`;
+    $('hive-status').textContent=state==='ready'||state==='ready_with_failures'?`${flyCount().toLocaleString()} flies measured in every condition. Stopped attempts remain included.`:state==='missing'?'Prepare the population before the webinar.':state==='computing'||state==='starting'?`${hiveStatus.done.toLocaleString()} / ${hiveStatus.total.toLocaleString()} trials computed · ${hiveStatus.mode||'starting'}`:state==='stale'?'Population source changed. Archive earlier artifacts and prepare again.':state==='audit_failed'?'Population evidence audit failed. Read compute.log.':`Population ${state}${hiveStatus.detail?`: ${hiveStatus.detail}`:''}.`;
     $('prepare-hive').hidden=state==='ready'||state==='ready_with_failures';$('prepare-hive').disabled=['computing','starting','stale','audit_failed'].includes(state);
     $('cancel-hive').hidden=!['computing','starting'].includes(state);
     $('hive-population').disabled=!hiveStatus.ready.includes('none');
@@ -149,7 +149,7 @@ window.webinarReady=ready.then(async()=>{
 window.webinarReady.catch(error=>$('message').textContent=error.message);
 
 window.webinarPlaybackEnd=data=>data?.population?(data.turn_replay?.end_ms??data.presentation_end_ms??Math.max(...data.flies.map(r=>r.summary.time_ms))):undefined;
-window.webinarHeadline=condition=>({none:'Explore without memory.',personal:'Use your own experience.',shared:'Build one memory together.'}[condition]);
+window.webinarHeadline=condition=>({none:'Explore without memory.',personal:'Use your own experience.',inherited:'Use an earlier group’s experience.',shared:'Build one memory together.'}[condition]);
 
 const raceBackgrounds=new Map();
 function raceMaze(id,runs,time,color){
@@ -200,7 +200,7 @@ function drawCrowdSamples(id,runs,time,color,background,{scale,ox,oy,dpr}){
       g.drawImage(background,(px-(cw-4)/zoom/2)*dpr,(py-viewHeight/zoom/2)*dpr,(cw-4)/zoom*dpr,viewHeight/zoom*dpr,x,y,cw-4,viewHeight);
       const angle=((Math.round(frame.heading*12/Math.PI)%24)+24)%24;
       g.drawImage(crowdSprite(color,angle),x+(cw-4)/2-22,y+viewHeight/2-22,44,44);
-      label(g,run.owner||`${id.includes('shared')?'H':'A'}${picks[i]+1}`,x+(cw-4)/2,y+ch-3,9,color,'center');
+      label(g,run.owner||`${id.includes('shared')?'H':id.includes('inherited')?'B':'A'}${picks[i]+1}`,x+(cw-4)/2,y+ch-3,9,color,'center');
     }
     g.strokeStyle='#515b7766';g.lineWidth=1;g.strokeRect(x+.5,y+.5,cw-5,viewHeight-1);
   }
@@ -250,20 +250,28 @@ function raceLedger(id,runs,time,color){
   }
   g.globalAlpha=1;
 }
+const RACE_PANES=[{key:'none',color:COLORS.blue},{key:'inherited',color:COLORS.purple},{key:'shared',color:COLORS.mint}];
 window.webinarUpdateRace=()=>{
   if(!window.WEBINAR_PRESENTATION||presentationView!=='race')return false;
-  const paired=bundle?.population&&bundle.mode==='shared',baseline=paired?bundle.comparisons:[],shared=paired?bundle.flies:[];
-  raceMaze('race-none-world',baseline,elapsed,COLORS.blue);raceMaze('race-shared-world',shared,elapsed,COLORS.mint);
-  raceLedger('race-none-grid',baseline,elapsed,COLORS.blue);raceLedger('race-shared-grid',shared,elapsed,COLORS.mint);
+  const paired=bundle?.population&&bundle.mode==='shared';
+  const crowds={none:paired?bundle.comparisons:[],inherited:paired?bundle.peers||[]:[],shared:paired?bundle.flies:[]};
+  // The inherited pane appears only when its recording was loaded.
+  const showInherited=crowds.inherited.length>0;
+  $('race-inherited-pane').hidden=!showInherited;$('race-panes').dataset.panes=showInherited?'3':'2';
   const exits=runs=>runs.filter(run=>run.summary.exit&&elapsed>=run.summary.time_ms).length;
-  const noMemory=exits(baseline),withMemory=exits(shared);
-  $('race-none-count').textContent=noMemory.toLocaleString();$('race-shared-count').textContent=withMemory.toLocaleString();
+  const counts={};
+  for(const {key,color} of RACE_PANES){
+    if(key==='inherited'&&!showInherited)continue;
+    raceMaze(`race-${key}-world`,crowds[key],elapsed,color);raceLedger(`race-${key}-grid`,crowds[key],elapsed,color);
+    counts[key]=exits(crowds[key]);$(`race-${key}-count`).textContent=counts[key].toLocaleString();
+  }
+  const noMemory=counts.none,withMemory=counts.shared;
   $('race-clock').textContent=(elapsed/1000).toFixed(1);
   $('race-source').textContent=`Recorded comparison · ${speed}× playback · 60-second checkpoint`;
   $('pause').textContent=playing?'Pause':'Resume';
   $('run').textContent=paired?'Replay comparison':'Play comparison';
   $('explain-turn').disabled=busy||raceLoading||!hiveStatus.ready.includes('shared');
-  if(paired&&!playing&&elapsed>=60000)$('message').textContent=`At 60 simulation seconds: ${withMemory.toLocaleString()} exits with shared memory; ${noMemory.toLocaleString()} without memory.`;
+  if(paired&&!playing&&elapsed>=60000)$('message').textContent=`At 60 simulation seconds: ${withMemory.toLocaleString()} exits with the shared hive${showInherited?`, ${counts.inherited.toLocaleString()} with inherited memory`:''}; ${noMemory.toLocaleString()} without memory.`;
   return true;
 };
 function setPresentationView(next){
@@ -290,6 +298,9 @@ async function startRace(){
     population='hive';mode='shared';
     document.body.dataset.population='hive';$('hive-population').setAttribute('aria-pressed','true');$('live-population').setAttribute('aria-pressed','false');
     await startPopulation();
+    // The earlier frozen-pool condition joins the race when its recording exists.
+    const peers=hiveStatus.ready.includes('inherited')?(await overview('inherited')).flies:[];
+    if(bundle?.population&&bundle.mode==='shared')bundle.peers=peers;
     if(bundle?.population&&bundle.mode==='shared'){$('message').textContent='Recorded comparison. Watch both crowds on the same simulation clock.';$('pause').disabled=false;}
   }finally{raceLoading=false;$('race-loading').hidden=true;update();}
 }

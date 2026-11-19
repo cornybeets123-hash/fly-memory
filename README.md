@@ -4,13 +4,15 @@ This branch contains the webinar demo. Run `uv run run.py` and open http://127.0
 
 Select **Play comparison** to race 200 flies without memory against 200 flies that share one memory. Both crowds use one clock and matched seeds. Playback runs at 4× and stops at the labeled 60-second checkpoint, after about 15 seconds. The shared memory starts empty. Every fly writes its completed observations into the same Qdrant shard and reads every fly's entries, so later junctions benefit from earlier visits by any fly.
 
+When the inherited-memory recording exists, a third pane joins the race. Those flies start after a finished personal-memory group and read its frozen pool. They publish nothing and never read themselves. That is a handoff between groups, not a hive.
+
 Each maze shows recorded fly positions, with counts where flies overlap. Eight labeled close-ups follow distinct trials in each crowd. The small fly grid shows every trial outcome.
 
 Select **Why did this fly turn?** to pause at a recorded use of shared memory. Inspect the captured view, source observation, changed sensory input, and actual neural choice. **Replay this turn** shows the recorded passage at normal speed. The timeline can inspect the full 180-second trial. **Completed results and failed attempts** contains every condition and both stopped attempts.
 
-**Demo controls** contains the personal-memory condition, the eight-fly live demo, and population preparation. The larger maze has eight forks and a 180-second limit. The recorded comparison and live demo use the same sensory adapter, fixed wiring, and movement code. Playback speed changes the display clock.
+**Demo controls** contains the personal-memory and inherited-memory conditions, the eight-fly live demo, and population preparation. The larger maze has eight forks and a 180-second limit. The recorded comparison and live demo use the same sensory adapter, fixed wiring, and movement code. Playback speed changes the display clock.
 
-Select **Prepare the recorded comparison** before the webinar if the recordings are missing. Preparation computes 600 real trials across the three conditions. The 200 shared-memory flies run as one group in one process because they share one shard. It saves progress under `_internal/artifacts/webinar-hive/`. Run preparation from the terminal with `uv run python -m _internal.maze.webinar_population`. Completed groups resume when the source hashes match. The population display uses recorded trajectories and sampled neural frames.
+Select **Prepare the recorded comparison** before the webinar if the recordings are missing. Preparation computes 800 real trials across the four conditions: no memory, personal, inherited (the personal group's frozen pool), and the shared hive. The 200 shared-memory flies run as one group in one process because they share one shard. It saves progress under `_internal/artifacts/webinar-hive/`. Run preparation from the terminal with `uv run python -m _internal.maze.webinar_population`. Completed groups resume when the source hashes match. The population display uses recorded trajectories and sampled neural frames.
 
 Run `uv run run.py --workshop` for the original workshop starter, or add `--solution` for its completed reference. The original workshop instructions follow.
 

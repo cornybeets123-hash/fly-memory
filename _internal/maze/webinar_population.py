@@ -20,6 +20,7 @@ from fastapi.responses import FileResponse
 from qdrant_edge import Distance, EdgeConfig, EdgeShard, EdgeVectorParams, Point
 
 from . import cohort, memory
+from . import webinar_inherited as inherited
 from .cohort_evaluate import audit
 from .kernel import Kernel
 from .presentation import pack, record
@@ -30,7 +31,12 @@ from .workshop_evaluate import capture_frame, freeze, place
 
 ROOT = Path(__file__).resolve().parents[2]
 DIRECTORY = ROOT / "_internal/artifacts/webinar-hive"
-MODES = ("none", "personal", "shared")
+MODES = ("none", "personal", "inherited", "shared")
+# What the simulator runs for each condition. The hive is the "hive" mode; the earlier
+# frozen-pool design is the "shared" mode, which reads completed history and publishes nothing.
+SIMULATED = {"inherited": "shared", "shared": "hive"}
+# Pools that supply a fly's retrieved observations on playback.
+POOLS = {"inherited": inherited.POOL, "shared": "hive-pool.json.gz"}
 router = APIRouter(prefix="/api/hive")
 _job = None
 _job_lock = Lock()
@@ -48,6 +54,7 @@ def signature(count=COUNT, seed=50000):
                 "seed": seed,
                 "world": WebinarWorld.id,
                 "shared": "hive",
+                "modes": MODES,
             },
             sort_keys=True,
         ).encode()
@@ -93,6 +100,7 @@ def restored_episode(item):
 
 
 def close_worker():
+    inherited.close()
     if _worker_kernel is not None:
         _worker_kernel.close()
 
@@ -115,11 +123,14 @@ def run_batch(mode, offset, seeds, directory):
     from tempfile import TemporaryDirectory
 
     directory = Path(directory)
-    simulated = "hive" if mode == "shared" else mode
+    simulated = SIMULATED.get(mode, mode)
+    history, source_atlas, resident = (), None, None
+    if mode == "inherited":
+        history, source_atlas, resident = inherited.pool(directory)
     with TemporaryDirectory(prefix="webinar-batch-") as temporary:
         path = Path(temporary) / "edge"
         path.mkdir()
-        shard = EdgeShard.create(
+        shard = resident or EdgeShard.create(
             str(path),
             EdgeConfig(
                 vectors={"view": EdgeVectorParams(size=192, distance=Distance.Cosine)}
@@ -133,9 +144,11 @@ def run_batch(mode, offset, seeds, directory):
                 seeds,
                 memory,
                 shard,
+                history=history,
                 owner_offset=offset,
+                history_loaded=resident is not None,
             )
-            checked = audit({mode: results}, _worker_world, OUTCOMES)
+            checked = audit({mode: results}, _worker_world, OUTCOMES, source_atlas)
             atlas, episodes, movements = {}, [], []
             for i, result in enumerate(results):
                 decisions = {
@@ -157,7 +170,7 @@ def run_batch(mode, offset, seeds, directory):
                     atlas[str(episode.point.id)] = place(
                         _worker_world, capture_frame(result, decision), view, OUTCOMES
                     )
-                    if mode == "shared":
+                    if mode in ("personal", "shared"):
                         episodes.append(serialized_episode(episode))
                 packed = pack(result, _worker_world)
                 captures = {
@@ -190,7 +203,8 @@ def run_batch(mode, offset, seeds, directory):
             save_gzip(directory / f"batch-{mode}-{offset}.json.gz", batch)
             return offset
         finally:
-            shard.close()
+            if resident is None:
+                shard.close()
 
 
 def aggregate(rows):
@@ -223,7 +237,7 @@ def prepare(directory=DIRECTORY, count=COUNT, seed=50000, workers=8):
         "count": count,
         "seed": seed,
         "done": 0,
-        "total": count * 3,
+        "total": count * len(MODES),
         "state": "computing",
         "mode": "none",
         "ready": [],
@@ -296,6 +310,19 @@ def prepare(directory=DIRECTORY, count=COUNT, seed=50000, workers=8):
                 state["summary"][mode]["queries"] = sum(
                     b["audit"]["query_count"] for b in batches
                 )
+                if mode == "personal":
+                    # The frozen pool for the inherited condition, and its evaluation atlas.
+                    save_gzip(
+                        directory / inherited.POOL,
+                        [e for b in batches for e in b["episodes"]],
+                    )
+                    write_json(
+                        directory / inherited.ATLAS,
+                        {k: v for b in batches for k, v in b["atlas"].items()},
+                    )
+                    state["inherited_memory_count"] = sum(
+                        len(b["episodes"]) for b in batches
+                    )
                 if mode == "shared":
                     save_gzip(
                         directory / "hive-pool.json.gz",
@@ -338,7 +365,7 @@ def status():
             "state": "missing",
             "count": COUNT,
             "done": 0,
-            "total": COUNT * 3,
+            "total": COUNT * len(MODES),
             "ready": [],
         }
     result = read_json(path)
@@ -407,7 +434,7 @@ def detail(mode: str, index: int):
         raise HTTPException(404, "Unknown fly.")
     result = read_gzip(DIRECTORY / f"{mode}-{index}.json.gz")
     observations = []
-    if mode == "shared":
+    if mode in POOLS:
         ids = {
             hit["id"]
             for d in result["decisions"]
@@ -416,7 +443,7 @@ def detail(mode: str, index: int):
         }
         observations = [
             record(restored_episode(e))
-            for e in read_gzip(DIRECTORY / "hive-pool.json.gz")
+            for e in read_gzip(DIRECTORY / POOLS[mode])
             if e["id"] in ids
         ]
     return {"run": result, "initial_memories": observations}
