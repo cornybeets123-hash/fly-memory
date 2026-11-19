@@ -41,9 +41,11 @@ header{min-height:52px;padding:6px 12px;gap:12px}h1{font-size:21px}.webinar-tool
 @media(max-height:780px) and (min-width:901px){.race-pane-heading .crowd-samples{height:86px}}
 @media(max-width:900px){.race-time{flex-direction:column;align-items:flex-end;gap:0}.race-time span{display:block;font-size:9px}}
 @media(max-width:520px){.race-pane h3{font-size:16px}}
-/* Three panes (inherited memory shown): crowd close-ups need more of a narrower pane, and stacked panes need more height. */
+/* Three panes (inherited memory shown). Side by side while the page is fixed-height; the page scrolls
+   and the panes stack from 900px down, matching the single-column breakpoint used everywhere else. */
 .race-panes[data-panes="3"] .race-pane-heading{width:46%}
 .race-panes[data-panes="3"] .race-pane p{max-width:150px}
-@media(max-width:1250px){.race-panes[data-panes="3"]{grid-template-columns:1fr;min-height:1500px}.race-panes[data-panes="3"] .race-pane{min-height:480px}.race-panes[data-panes="3"] .race-pane-heading{width:34%}}
-@media(max-width:900px){.race-panes[data-panes="3"]{min-height:1650px}#race-stage:has([data-panes="3"]){min-height:1720px}}
+@media(max-width:900px){.race-panes[data-panes="3"]{grid-template-columns:1fr;min-height:1650px}.race-panes[data-panes="3"] .race-pane{min-height:520px}.race-panes[data-panes="3"] .race-pane-heading{width:34%}#race-stage:has([data-panes="3"]){min-height:1720px}}
 @media(max-width:520px){.race-panes[data-panes="3"]{min-height:1700px}#race-stage:has([data-panes="3"]){min-height:1760px}}
+/* Phone widths wrap the toolbar, which leaves the controls on the left. Anchor the popover there so it stays on screen. */
+@media(max-width:520px){.advanced-content{left:0;right:auto}}

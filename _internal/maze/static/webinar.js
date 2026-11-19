@@ -167,7 +167,10 @@ function raceMaze(id,runs,time,color){
     bg.restore();const ex=ox+world.exit[0]*scale,ey=oy+world.exit[1]*scale;
     label(bg,'EXIT',ex,Math.max(16,ey-15),12,COLORS.mint,'center');
     const startY=world.start_line?.[2]??world.start[1];
-    label(bg,'START',ox+(world.start[0]-65)*scale,oy+startY*scale+4,11,COLORS.muted,'right');
+    // Keep the label on the canvas and legible even where it overlaps the pale corridor.
+    const labelX=Math.max(40,ox+(world.start[0]-65)*scale),labelY=oy+startY*scale+4;
+    bg.fillStyle='#0d1020e0';bg.fillRect(labelX-37,labelY-11,40,15);
+    label(bg,'START',labelX,labelY,11,COLORS.muted,'right');
     raceBackgrounds.set(key,background);if(raceBackgrounds.size>6)raceBackgrounds.delete(raceBackgrounds.keys().next().value);
   }
   g.drawImage(background,0,0,w,h);
@@ -242,6 +245,8 @@ function raceLedger(id,runs,time,color){
     const run=runs[i],done=!!run&&time>=run.summary.time_ms,exited=done&&run.summary.exit;
     const x=i%columns*cw,y=Math.floor(i/columns)*ch;
     g.fillStyle=exited?COLORS.mint:done?COLORS.pink:color;g.globalAlpha=done?1:.25;
+    // Cells too small for a fly glyph (hundreds of trials) become plain dots with the same colors.
+    if(Math.min(cw,ch)<13){g.beginPath();g.roundRect(x+1,y+1,Math.max(2,cw-2),Math.max(2,ch-2),2);g.fill();continue;}
     // One small fly per trial: two wings and a body, rather than a block.
     const cx=x+cw/2,cy=y+ch/2;
     g.beginPath();g.ellipse(cx-cw*.15,cy-ch*.12,cw*.19,ch*.25,-.5,0,Math.PI*2);g.ellipse(cx+cw*.15,cy-ch*.12,cw*.19,ch*.25,.5,0,Math.PI*2);g.fill();
