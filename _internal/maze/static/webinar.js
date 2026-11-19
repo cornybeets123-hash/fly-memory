@@ -281,7 +281,7 @@ function setPresentationView(next){
   $('race-stage').hidden=next!=='race';$('explanation-stage').hidden=next!=='explain';
   $('view-race').setAttribute('aria-pressed',String(next==='race'));
   $('view-explain').setAttribute('aria-pressed',String(next==='explain'));
-  $('race-setup').textContent=next==='race'?'Shared flies start with one empty memory and fill it together. Both crowds use the same seeds.':'Inspect a newcomer’s captured view, source observation, sensory input, and actual neural choice.';
+  $('race-setup').textContent=next==='race'?'The hive starts with one empty memory that every fly fills and reads. Inherited flies only read a finished group’s pool. All crowds use the same seeds.':'Inspect a newcomer’s captured view, source observation, sensory input, and actual neural choice.';
   $('run').textContent=next==='race'?'Play comparison':population==='hive'?`Replay ${flyCount()} flies`:'Run eight flies';
   if(next==='race'&&!(bundle?.population&&bundle.mode==='shared')){bundle=null;elapsed=0;playing=false;}
   if(next==='race'&&bundle)bundle.presentation_end_ms=60000;
