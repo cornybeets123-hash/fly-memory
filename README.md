@@ -4,7 +4,7 @@ This branch contains the webinar demo. Run `uv run run.py` and open http://127.0
 
 Select **Play comparison** to race 200 flies without memory against 200 flies that share one memory. Both crowds use one clock and matched seeds. Playback runs at 4× and stops at the labeled 60-second checkpoint, after about 15 seconds. The shared memory starts empty. Every fly writes its completed observations into the same Qdrant shard and reads every fly's entries, so later junctions benefit from earlier visits by any fly.
 
-When the inherited-memory recording exists, a third pane joins the race. Those flies start after a finished personal-memory group and read its frozen pool. They publish nothing and never read themselves. That is a handoff between groups, not a hive.
+When the personal and inherited recordings exist, two more panes join the race, in the order No memory, Personal, Inherited, Shared hive. Personal flies read only their own completed observations. Inherited flies start after a finished personal-memory group and read its frozen pool. They publish nothing and never read themselves. That is a handoff between groups, not a hive.
 
 Each maze shows recorded fly positions, with counts where flies overlap. Eight labeled close-ups follow distinct trials in each crowd. The small fly grid shows every trial outcome.
 

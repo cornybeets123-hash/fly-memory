@@ -255,18 +255,20 @@ function raceLedger(id,runs,time,color){
   }
   g.globalAlpha=1;
 }
-const RACE_PANES=[{key:'none',color:COLORS.blue},{key:'inherited',color:COLORS.purple},{key:'shared',color:COLORS.mint}];
+// Memory conditions in display order. Personal and inherited panes appear only when their recordings were loaded.
+const PERSONAL_COLOR='#f2c46d';
+const RACE_PANES=[{key:'none',color:COLORS.blue,label:'without memory'},{key:'personal',color:PERSONAL_COLOR,label:'with personal memory',optional:true},{key:'inherited',color:COLORS.purple,label:'with inherited memory',optional:true},{key:'shared',color:COLORS.mint,label:'with the shared hive'}];
 window.webinarUpdateRace=()=>{
   if(!window.WEBINAR_PRESENTATION||presentationView!=='race')return false;
   const paired=bundle?.population&&bundle.mode==='shared';
-  const crowds={none:paired?bundle.comparisons:[],inherited:paired?bundle.peers||[]:[],shared:paired?bundle.flies:[]};
-  // The inherited pane appears only when its recording was loaded.
-  const showInherited=crowds.inherited.length>0;
-  $('race-inherited-pane').hidden=!showInherited;$('race-panes').dataset.panes=showInherited?'3':'2';
+  const peers=paired?bundle.peers||{}:{};
+  const crowds={none:paired?bundle.comparisons:[],personal:peers.personal||[],inherited:peers.inherited||[],shared:paired?bundle.flies:[]};
+  const shown=RACE_PANES.filter(p=>!p.optional||crowds[p.key].length>0);
+  for(const p of RACE_PANES)if(p.optional)$(`race-${p.key}-pane`).hidden=!shown.includes(p);
+  $('race-panes').dataset.panes=String(shown.length);
   const exits=runs=>runs.filter(run=>run.summary.exit&&elapsed>=run.summary.time_ms).length;
   const counts={};
-  for(const {key,color} of RACE_PANES){
-    if(key==='inherited'&&!showInherited)continue;
+  for(const {key,color} of shown){
     raceMaze(`race-${key}-world`,crowds[key],elapsed,color);raceLedger(`race-${key}-grid`,crowds[key],elapsed,color);
     counts[key]=exits(crowds[key]);$(`race-${key}-count`).textContent=counts[key].toLocaleString();
   }
@@ -276,7 +278,7 @@ window.webinarUpdateRace=()=>{
   $('pause').textContent=playing?'Pause':'Resume';
   $('run').textContent=paired?'Replay comparison':'Play comparison';
   $('explain-turn').disabled=busy||raceLoading||!hiveStatus.ready.includes('shared');
-  if(paired&&!playing&&elapsed>=60000)$('message').textContent=`At 60 simulation seconds: ${withMemory.toLocaleString()} exits with the shared hive${showInherited?`, ${counts.inherited.toLocaleString()} with inherited memory`:''}; ${noMemory.toLocaleString()} without memory.`;
+  if(paired&&!playing&&elapsed>=60000)$('message').textContent=`At 60 simulation seconds: ${[...shown].reverse().map(p=>`${counts[p.key].toLocaleString()} exits ${p.label}`).join('; ')}.`;
   return true;
 };
 function setPresentationView(next){
@@ -286,7 +288,7 @@ function setPresentationView(next){
   $('race-stage').hidden=next!=='race';$('explanation-stage').hidden=next!=='explain';
   $('view-race').setAttribute('aria-pressed',String(next==='race'));
   $('view-explain').setAttribute('aria-pressed',String(next==='explain'));
-  $('race-setup').textContent=next==='race'?'The hive starts with one empty memory that every fly fills and reads. Inherited flies only read a finished group’s pool. All crowds use the same seeds.':'Inspect a newcomer’s captured view, source observation, sensory input, and actual neural choice.';
+  $('race-setup').textContent=next==='race'?'Personal flies read only their own observations. Inherited flies read a finished group’s pool. The hive starts empty and every fly fills and reads it. All crowds use the same seeds.':'Inspect a newcomer’s captured view, source observation, sensory input, and actual neural choice.';
   $('run').textContent=next==='race'?'Play comparison':population==='hive'?`Replay ${flyCount()} flies`:'Run eight flies';
   if(next==='race'&&!(bundle?.population&&bundle.mode==='shared')){bundle=null;elapsed=0;playing=false;}
   if(next==='race'&&bundle)bundle.presentation_end_ms=60000;
@@ -303,8 +305,9 @@ async function startRace(){
     population='hive';mode='shared';
     document.body.dataset.population='hive';$('hive-population').setAttribute('aria-pressed','true');$('live-population').setAttribute('aria-pressed','false');
     await startPopulation();
-    // The earlier frozen-pool condition joins the race when its recording exists.
-    const peers=hiveStatus.ready.includes('inherited')?(await overview('inherited')).flies:[];
+    // Personal and inherited crowds join the race when their recordings exist.
+    const peers={};
+    for(const key of ['personal','inherited'])peers[key]=hiveStatus.ready.includes(key)?(await overview(key)).flies:[];
     if(bundle?.population&&bundle.mode==='shared')bundle.peers=peers;
     if(bundle?.population&&bundle.mode==='shared'){$('message').textContent='Recorded comparison. Watch both crowds on the same simulation clock.';$('pause').disabled=false;}
   }finally{raceLoading=false;$('race-loading').hidden=true;update();}
