@@ -254,8 +254,8 @@ test('only an explicit successful New group changes the comparison seed',async()
 test('the webinar uses a four-times clock and clears live state when switching populations',async()=>{
   const h=harness(false,true);await h.api.ready;await h.api.start();
   h.api.tick(100);h.api.tick(150);assert.equal(h.api.state().elapsed,200);
-  h.api.population('hive');assert.equal(h.api.state().count,undefined);assert.equal(h.api.state().playing,false);
-  assert.equal(h.get('group-result').textContent,'0/50');
+  await h.api.refreshHive();h.api.population('hive');assert.equal(h.api.state().count,undefined);assert.equal(h.api.state().playing,false);
+  assert.equal(h.get('group-result').textContent,'0/1000');
   assert.match(h.get('message').textContent,/recorded, independently computed/);
 });
 

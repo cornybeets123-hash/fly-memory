@@ -34,7 +34,7 @@ MODES = ("none", "personal", "shared")
 router = APIRouter(prefix="/api/hive")
 _job = None
 _job_lock = Lock()
-COUNT = 50
+COUNT = 200
 _worker_kernel = None
 _worker_world = None
 

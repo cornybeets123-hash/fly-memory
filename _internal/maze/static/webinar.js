@@ -3,6 +3,8 @@ let population='live', hiveStatus={ready:[],state:'missing'}, selectionRequest=0
 let presentationView=window.WEBINAR_PRESENTATION?'race':'explain',raceLoading=false;
 const liveStart=start, liveSelectFly=selectFly;
 const measured={live:{},hive:{}};
+const flyCount=()=>hiveStatus.count||200;
+function applyFlyCount(){for(const el of document.querySelectorAll('[data-count]'))el.textContent=flyCount().toLocaleString();}
 const populationRuns=new Map();
 window.webinarOnBegin=data=>{if(!data.population){measured.live={...(data.cohort?.stages||{})};comparisonTable();}};
 function drawPopulationGrid(){
@@ -38,7 +40,7 @@ window.webinarAfterUpdate=()=>{
   $('brain-time').textContent=`Fly time · ${((frameAt(bundle.hero,elapsed)?.ms||0)/1000).toFixed(1)} s`;
   const hit=junctionEvidence(shownDecision()).hit;
   const outcome=hit?.payload.outcome==='returned'?'returned to START':hit?.payload.outcome.replace('_',' ');
-  $('visible-provenance').textContent=hit?`${hit.payload.source_fly} observed “${outcome}”. ${bundle.hero.owner} ${junctionEvidence(shownDecision()).applied?'uses that evidence.':'keeps both options.'}`:mode==='shared'?'All 50 flies start with one empty memory. Each completed observation is written at once, and every fly reads it.':mode==='personal'?'Each fly can retrieve only its own completed observations.':'Each fly explores without external memory.';
+  $('visible-provenance').textContent=hit?`${hit.payload.source_fly} observed “${outcome}”. ${bundle.hero.owner} ${junctionEvidence(shownDecision()).applied?'uses that evidence.':'keeps both options.'}`:mode==='shared'?`All ${bundle.flies.length} flies start with one empty memory. Each completed observation is written at once, and every fly reads it.`:mode==='personal'?'Each fly can retrieve only its own completed observations.':'Each fly explores without external memory.';
   if(!bundle.streaming&&bundle.cohort?.summary){
     const summary=bundle.cohort.summary;
     if(measured[population][mode]!==summary){measured[population][mode]=summary;comparisonTable();if(summary.audit_errors?.length)$('message').textContent='Evidence audit failed. Inspect the raw results before presenting this run.';}
@@ -96,7 +98,7 @@ async function startPopulation(options={}){
       initial_memories:detail.initial_memories,memory_count:hiveStatus.memory_count,memory_times:data.memory_times,
       comparison_mode:'none',world,brain:data.brain,code:'Recorded population',
       cohort:{seeds:flies.map(r=>r.seed),deadline_ms:180000,summary:data.summary}});
-    $('disconnect').hidden=true;$('run').textContent='Replay 50 flies';$('message').textContent='Recorded population. Each fly follows its own computed run.';
+    $('disconnect').hidden=true;$('run').textContent=`Replay ${flyCount()} flies`;$('message').textContent='Recorded population. Each fly follows its own computed run.';
   }catch(error){
     bundle=previous;if(previous)mode=previous.mode;
     for(const button of document.querySelectorAll('.stage')){button.classList.toggle('selected',button.dataset.mode===mode);button.setAttribute('aria-pressed',String(button.dataset.mode===mode));}
@@ -110,8 +112,8 @@ function choosePopulation(next){
   $('live-population').setAttribute('aria-pressed',String(next==='live'));
   $('hive-population').setAttribute('aria-pressed',String(next==='hive'));
   for(const button of document.querySelectorAll('.stage')){button.classList.toggle('selected',button.dataset.mode==='none');button.setAttribute('aria-pressed',String(button.dataset.mode==='none'));}
-  $('disconnect').hidden=next==='hive';$('run').textContent=next==='hive'?'Play 50 flies':'Run eight flies';
-  $('group-result').textContent=next==='hive'?'0/50':'0/8';$('fly-selector').replaceChildren();
+  $('disconnect').hidden=next==='hive';$('run').textContent=next==='hive'?`Play ${flyCount()} flies`:'Run eight flies';
+  $('group-result').textContent=next==='hive'?`0/${flyCount()}`:'0/8';$('fly-selector').replaceChildren();
   $('pause').disabled=true;$('seek').disabled=true;
   $('message').textContent=next==='hive'?'The population uses recorded, independently computed neural runs.':'Start No memory, then Personal memory, then Shared memory.';
   comparisonTable();lastEvidence='';update();
@@ -124,9 +126,9 @@ $('hive-population').addEventListener('click',()=>choosePopulation('hive'));
 async function refreshHive(){
   try{
     const response=await fetch('/api/hive/status');if(!response.ok)throw Error('Population status is unavailable.');
-    hiveStatus=await response.json();
+    hiveStatus=await response.json();applyFlyCount();
     const state=hiveStatus.state;
-    $('hive-status').textContent=state==='ready'||state==='ready_with_failures'?'50 flies measured in all three conditions. Stopped attempts remain included.':state==='missing'?'Prepare the population before the webinar.':state==='computing'||state==='starting'?`${hiveStatus.done.toLocaleString()} / ${hiveStatus.total.toLocaleString()} trials computed · ${hiveStatus.mode||'starting'}`:state==='stale'?'Population source changed. Archive earlier artifacts and prepare again.':state==='audit_failed'?'Population evidence audit failed. Read compute.log.':`Population ${state}${hiveStatus.detail?`: ${hiveStatus.detail}`:''}.`;
+    $('hive-status').textContent=state==='ready'||state==='ready_with_failures'?`${flyCount().toLocaleString()} flies measured in all three conditions. Stopped attempts remain included.`:state==='missing'?'Prepare the population before the webinar.':state==='computing'||state==='starting'?`${hiveStatus.done.toLocaleString()} / ${hiveStatus.total.toLocaleString()} trials computed · ${hiveStatus.mode||'starting'}`:state==='stale'?'Population source changed. Archive earlier artifacts and prepare again.':state==='audit_failed'?'Population evidence audit failed. Read compute.log.':`Population ${state}${hiveStatus.detail?`: ${hiveStatus.detail}`:''}.`;
     $('prepare-hive').hidden=state==='ready'||state==='ready_with_failures';$('prepare-hive').disabled=['computing','starting','stale','audit_failed'].includes(state);
     $('cancel-hive').hidden=!['computing','starting'].includes(state);
     $('hive-population').disabled=!hiveStatus.ready.includes('none');
@@ -181,12 +183,14 @@ function raceMaze(id,runs,time,color){
 // Every sprite uses its recorded position. Nearby flies overlap; badges count
 // those overlaps instead of moving agents to decorative display positions.
 const crowdSprites=new Map();
-const crowdSampleIndices=[3,9,16,22,28,34,41,47];
+// Eight distinct trials spread across the whole population.
+const sampleIndices=n=>Array.from({length:Math.min(8,n)},(_,i)=>Math.floor((i+.5)*n/Math.min(8,n)));
 function drawCrowdSamples(id,runs,time,color,background,{scale,ox,oy,dpr}){
   const {g,w,h}=canvas(id),columns=4,cw=w/columns,ch=(h-17)/2;
   label(g,'Eight magnified flies',0,11,10,COLORS.muted);
-  for(let i=0;i<crowdSampleIndices.length;i++){
-    const run=runs[crowdSampleIndices[i]],frame=run&&movementFrameAt(run,time);
+  const picks=sampleIndices(runs.length);
+  for(let i=0;i<8;i++){
+    const run=runs[picks[i]],frame=run&&movementFrameAt(run,time);
     const x=i%columns*cw,y=17+Math.floor(i/columns)*ch,viewHeight=ch-12;
     g.fillStyle='#0d1020';g.fillRect(x,y,cw-4,viewHeight);
     if(frame){
@@ -196,7 +200,7 @@ function drawCrowdSamples(id,runs,time,color,background,{scale,ox,oy,dpr}){
       g.drawImage(background,(px-(cw-4)/zoom/2)*dpr,(py-viewHeight/zoom/2)*dpr,(cw-4)/zoom*dpr,viewHeight/zoom*dpr,x,y,cw-4,viewHeight);
       const angle=((Math.round(frame.heading*12/Math.PI)%24)+24)%24;
       g.drawImage(crowdSprite(color,angle),x+(cw-4)/2-22,y+viewHeight/2-22,44,44);
-      label(g,run.owner||`${id.includes('shared')?'H':'A'}${crowdSampleIndices[i]+1}`,x+(cw-4)/2,y+ch-3,9,color,'center');
+      label(g,run.owner||`${id.includes('shared')?'H':'A'}${picks[i]+1}`,x+(cw-4)/2,y+ch-3,9,color,'center');
     }
     g.strokeStyle='#515b7766';g.lineWidth=1;g.strokeRect(x+.5,y+.5,cw-5,viewHeight-1);
   }
@@ -232,8 +236,9 @@ function drawCrowd(g,runs,time,point,color,height=Infinity){
   }
 }
 function raceLedger(id,runs,time,color){
-  const {g,w,h}=canvas(id),columns=10,rows=5,cw=w/columns,ch=h/rows;
-  for(let i=0;i<50;i++){
+  const {g,w,h}=canvas(id),total=Math.max(runs.length,flyCount());
+  const columns=Math.max(1,Math.min(total,Math.round(Math.sqrt(total*w/Math.max(1,h))))),rows=Math.ceil(total/columns),cw=w/columns,ch=h/rows;
+  for(let i=0;i<total;i++){
     const run=runs[i],done=!!run&&time>=run.summary.time_ms,exited=done&&run.summary.exit;
     const x=i%columns*cw,y=Math.floor(i/columns)*ch;
     g.fillStyle=exited?COLORS.mint:done?COLORS.pink:color;g.globalAlpha=done?1:.25;
@@ -269,7 +274,7 @@ function setPresentationView(next){
   $('view-race').setAttribute('aria-pressed',String(next==='race'));
   $('view-explain').setAttribute('aria-pressed',String(next==='explain'));
   $('race-setup').textContent=next==='race'?'Shared flies start with one empty memory and fill it together. Both crowds use the same seeds.':'Inspect a newcomer’s captured view, source observation, sensory input, and actual neural choice.';
-  $('run').textContent=next==='race'?'Play comparison':population==='hive'?'Replay 50 flies':'Run eight flies';
+  $('run').textContent=next==='race'?'Play comparison':population==='hive'?`Replay ${flyCount()} flies`:'Run eight flies';
   if(next==='race'&&!(bundle?.population&&bundle.mode==='shared')){bundle=null;elapsed=0;playing=false;}
   if(next==='race'&&bundle)bundle.presentation_end_ms=60000;
   if(next==='race')$('message').textContent='Recorded comparison. Play both crowds to the 60-second checkpoint.';

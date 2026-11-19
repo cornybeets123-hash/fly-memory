@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>50 flies · Shared memory</title><link rel="icon" href="/assets/qdrant-mark.svg"><link rel="stylesheet" href="/static/webinar.css?v=7"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Shared memory · recorded flies</title><link rel="icon" href="/assets/qdrant-mark.svg"><link rel="stylesheet" href="/static/webinar.css?v=8"></head>
 <body>
 <header>
   <div class="brand"><img src="/assets/qdrant-mark.svg" alt="Qdrant"><h1>Shared memory.</h1></div>
@@ -10,22 +10,22 @@
 <section class="webinar-toolbar" aria-label="Experiment controls">
   <p id="race-setup">Shared flies start with one empty memory and fill it together. Both crowds use the same seeds.</p>
   <details id="advanced-controls"><summary>Demo controls</summary><div class="advanced-content">
-    <div class="population-choice" role="group" aria-label="Population"><button id="live-population" aria-pressed="false">Eight live flies</button><button id="hive-population" aria-pressed="true">50 recorded flies</button></div>
+    <div class="population-choice" role="group" aria-label="Population"><button id="live-population" aria-pressed="false">Eight live flies</button><button id="hive-population" aria-pressed="true"><span data-count>200</span> recorded flies</button></div>
       <div class="condition-controls">  <nav aria-label="Memory conditions">
     <button class="stage selected" data-mode="none" aria-pressed="true">No memory</button>
     <button class="stage" data-mode="personal" aria-pressed="false">Personal memory</button>
     <button class="stage" data-mode="shared" aria-pressed="false">Shared memory</button>
   </nav></div>
     <p id="experiment-scope">Eight forks. 180-second trial limit. Matched conditions.</p>
-    <button id="prepare-hive">Prepare 50-fly comparison</button><button id="cancel-hive" hidden>Stop preparation</button>
+    <button id="prepare-hive">Prepare the recorded comparison</button><button id="cancel-hive" hidden>Stop preparation</button>
     <p id="hive-status" role="status" aria-live="polite"></p>
   </div></details>
 </section>
 <section id="race-stage" aria-label="Matched population comparison">
-  <div class="race-heading"><div><p class="eyebrow">50 MATCHED TRIALS</p><h2>What does shared experience change?</h2></div><div class="race-time"><strong id="race-clock">0.0</strong><span>simulation seconds</span></div></div>
+  <div class="race-heading"><div><p class="eyebrow"><span data-count>200</span> MATCHED TRIALS</p><h2>What does shared experience change?</h2></div><div class="race-time"><strong id="race-clock">0.0</strong><span>simulation seconds</span></div></div>
   <div class="race-panes">
-    <section class="race-pane" aria-label="No-memory population"><div class="race-pane-heading"><div><h3>No memory</h3><p>Each fly starts without observations.</p></div><div class="race-score"><strong id="race-none-count">0</strong><span>of 50 exited</span></div><canvas id="race-none-samples" class="crowd-samples" role="img" aria-label="Magnified recorded movement of eight distinct no-memory flies, labeled by trial."></canvas></div><canvas id="race-none-world" role="img" aria-label="Recorded movement of 50 flies without memory. Badges count flies at overlapping positions."></canvas><canvas id="race-none-grid" role="img" aria-label="One fly per no-memory trial. Bright flies mark exits; crossed flies mark failed attempts."></canvas></section>
-    <section class="race-pane shared-pane" aria-label="Shared-memory population"><div class="race-pane-heading"><div><h3>Shared memory</h3><p>One memory, empty at start, written and read by all 50.</p></div><div class="race-score"><strong id="race-shared-count">0</strong><span>of 50 exited</span></div><canvas id="race-shared-samples" class="crowd-samples" role="img" aria-label="Magnified recorded movement of eight distinct shared-memory flies, labeled by trial."></canvas></div><canvas id="race-shared-world" role="img" aria-label="Recorded movement of 50 flies sharing one memory. Badges count flies at overlapping positions."></canvas><canvas id="race-shared-grid" role="img" aria-label="One fly per shared-memory trial. Bright flies mark exits; crossed flies mark failed attempts."></canvas></section>
+    <section class="race-pane" aria-label="No-memory population"><div class="race-pane-heading"><div><h3>No memory</h3><p>Each fly starts without observations.</p></div><div class="race-score"><strong id="race-none-count">0</strong><span>of <span data-count>200</span> exited</span></div><canvas id="race-none-samples" class="crowd-samples" role="img" aria-label="Magnified recorded movement of eight distinct no-memory flies, labeled by trial."></canvas></div><canvas id="race-none-world" role="img" aria-label="Recorded movement of all flies without memory. Badges count flies at overlapping positions."></canvas><canvas id="race-none-grid" role="img" aria-label="One fly per no-memory trial. Bright flies mark exits; crossed flies mark failed attempts."></canvas></section>
+    <section class="race-pane shared-pane" aria-label="Shared-memory population"><div class="race-pane-heading"><div><h3>Shared memory</h3><p>One memory, empty at start, written and read by every fly.</p></div><div class="race-score"><strong id="race-shared-count">0</strong><span>of <span data-count>200</span> exited</span></div><canvas id="race-shared-samples" class="crowd-samples" role="img" aria-label="Magnified recorded movement of eight distinct shared-memory flies, labeled by trial."></canvas></div><canvas id="race-shared-world" role="img" aria-label="Recorded movement of all flies sharing one memory. Badges count flies at overlapping positions."></canvas><canvas id="race-shared-grid" role="img" aria-label="One fly per shared-memory trial. Bright flies mark exits; crossed flies mark failed attempts."></canvas></section>
   </div>
   <div class="race-caption"><p>Each small fly represents one trial. <span>○ Exploring</span> <span>● Exited</span> <span>× Failed</span></p><span id="race-source">Recorded comparison · 4× playback · 60-second checkpoint</span></div>
   <div id="race-loading" class="computing" hidden><span class="spinner"></span><p>Loading matched recordings…</p></div>
@@ -72,5 +72,5 @@
   <div class="evidence-controls"><button id="explain-turn" class="secondary">Why did this fly turn?</button><button id="replay-memory" hidden>Replay memory</button><button id="inspect">Inspect evidence</button></div>
 </footer>
 <dialog id="inspector"><button id="close-inspector" class="close" aria-label="Close evidence">×</button><h2>The computation behind this run</h2><p>The fixed model integrates 138,639 neurons. Actual Qdrant results change its sensory input. The evidence below belongs to the displayed junction. Thumbnails use the maze orientation. The outlined area marks the query capture. Original captures and hashes remain unchanged.</p><p id="memory-title">Run the demo to inspect a junction.</p><p id="policy"></p><p id="provenance"></p><div id="retrieval-table"></div><p>Cosine measures view similarity. Search time includes the local Qdrant call. It excludes image encoding and brain computation.</p><div class="brain-note"><span id="input">Steering input: 0 / 0 Hz</span><button id="disconnect" aria-pressed="false">Disconnect steering</button></div><details><summary>Raw evidence</summary><pre id="details"></pre></details></dialog>
-<script>window.WEBINAR=true;window.WEBINAR_PRESENTATION=true;</script><script src="/assets/fly.js"></script><script src="/static/app.js?v=webinar-7"></script>
-<script src="/static/webinar.js?v=7"></script></body></html>
+<script>window.WEBINAR=true;window.WEBINAR_PRESENTATION=true;</script><script src="/assets/fly.js"></script><script src="/static/app.js?v=webinar-8"></script>
+<script src="/static/webinar.js?v=8"></script></body></html>
