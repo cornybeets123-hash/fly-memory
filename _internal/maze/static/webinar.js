@@ -94,7 +94,7 @@ async function startPopulation(options={}){
     flies[focusIndex]={...detail.run,detailLoaded:true};
     disconnected=false;
     begin({mode:selectedMode,flies,comparisons:comparison?.flies||[],population:true,
-      presentation_end_ms:selectedMode==='shared'?60000:180000,
+      presentation_end_ms:selectedMode==='shared'?100000:180000,
       initial_memories:detail.initial_memories,memory_count:selectedMode==='inherited'?hiveStatus.inherited_memory_count:hiveStatus.memory_count,memory_times:selectedMode==='shared'?data.memory_times:undefined,
       comparison_mode:'none',world,brain:data.brain,code:'Recorded population',
       cohort:{seeds:flies.map(r=>r.seed),deadline_ms:180000,summary:data.summary}});
@@ -274,11 +274,11 @@ window.webinarUpdateRace=()=>{
   }
   const noMemory=counts.none,withMemory=counts.shared;
   $('race-clock').textContent=(elapsed/1000).toFixed(1);
-  $('race-source').textContent=`Recorded comparison · ${speed}× playback · 60-second checkpoint`;
+  $('race-source').textContent=`Recorded comparison · ${speed}× playback · 100-second checkpoint`;
   $('pause').textContent=playing?'Pause':'Resume';
   $('run').textContent=paired?'Replay comparison':'Play comparison';
   $('explain-turn').disabled=busy||raceLoading||!hiveStatus.ready.includes('shared');
-  if(paired&&!playing&&elapsed>=60000)$('message').textContent=`At 60 simulation seconds: ${[...shown].reverse().map(p=>`${counts[p.key].toLocaleString()} exits ${p.label}`).join('; ')}.`;
+  if(paired&&!playing&&elapsed>=100000)$('message').textContent=`At 100 simulation seconds: ${[...shown].reverse().map(p=>`${counts[p.key].toLocaleString()} exits ${p.label}`).join('; ')}.`;
   return true;
 };
 function setPresentationView(next){
@@ -291,8 +291,8 @@ function setPresentationView(next){
   $('race-setup').textContent=next==='race'?'Personal flies read only their own observations. Inherited flies read a finished group’s pool. The hive starts empty and every fly fills and reads it. All crowds use the same seeds.':'Inspect a newcomer’s captured view, source observation, sensory input, and actual neural choice.';
   $('run').textContent=next==='race'?'Play comparison':population==='hive'?`Replay ${flyCount()} flies`:'Run eight flies';
   if(next==='race'&&!(bundle?.population&&bundle.mode==='shared')){bundle=null;elapsed=0;playing=false;}
-  if(next==='race'&&bundle)bundle.presentation_end_ms=60000;
-  if(next==='race')$('message').textContent='Recorded comparison. Play both crowds to the 60-second checkpoint.';
+  if(next==='race'&&bundle)bundle.presentation_end_ms=100000;
+  if(next==='race')$('message').textContent='Recorded comparison. Play both crowds to the 100-second checkpoint.';
   prepareBrain();update();requestAnimationFrame(()=>{prepareBrain();update();});
 }
 async function startRace(){
@@ -321,7 +321,7 @@ async function showExplanation(){
   setPresentationView('explain');$('pause').disabled=false;
   $('message').textContent='Paused at an actual use of another fly’s completed observation.';
 }
-$('view-race').addEventListener('click',()=>{if(!busy&&!raceLoading){playing=false;elapsed=Math.min(elapsed,60000);setPresentationView('race');}});
+$('view-race').addEventListener('click',()=>{if(!busy&&!raceLoading){playing=false;elapsed=Math.min(elapsed,100000);setPresentationView('race');}});
 $('view-explain').addEventListener('click',()=>{if(population==='live'&&presentationView==='explain')return;return showExplanation();});
 $('explain-turn').addEventListener('click',showExplanation);
 $('advanced-controls').addEventListener('toggle',()=>{requestAnimationFrame(()=>{prepareBrain();update();});});

@@ -286,12 +286,12 @@ test('population playback accepts classified stopped attempts and still blocks e
   assert.match(blocked.get('message').textContent,/failed its evidence audit/);
 });
 
-test('the recorded comparison shares one clock and stops at the sixty-second checkpoint',async()=>{
+test('the recorded comparison shares one clock and stops at the hundred-second checkpoint',async()=>{
   const h=harness(false,true,true);await h.api.presentationReady;await h.api.start();
-  assert.equal(h.api.state().count,1000);assert.equal(h.api.playbackEnd(),60000);
-  for(let time=1;time<=16001;time+=250)h.api.tick(time);
-  assert.equal(h.api.state().elapsed,60000);assert.equal(h.api.state().playing,false);
-  assert.equal(h.get('race-clock').textContent,'60.0');
+  assert.equal(h.api.state().count,1000);assert.equal(h.api.playbackEnd(),100000);
+  for(let time=1;time<=26001;time+=250)h.api.tick(time);
+  assert.equal(h.api.state().elapsed,100000);assert.equal(h.api.state().playing,false);
+  assert.equal(h.get('race-clock').textContent,'100.0');
   assert.equal(h.get('race-none-count').textContent,'5');assert.equal(h.get('race-shared-count').textContent,'1,000');
   assert.match(h.get('race-source').textContent,/4× playback/);
 });
