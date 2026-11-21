@@ -173,6 +173,17 @@ def audit(results, world):
     }
 
 
+TEXT_SUFFIXES = {".py", ".ts", ".lock"}
+
+
+def file_digest(path):
+    """SHA-256 of a file. Text files hash with LF endings so every OS agrees."""
+    data = Path(path).read_bytes()
+    if Path(path).suffix in TEXT_SUFFIXES:
+        data = data.replace(b"\r\n", b"\n")
+    return hashlib.sha256(data).hexdigest()
+
+
 def freeze():
     root = Path(__file__).resolve().parents[2]
     files = [
@@ -185,10 +196,7 @@ def freeze():
         *sorted((root / "_internal/brain").glob("*.ts")),
         *sorted((root / "_internal/brain/data").glob("*.gz")),
     ]
-    return {
-        p.relative_to(root).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
-        for p in files
-    }
+    return {p.relative_to(root).as_posix(): file_digest(p) for p in files}
 
 
 def evaluate(development=True, controls=True):

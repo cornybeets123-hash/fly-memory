@@ -1,6 +1,5 @@
 """Serve intact recordings while retaining explicitly stopped attempts as failures."""
 
-import hashlib
 import json
 import os
 import shutil
@@ -14,6 +13,7 @@ from fastapi.responses import FileResponse
 
 from . import webinar_population as producer
 from .presentation import record
+from .workshop_evaluate import file_digest
 
 router = APIRouter(prefix="/api/hive")
 export_lock = Lock()
@@ -45,10 +45,7 @@ def recording_sources_match(source):
 
 @lru_cache(maxsize=4)
 def _hashes_match(stamps):
-    return all(
-        hashlib.sha256(Path(path).read_bytes()).hexdigest() == digest
-        for path, digest, _, _ in stamps
-    )
+    return all(file_digest(path) == digest for path, digest, _, _ in stamps)
 
 
 def stopped_attempt(run):
