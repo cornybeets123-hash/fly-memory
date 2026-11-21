@@ -9,7 +9,9 @@ def main():
     parser.add_argument(
         "--solution", action="store_true", help="Rehearse with completed code."
     )
-    parser.add_argument("--workshop", action="store_true", help="Open the original coding workshop.")
+    parser.add_argument(
+        "--workshop", action="store_true", help="Open the original coding workshop."
+    )
     parser.add_argument(
         "--check", choices=("personal", "shared"), help="Check the saved code."
     )
@@ -48,7 +50,9 @@ def main():
         from _internal.maze.cohort_evaluate import evaluate
 
         result = evaluate([50000, 50008])
-        Path("_maintainer/evaluation.json").write_text(json.dumps(result, indent=2))
+        Path("_maintainer/evaluation.json").write_text(
+            json.dumps(result, indent=2), encoding="utf-8"
+        )
         raise SystemExit(0 if result["passed"] else 1)
     if args.export:
         from _internal.maze.package import export

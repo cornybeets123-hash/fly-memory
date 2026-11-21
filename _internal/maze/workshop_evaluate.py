@@ -266,6 +266,6 @@ if __name__ == "__main__":
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     result = evaluate(development=not args.held_out, controls=not args.no_controls)
-    args.output.write_text(json.dumps(result, indent=2))
+    args.output.write_text(json.dumps(result, indent=2), encoding="utf-8")
     print(json.dumps({k: v for k, v in result.items() if k not in {"rows", "source"}}))
     raise SystemExit(0 if result["passed"] else 1)

@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parents[2]
 def read_module(name):
     path = ROOT / f"{name}.py"
     module = ModuleType(f"workshop_{name}")
-    exec(compile(path.read_text(), str(path), "exec"), module.__dict__)  # noqa: S102
+    exec(compile(path.read_text(encoding="utf-8"), str(path), "exec"), module.__dict__)  # noqa: S102
     return module
 
 

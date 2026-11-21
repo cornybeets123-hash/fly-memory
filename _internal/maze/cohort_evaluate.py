@@ -186,5 +186,5 @@ if __name__ == "__main__":
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     result = evaluate(args.bases)
-    args.output.write_text(json.dumps(result, indent=2))
+    args.output.write_text(json.dumps(result, indent=2), encoding="utf-8")
     raise SystemExit(0 if result["passed"] else 1)

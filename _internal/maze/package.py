@@ -40,8 +40,8 @@ def backup():
         ).decode(),
         "runs": runs,
     }
-    html = (server.STATIC / "index.html").read_text()
-    css = (server.STATIC / "style.css").read_text()
+    html = (server.STATIC / "index.html").read_text(encoding="utf-8")
+    css = (server.STATIC / "style.css").read_text(encoding="utf-8")
     font = base64.b64encode(
         (ROOT / "_internal/assets/fonts/mona.woff2").read_bytes()
     ).decode()
@@ -56,13 +56,15 @@ def backup():
         html = html.replace(f"/assets/{name}", f"data:image/svg+xml;base64,{encoded}")
     html = html.replace(
         '<script src="/assets/fly.js"></script>',
-        "<script>" + (ROOT / "_internal/assets/fly.js").read_text() + "</script>",
+        "<script>"
+        + (ROOT / "_internal/assets/fly.js").read_text(encoding="utf-8")
+        + "</script>",
     )
     data = json.dumps(dataset, separators=(",", ":")).replace("</", "<\\/")
     html = html.replace(
         '<script src="/static/app.js?v=13"></script>',
         f"<script>window.WORKSHOP_DATA={data};</script><script>"
-        + (server.STATIC / "app.js").read_text()
+        + (server.STATIC / "app.js").read_text(encoding="utf-8")
         + "</script>",
     )
     if (
@@ -74,10 +76,10 @@ def backup():
             "The offline export still depends on live assets or lacks recorded data."
         )
     output = MAINTAINER / "fly-memory-offline.html"
-    output.write_text(html)
+    output.write_text(html, encoding="utf-8")
     evidence = ROOT / "_internal/artifacts/maze-slides/demo.json"
     evidence.parent.mkdir(parents=True, exist_ok=True)
-    evidence.write_text(json.dumps(runs))
+    evidence.write_text(json.dumps(runs), encoding="utf-8")
     return output
 
 

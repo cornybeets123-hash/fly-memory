@@ -47,9 +47,10 @@ def replace_functions(source, replacements):
 
 def completed_sources():
     memory = replace_functions(
-        (ROOT / "memory.py").read_text(), {"remember": REMEMBER, "recall": RECALL}
+        (ROOT / "memory.py").read_text(encoding="utf-8"),
+        {"remember": REMEMBER, "recall": RECALL},
     )
     pipeline = replace_functions(
-        (ROOT / "pipeline.py").read_text(), {"scope": SHARED_SCOPE}
+        (ROOT / "pipeline.py").read_text(encoding="utf-8"), {"scope": SHARED_SCOPE}
     )
     return {"memory": memory, "pipeline": pipeline}

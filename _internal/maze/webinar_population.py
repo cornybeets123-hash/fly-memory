@@ -63,23 +63,23 @@ def signature(count=COUNT, seed=50000):
 
 def write_json(path, data):
     temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(json.dumps(data, separators=(",", ":")))
+    temporary.write_text(json.dumps(data, separators=(",", ":")), encoding="utf-8")
     temporary.replace(path)
 
 
 def read_json(path):
-    return json.loads(path.read_text())
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
 def save_gzip(path, data):
     temporary = path.with_suffix(".tmp")
-    with gzip.open(temporary, "wt") as output:
+    with gzip.open(temporary, "wt", encoding="utf-8") as output:
         json.dump(data, output, separators=(",", ":"))
     temporary.replace(path)
 
 
 def read_gzip(path):
-    with gzip.open(path, "rt") as source:
+    with gzip.open(path, "rt", encoding="utf-8") as source:
         return json.load(source)
 
 

@@ -29,11 +29,11 @@ BIN_MS = 30_000
 
 
 def read_json(path):
-    return json.loads(Path(path).read_text())
+    return json.loads(Path(path).read_text(encoding="utf-8"))
 
 
 def read_gzip(path):
-    with gzip.open(path, "rt") as source:
+    with gzip.open(path, "rt", encoding="utf-8") as source:
         return json.load(source)
 
 
