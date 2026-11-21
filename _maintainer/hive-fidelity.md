@@ -28,21 +28,36 @@ uv run python _maintainer/hive_fidelity.py                  # _internal/artifact
 uv run python _maintainer/hive_fidelity.py path/to/dir
 ```
 
-The figures below come from a **small smoke recording (8 flies, seeds 50000-50007)** made to develop the script. They show the shape of each mechanism. They are not outcome claims, and the exit counts at this size must not be quoted. Replace them with the 200-fly recording before the webinar.
+The figures below come from the **200-fly recording** (seeds 50000-50199, 180-second limit), prepared on 2026-11-21.
 
 | Measure | Shared hive | Inherited |
 | --- | --- | --- |
-| Observations stored at 0 s / 60 s / end | 0 / 50 / 124 | 147 / 147 / 147 |
-| Retrieved hits that came from the fly itself | 8% | 0% |
+| Observations stored at 0 s / 60 s / end | 0 / 1,423 / 2,033 | 3,488 / 3,488 / 3,488 |
+| Retrieved hits that came from the fly itself | 0% (rounded) | 0% |
+| Applied evidence from the fly's own writes | 1% | 0% |
+| Distinct flies that supplied applied evidence | 82 | 195 |
+| Flies that used memory | 199 / 200 | 200 / 200 |
 | Median time of the first applied memory | 23.2 s | 4.3 s |
-| Share of searches that changed a decision, 0-30 s to 150-180 s | 23% rising to 46% (dips to 11% at 30-60 s) | about 50%, flat |
+| Share of searches that changed a decision, 0-30 s to 150-180 s | 26%, then 43-44%, rising to 50% | 50% while flies remain (all exited by 60 s) |
 | Reads of a write made after the decision | 0 | not applicable |
 
-The last two rows carry the argument. Inherited memory helps from the first junction and stays level, because the evidence was complete on arrival. The hive starts weak and improves as the flies fill the bank. That curve is the signature of a shared memory under construction, and the inherited condition cannot produce it.
+The memory and timing rows carry the argument. Inherited memory helps from the first junction and stays level, because the evidence was complete on arrival. The hive starts empty and its effect rises as the flies fill the bank. That curve is the signature of a shared memory under construction, and the inherited condition cannot produce it.
+
+Outcomes, for context only (not a ranking; see Cautions):
+
+| Condition | Exits | Mean time |
+| --- | --- | --- |
+| No memory | 61 / 200 | 160.9 s |
+| Personal | 101 / 200 | 146.8 s |
+| Inherited | 200 / 200 | 49.5 s |
+| Shared hive | 200 / 200 | 76.1 s |
+
+One no-memory fly (A51, seed 50050) stopped at an ambiguous fork at 132.7 s. The page lists it as a visible behaviour failure.
 
 ## Cautions
 
-- **Self-reads.** About one in ten applied hive decisions used the fly's own earlier observation. The hive is "learning from everyone, including yourself", not purely "learning from others". If the 200-fly recording shows a much larger share, add a hive variant that excludes the fly's own entries. `memory.recall` already supports `exclude_fly`, so it is a small change.
+- **Self-reads.** About 1% of applied hive decisions used the fly's own earlier observation. That is down from about one in ten in the 8-fly smoke recording. At 200 flies the hive is almost entirely "learning from others", although self-reads stay allowed by design. No self-excluding variant is needed. `memory.recall` supports `exclude_fly` if one is ever wanted.
+- **Early explorers supply the evidence.** 82 flies supplied all applied hive evidence. Early flies explore with an empty memory, and later flies reuse what they found. That is expected for a hive, and worth narrating.
 - **Early-run weakness.** The hive can look worse early. That is expected and worth narrating, not hiding.
 - **Replay, not a service.** Both conditions are recorded runs on one local shard. They show retrieval behaviour, not the contention, latency or consistency of a networked shared store.
 - **Different questions.** A gap between the two conditions mixes two effects: how much experience there is, and when it arrives. Do not read it as a ranking.

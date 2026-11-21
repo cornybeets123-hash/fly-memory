@@ -34,7 +34,7 @@ Show actual returns, cosine scores, local query-call times, and spikes. Cosine m
 
 The opening group uses seeds 300–307 and focuses A6/B6. It produced four, six, and eight exits across the stages. **New group** samples fresh seeds. The held-out evaluation uses 50000–50015: 5/16, 9/16, and 16/16 exits within 65 seconds. See [evaluation details](_maintainer/evaluation-summary.md) for full measures and limitations.
 
-The current checks cover 22 Python tests, 23 JavaScript checks, four dense neural checks, and the ownership audit. Astra found no route fallback or blocker. Work inline. Dylan rejected repeated or parallel reviews. Preserve the current design during manual finishing.
+The current checks cover 47 Python tests, 32 JavaScript checks, four dense neural checks, and the ownership audit. They need Node.js 22.18 or later on `PATH`; `kernel.find_node()` rejects older versions. Astra found no route fallback or blocker. Work inline. Dylan rejected repeated or parallel reviews. Preserve the current design during manual finishing.
 
 Start with [the presenter guide](_maintainer/presenter.md) for timing, exact builds, controls, and recovery. [Slide notes](_maintainer/slides.json) contain the lesson details.
 

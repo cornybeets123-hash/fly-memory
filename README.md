@@ -14,14 +14,15 @@ Select **Why did this fly turn?** to pause at a recorded use of shared memory. I
 
 Select **Prepare the recorded comparison** before the webinar if the recordings are missing. Preparation computes 800 real trials across the four conditions: no memory, personal, inherited (the personal group's frozen pool), and the shared hive. The 200 shared-memory flies run as one group in one process because they share one shard. It saves progress under `_internal/artifacts/webinar-hive/`. Run preparation from the terminal with `uv run python -m _internal.maze.webinar_population`. Completed groups resume when the source hashes match. The population display uses recorded trajectories and sampled neural frames.
 
-Run `uv run run.py --workshop` for the original workshop starter, or add `--solution` for its completed reference. The original workshop instructions follow.
+Preparation took 73 minutes on an 8-core Windows laptop. The first three conditions use all cores, and the shared hive runs on one core for about 27 minutes. Allow about 8 GB of free memory. The hive alone holds about 1.2 GB in Node and grows to about 2.3 GB in Python, because all 200 flies keep their traces until the group ends. The status counter stays at 600 of 800 while the hive runs.
 
+Run `uv run run.py --workshop` for the original workshop starter, or add `--solution` for its completed reference. The original workshop instructions follow.
 
 A 45-minute AI Dev Day workshop about retrieval. Watch the presenter, or use the same files.
 
 ## Run
 
-Clone the [workshop repository](https://github.com/qdrant-labs/fly-memory) before the session. Use Python 3.12, Node.js 22.18 or later, and uv.
+Clone the [workshop repository](https://github.com/qdrant-labs/fly-memory) before the session. Use Python 3.12, Node.js 22.18 or later, and uv. The app stops with a clear message if `node` on `PATH` is older. Windows on ARM is not supported, because `qdrant-edge-py` has no wheel for it. Use a current Chrome or Edge, Safari 16 or later, or Firefox 121 or later.
 
 ```sh
 git clone --depth 1 https://github.com/qdrant-labs/fly-memory.git
