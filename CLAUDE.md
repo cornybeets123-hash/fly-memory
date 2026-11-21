@@ -58,4 +58,4 @@ Keep the native deck, notes, PDF, offline HTML, and ZIP synchronized. Export wri
 
 The live display streams all eight flies without automatic event holds. The ten-seed gate and opening-group frames match the previous release. Live stream, ownership, and cancellation checks passed.
 
-At handoff, the local server runs completed rehearsal code. Stop it before starting a session with the starter code. Git changes remain uncommitted. Do not commit or push without Dylan's explicit instruction.
+At handoff, the local server runs completed rehearsal code. Stop it before starting a session with the starter code. The cross-platform work is committed on `hive-shared-memory` (`e29d722`–`37567ef`) but not pushed. Do not commit or push without Dylan's explicit instruction.
