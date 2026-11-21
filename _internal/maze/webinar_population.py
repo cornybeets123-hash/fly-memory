@@ -6,8 +6,6 @@ import gzip
 import hashlib
 import json
 import os
-import signal
-import subprocess
 import sys
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
@@ -19,7 +17,7 @@ from fastapi import APIRouter, HTTPException
 from fastapi.responses import FileResponse
 from qdrant_edge import Distance, EdgeConfig, EdgeShard, EdgeVectorParams, Point
 
-from . import cohort, memory
+from . import cohort, jobs, memory
 from . import webinar_inherited as inherited
 from .cohort_evaluate import audit
 from .kernel import Kernel
@@ -64,7 +62,16 @@ def signature(count=COUNT, seed=50000):
 def write_json(path, data):
     temporary = path.with_suffix(path.suffix + ".tmp")
     temporary.write_text(json.dumps(data, separators=(",", ":")), encoding="utf-8")
-    temporary.replace(path)
+    jobs.replace_file(temporary, path)
+
+
+def running(status):
+    """True while the preparation job is alive and still reporting a heartbeat."""
+    return (
+        "pid" in status
+        and jobs.process_alive(status["pid"])
+        and not jobs.heartbeat_stale(DIRECTORY / "heartbeat")
+    )
 
 
 def read_json(path):
@@ -75,7 +82,7 @@ def save_gzip(path, data):
     temporary = path.with_suffix(".tmp")
     with gzip.open(temporary, "wt", encoding="utf-8") as output:
         json.dump(data, output, separators=(",", ":"))
-    temporary.replace(path)
+    jobs.replace_file(temporary, path)
 
 
 def read_gzip(path):
@@ -249,6 +256,7 @@ def prepare(directory=DIRECTORY, count=COUNT, seed=50000, workers=8):
         "workers": workers,
     }
     write_json(status_path, state)
+    beat = jobs.start_heartbeat(directory / "heartbeat")
     groups = {
         mode: [
             (offset, list(range(seed + offset, seed + min(offset + 8, count))))
@@ -355,6 +363,8 @@ def prepare(directory=DIRECTORY, count=COUNT, seed=50000, workers=8):
         state.update(state="failed", detail=str(error))
         write_json(status_path, state)
         raise
+    finally:
+        beat.set()
 
 
 @router.get("/status")
@@ -371,11 +381,8 @@ def status():
     result = read_json(path)
     if result.get("signature") != signature():
         return {**result, "state": "stale", "ready": []}
-    if result.get("state") == "computing":
-        try:
-            os.kill(result["pid"], 0)
-        except (KeyError, ProcessLookupError):
-            result["state"] = "interrupted"
+    if result.get("state") == "computing" and not running(result):
+        result["state"] = "interrupted"
     return {k: v for k, v in result.items() if k != "source"}
 
 
@@ -397,12 +404,11 @@ def launch():
             return current
         DIRECTORY.mkdir(parents=True, exist_ok=True)
         with (DIRECTORY / "compute.log").open("a") as log:
-            _job = subprocess.Popen(
+            _job = jobs.launch_group(
                 [sys.executable, "-m", "_internal.maze.webinar_population"],
                 cwd=ROOT,
                 stdout=log,
                 stderr=log,
-                start_new_session=True,
             )
         return {**current, "state": "starting"}
 
@@ -411,7 +417,7 @@ def launch():
 def cancel():
     with _job_lock:
         if _job is not None and _job.poll() is None:
-            os.killpg(_job.pid, signal.SIGTERM)
+            jobs.terminate_tree(_job.pid)
             current = status()
             current.update(state="cancelled")
             write_json(DIRECTORY / "status.json", current)

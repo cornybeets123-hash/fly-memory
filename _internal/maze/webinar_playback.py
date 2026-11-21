@@ -3,7 +3,6 @@
 import json
 import os
 import shutil
-import signal
 from functools import lru_cache
 from pathlib import Path
 from threading import Lock
@@ -11,6 +10,7 @@ from threading import Lock
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import FileResponse
 
+from . import jobs
 from . import webinar_population as producer
 from .presentation import record
 from .workshop_evaluate import file_digest
@@ -136,11 +136,8 @@ def status():
             if any(current["behavior_failures"].values())
             else "ready"
         )
-    if current["state"] == "computing":
-        try:
-            os.kill(current["pid"], 0)
-        except (KeyError, ProcessLookupError):
-            current["state"] = "interrupted"
+    if current["state"] == "computing" and not producer.running(current):
+        current["state"] = "interrupted"
     return current
 
 
@@ -173,14 +170,11 @@ def prepare():
 @router.post("/cancel")
 def cancel():
     current = status()
-    if current["state"] == "computing":
-        pid = current["pid"]
-        if os.getpgid(pid) == pid:
-            os.killpg(pid, signal.SIGTERM)
-            original = producer.read_json(producer.DIRECTORY / "status.json")
-            producer.write_json(
-                producer.DIRECTORY / "status.json", {**original, "state": "cancelled"}
-            )
+    if current["state"] == "computing" and jobs.terminate_tree(current["pid"]):
+        original = producer.read_json(producer.DIRECTORY / "status.json")
+        producer.write_json(
+            producer.DIRECTORY / "status.json", {**original, "state": "cancelled"}
+        )
     return status()
 
 
@@ -234,6 +228,6 @@ def overview(mode: str):
                 stream.write(
                     b"," + json.dumps(checked, separators=(",", ":")).encode()[1:]
                 )
-            temporary.replace(output)
+            jobs.replace_file(temporary, output)
             producer.write_json(metadata, stamp)
     return FileResponse(output, media_type="application/json")
