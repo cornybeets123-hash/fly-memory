@@ -16,6 +16,8 @@ Select **Prepare the recorded comparison** before the webinar if the recordings 
 
 Preparation took 73 minutes on an 8-core Windows laptop. The first three conditions use all cores, and the shared hive runs on one core for about 27 minutes. Allow about 8 GB of free memory. The hive alone holds about 1.2 GB in Node and grows to about 2.3 GB in Python, because all 200 flies keep their traces until the group ends. The status counter stays at 600 of 800 while the hive runs.
 
+> **Note: hive parallelism is possible but not implemented.** Sorry for the long preparation. The shared hive could split its 200 flies across workers, with each worker keeping a copy of the shard, and stay identical to the current design because every write waits for the end of the cycle. That would cut the hive from about 27 minutes to about 5–7 minutes, and a full preparation from about 73 minutes to about 51–53. It was left out so that the verified recording stays valid: the change alters the source fingerprint and requires a fresh preparation. To implement it, start with [the hive parallelism plan](_maintainer/hive-parallelism.md).
+
 Run `uv run run.py --workshop` for the original workshop starter, or add `--solution` for its completed reference. The original workshop instructions follow.
 
 A 45-minute AI Dev Day workshop about retrieval. Watch the presenter, or use the same files.
