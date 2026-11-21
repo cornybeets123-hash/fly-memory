@@ -1,18 +1,42 @@
 """Supervise the local neural worker. Fail clearly when it stops or times out."""
 
 import json
+import re
 import shutil
 import subprocess
 from pathlib import Path
 from queue import Empty, Queue
 from threading import Thread
 
+MINIMUM_NODE = (22, 18)
+
+
+def node_version_ok(text):
+    """True when `node --version` output such as 'v22.18.0' meets the minimum."""
+    match = re.match(r"v?(\d+)\.(\d+)", text.strip())
+    return match is not None and (int(match[1]), int(match[2])) >= MINIMUM_NODE
+
+
+def find_node():
+    node = shutil.which("node")
+    if node is None:
+        raise RuntimeError("Install Node.js 22.18 or later.")
+    try:
+        found = subprocess.run(
+            [node, "--version"], capture_output=True, text=True, timeout=10, check=False
+        ).stdout.strip()
+    except (OSError, subprocess.TimeoutExpired):
+        found = ""
+    if not node_version_ok(found):
+        raise RuntimeError(
+            f"Node.js 22.18 or later is required; found {found or 'an unknown version'}."
+        )
+    return node
+
 
 class Kernel:
     def __init__(self):
-        node = shutil.which("node")
-        if node is None:
-            raise RuntimeError("Install Node.js 22.18 or later.")
+        node = find_node()
         self.process = subprocess.Popen(
             [node, str(Path(__file__).with_name("neural.ts"))],
             stdin=subprocess.PIPE,
